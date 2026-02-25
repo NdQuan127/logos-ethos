@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { getPostBySlug, getPostSlugs, getAllPostsMeta } from '@/lib/mdx';
 import { BlogPost } from '@/lib/blog-data';
 import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
+import { SITE_URL } from '@/lib/constants';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { GridLines } from '@/components/GridLines';
@@ -32,7 +33,7 @@ export async function generateMetadata({
 
   try {
     const post = await getPostBySlug(slug);
-    const url = `https://logos-ethos.web.app/blog/${slug}`;
+    const url = `${SITE_URL}/blog/${slug}`;
 
     return {
       title: `${post.title} | Logos & Ethos`,
@@ -78,11 +79,11 @@ function ArticleJsonLd({ post, slug }: { post: BlogPost; slug: string }) {
     description: post.excerpt,
     datePublished: post.isoDate ?? post.date,
     image: post.image,
-    url: `https://logos-ethos.web.app/blog/${slug}`,
+    url: `${SITE_URL}/blog/${slug}`,
     publisher: {
       '@type': 'Organization',
       name: 'Logos & Ethos',
-      url: 'https://logos-ethos.web.app',
+      url: SITE_URL,
     },
     articleSection: post.category,
   };

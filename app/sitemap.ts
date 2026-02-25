@@ -1,7 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { getPostSlugs } from '@/lib/mdx';
+import { SITE_URL } from '@/lib/constants';
 
-const BASE_URL = 'https://logos-ethos.web.app';
+export const dynamic = 'force-static';
+
+const BASE_URL = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const slugs = getPostSlugs();

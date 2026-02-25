@@ -27,7 +27,7 @@ export function Footer() {
             <span className="font-sans font-bold tracking-tight text-[var(--foreground)] uppercase text-sm">Logos &amp; Ethos</span>
           </Link>
           <p className="font-sans text-xs text-[var(--muted)] leading-relaxed max-w-xs">
-            Nơi giao thoa của Toán học &amp; Triết học — vẻ đẹp thuần khiết của logic và chiều sâu tư duy.
+            Về những giới hạn của sự hiểu biết — nơi toán học và triết học cùng đặt câu hỏi cho lý trí.
           </p>
         </div>
 

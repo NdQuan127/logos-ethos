@@ -7,7 +7,7 @@ import { QuoteSection } from '@/components/QuoteSection';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi | Logos & Ethos',
-  description: 'Logos & Ethos — nơi giao thoa của Toán học và Triết học, khám phá vẻ đẹp thuần khiết của logic và chiều sâu tư duy con người.',
+  description: 'Logos & Ethos — về những giới hạn của sự hiểu biết, nơi toán học và triết học cùng đặt câu hỏi cho lý trí.',
 };
 
 const PILLARS = [
@@ -42,8 +42,8 @@ export default function AboutPage() {
               <span>Về chúng tôi</span>
             </div>
             <h1 className="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight tracking-tight animate-fade-in-up max-w-4xl">
-              <span className="italic font-light text-[var(--muted)] block">Nơi giao thoa của</span>
-              Logos &amp; Ethos
+              <span className="italic font-light text-[var(--muted)] block">Về những giới hạn của</span>
+              Sự hiểu biết
             </h1>
           </div>
         </header>
@@ -53,12 +53,10 @@ export default function AboutPage() {
           <div className="max-w-4xl mx-auto">
             <p className="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-widest mb-6">Sứ mệnh</p>
             <p className="font-serif text-2xl md:text-3xl text-[var(--foreground)] leading-relaxed mb-6">
-              Chúng tôi tin rằng Toán học và Triết học không phải là hai lĩnh vực tách biệt — chúng là hai
-              khuôn mặt của cùng một nỗ lực: hiểu vũ trụ và vị trí của con người trong đó.
+              Lý trí có những đường biên mà chính nó không thể nhìn thấy. Toán học và triết học là hai cách tiếp cận khác nhau để sờ vào những đường biên đó.
             </p>
             <p className="font-sans text-[var(--muted)] text-lg leading-loose">
-              Logos &amp; Ethos là không gian cho những ai tin rằng câu hỏi quan trọng hơn câu trả lời, và
-              rằng sự tĩnh lặng khi đối diện với một định lý đẹp cũng sâu sắc như sự tĩnh lặng trước một bài thơ hay.
+              Logos & Ethos là nơi dành cho những ai thấy rằng một định lý toán học có thể gây rúng động ngang một câu hỏi triết học, và rằng câu hỏi quan trọng hơn câu trả lời.
             </p>
           </div>
         </section>

@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { SITE_URL } from '@/lib/constants';
 import './fonts.css';
 import './globals.css';
 
-const BASE_URL = 'https://logos-ethos.web.app';
+const BASE_URL = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Logos & Ethos | Toán học & Triết học',
+    default: 'Logos & Ethos',
     template: '%s | Logos & Ethos',
   },
-  description: 'Khám phá vẻ đẹp thuần khiết của Logic và chiều sâu của tư duy — nơi Toán học và Triết học gặp nhau.',
+  description: 'Về những giới hạn của sự hiểu biết — nơi toán học và triết học cùng đặt câu hỏi cho lý trí.',
   keywords: ['toán học', 'triết học', 'logic', 'Plato', 'Gödel', 'Pascal', 'tư duy', 'khoa học'],
   authors: [{ name: 'Logos & Ethos', url: BASE_URL }],
   creator: 'Logos & Ethos',
@@ -20,13 +21,13 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     url: BASE_URL,
     siteName: 'Logos & Ethos',
-    title: 'Logos & Ethos | Toán học & Triết học',
-    description: 'Khám phá vẻ đẹp thuần khiết của Logic và chiều sâu của tư duy.',
+    title: 'Logos & Ethos',
+    description: 'Về những giới hạn của sự hiểu biết — nơi toán học và triết học cùng đặt câu hỏi cho lý trí.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Logos & Ethos',
-    description: 'Nơi Toán học và Triết học gặp nhau.',
+    description: 'Về những giới hạn của sự hiểu biết.',
   },
   robots: {
     index: true,
