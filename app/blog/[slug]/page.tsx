@@ -5,8 +5,9 @@ import { ArrowLeft } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import type { Metadata } from 'next';
-import { getPostBySlug, getPostSlugs, getAllPosts } from '@/lib/mdx';
+import { getPostBySlug, getPostSlugs, getAllPostsMeta } from '@/lib/mdx';
 import { BlogPost } from '@/lib/blog-data';
+import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { GridLines } from '@/components/GridLines';
@@ -36,7 +37,6 @@ export async function generateMetadata({
     return {
       title: `${post.title} | Logos & Ethos`,
       description: post.excerpt,
-      authors: [{ name: post.author }],
       openGraph: {
         title: post.title,
         description: post.excerpt,
@@ -51,7 +51,6 @@ export async function generateMetadata({
           },
         ],
         publishedTime: post.isoDate ?? post.date,
-        authors: [post.author],
         tags: [post.category],
       },
       twitter: {
@@ -77,7 +76,6 @@ function ArticleJsonLd({ post, slug }: { post: BlogPost; slug: string }) {
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt,
-    author: { '@type': 'Person', name: post.author },
     datePublished: post.isoDate ?? post.date,
     image: post.image,
     url: `https://logos-ethos.web.app/blog/${slug}`,
@@ -208,8 +206,9 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  // Fetch all posts for related articles section
-  const allPosts = await getAllPosts();
+  // Fetch metadata of all posts for related articles — cheaper than getAllPosts
+  // which would parse the full MDX content of every post unnecessarily.
+  const allPosts = await getAllPostsMeta();
 
   return (
     <div className="min-h-screen flex flex-col relative font-serif">
@@ -231,18 +230,12 @@ export default async function BlogPostPage({
             {post.title}
           </h1>
           <div className="flex items-center justify-center gap-6 text-[var(--muted)] text-sm font-sans flex-wrap">
-            <span className="font-bold text-[var(--foreground)]">{post.author}</span>
-            <span className="w-1 h-1 rounded-full bg-[var(--accent-primary)]" aria-hidden="true" />
+
             {/* dateTime now uses ISO format for semantic correctness */}
             <time className="font-mono text-xs" dateTime={post.isoDate ?? post.date}>
               {post.date}
             </time>
-            {post.readingTime && (
-              <>
-                <span className="w-1 h-1 rounded-full bg-[var(--accent-primary)]" aria-hidden="true" />
-                <span className="font-mono text-xs">{post.readingTime} phút đọc</span>
-              </>
-            )}
+
           </div>
         </header>
 
@@ -253,6 +246,8 @@ export default async function BlogPostPage({
             alt={`Ảnh minh họa: ${post.title}`}
             fill
             sizes="(max-width: 896px) 100vw, 896px"
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR_PLACEHOLDER}
             className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
             priority
           />

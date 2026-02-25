@@ -1,0 +1,44 @@
+/*
+ * fonts.css — Self-hosted font imports via fontsource.
+ *
+ * We bundle font files directly from node_modules instead of fetching them
+ * from Google Fonts at compile time. This eliminates the network dependency
+ * during `next dev` / `next build` that caused repeated timeouts and added
+ * ~25 s to cold-start compilation.
+ *
+ * All font files are served from the same origin as the app — faster TTFB,
+ * no cross-origin handshake, and the build works offline/behind a firewall.
+ */
+
+/* ─── Crimson Pro (serif) ──────────────────────────────────────────────────── */
+/* Only the weights actually used in the codebase: 300 (light), 400, 700 (bold) */
+@import '@fontsource/crimson-pro/300.css';
+@import '@fontsource/crimson-pro/300-italic.css';
+@import '@fontsource/crimson-pro/400.css';
+@import '@fontsource/crimson-pro/400-italic.css';
+@import '@fontsource/crimson-pro/700.css';
+@import '@fontsource/crimson-pro/700-italic.css';
+
+/* ─── Be Vietnam Pro (sans) ────────────────────────────────────────────────── */
+/* Weights: 400 (body), 600 (semi-bold labels), 700 (bold headings) */
+@import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/600.css';
+@import '@fontsource/be-vietnam-pro/700.css';
+
+/* ─── IBM Plex Mono (mono) ─────────────────────────────────────────────────── */
+/* Weights: 400 (default mono), 600 (bold labels) */
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
+/*
+ * Map fontsource font-family names to the CSS custom properties used
+ * throughout the codebase via Tailwind's --font-serif / --font-sans / --font-mono.
+ *
+ * Previously `next/font/google` injected these variables automatically.
+ * We replicate that behaviour here so every component keeps working unchanged.
+ */
+:root {
+    --font-serif: 'Crimson Pro', Georgia, serif;
+    --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}

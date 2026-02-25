@@ -13,6 +13,9 @@
     "clean": "next clean"
   },
   "dependencies": {
+    "@fontsource/be-vietnam-pro": "^5.2.8",
+    "@fontsource/crimson-pro": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.553.0",
     "next": "^15.4.9",

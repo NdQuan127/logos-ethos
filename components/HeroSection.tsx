@@ -7,26 +7,27 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 animate-fade-in-up">
-            <div className="flex items-center gap-2 mb-6 text-[var(--accent-primary)] font-mono text-xs uppercase tracking-widest">
-              <span className="w-2 h-2 bg-current rounded-full" aria-hidden="true" />
-              <span>Ấn phẩm số 01</span>
-            </div>
+
             <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.05] text-[var(--foreground)] mb-8 font-medium tracking-tight">
-              <span className="italic block text-[var(--muted)] font-light">Vẻ đẹp thuần khiết của</span>
-              Logic &amp; Nhân sinh
+              <span className="italic block text-[var(--muted)] font-light">Về những giới hạn của</span>
+              Sự hiểu biết
             </h1>
-            <p className="font-sans text-[var(--foreground)] text-lg md:text-xl max-w-2xl leading-relaxed border-l-2 border-[var(--accent-primary)] pl-6 py-1">
-              Toán học và Triết học không phải là những con số hay giáo lý nằm trên giấy,
-              mà là ngôn ngữ tĩnh lặng để giải mã vũ trụ.
-            </p>
+            <blockquote className="border-l-2 border-[var(--accent-primary)] pl-6 py-1 max-w-2xl">
+              <p className="font-sans text-[var(--foreground)] text-lg md:text-xl leading-relaxed italic">
+                &quot;Hành động cuối cùng của lý trí là thừa nhận rằng có một lượng vô hạn những thứ vượt tầm của nó.&quot;
+              </p>
+              <footer className="mt-4 font-mono text-sm tracking-widest text-[var(--muted)] uppercase not-italic">
+                &mdash; Blaise Pascal
+              </footer>
+            </blockquote>
           </div>
 
           <div className="lg:col-span-4 flex flex-col justify-end animate-fade-in" style={{ animationDelay: '400ms' }}>
             <div className="font-mono text-xs text-[var(--muted)] space-y-4">
               {[
-                { Icon: Grid, label: 'Cấu trúc & Trật tự' },
-                { Icon: Circle, label: 'Sự hoàn hảo & Vô tận' },
-                { Icon: Triangle, label: 'Logic & Tam đoạn luận' },
+                { Icon: Grid, label: 'Lập luận & Phân tích' },
+                { Icon: Circle, label: 'Nghịch lý & Bất toàn' },
+                { Icon: Triangle, label: 'Logic & Đạo đức luận' },
               ].map(({ Icon, label }) => (
                 <div key={label} className="flex items-center gap-4 pb-4 border-b border-[var(--border-color)]">
                   <Icon size={16} aria-hidden="true" />

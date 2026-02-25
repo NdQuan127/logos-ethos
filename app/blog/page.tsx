@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { getAllPosts } from '@/lib/mdx';
+import { getAllPostsMeta } from '@/lib/mdx';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { GridLines } from '@/components/GridLines';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllPostsMeta();
 
   return (
     <div className="min-h-screen flex flex-col relative font-serif">

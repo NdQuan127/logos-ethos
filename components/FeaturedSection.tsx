@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BlogPost } from '@/lib/blog-data';
+import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
 
 interface FeaturedSectionProps {
   post: BlogPost;
@@ -51,6 +52,8 @@ export function FeaturedSection({ post }: FeaturedSectionProps) {
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
             priority
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR_PLACEHOLDER}
             className="object-cover grayscale contrast-[1.1] group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
           />
           <div className="absolute inset-0 bg-[var(--accent-primary)]/10 mix-blend-multiply dark:mix-blend-overlay" aria-hidden="true" />

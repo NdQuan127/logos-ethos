@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BlogPost } from '@/lib/blog-data';
+import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
 
 interface ArticleCardProps {
   post: BlogPost;
@@ -18,6 +19,8 @@ export function ArticleCard({ post, index }: ArticleCardProps) {
             alt={`Ảnh minh họa cho bài: ${post.title}`}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR_PLACEHOLDER}
             className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
           />
           {/* Number badge */}
@@ -43,12 +46,7 @@ export function ArticleCard({ post, index }: ArticleCardProps) {
           <div className="mt-auto pt-4 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] text-xs font-mono">
             <div className="flex items-center gap-3">
               <time dateTime={post.isoDate ?? post.date}>{post.date}</time>
-              {post.readingTime && (
-                <>
-                  <span aria-hidden="true">·</span>
-                  <span>{post.readingTime} phút đọc</span>
-                </>
-              )}
+
             </div>
             <span className="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
           </div>

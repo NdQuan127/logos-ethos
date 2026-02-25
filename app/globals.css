@@ -1,16 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: var(--font-serif);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  /* Font stacks — fontsource self-hosted, defined in fonts.css */
+  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 
   /* Arena-inspired Palette */
-  --color-paper: #F9F7F1;   /* Weathered notebook page */
-  --color-ink: #1A1A1A;     /* Sharp ink */
-  --color-leather: #1C1B1A; /* Worn leatherback textbook (Dark Mode BG) */
-  --color-sand: #E6E1D3;    /* Darker paper for borders */
-  --color-chalk: #EAE5D9;   /* Off-white for dark mode text */
+  --color-paper: #F9F7F1;
+  /* Weathered notebook page */
+  --color-ink: #1A1A1A;
+  /* Sharp ink */
+  --color-leather: #1C1B1A;
+  /* Worn leatherback textbook (Dark Mode BG) */
+  --color-sand: #E6E1D3;
+  /* Darker paper for borders */
+  --color-chalk: #EAE5D9;
+  /* Off-white for dark mode text */
 
   /* #6B6B6B: ~5.3:1 contrast ratio on paper (#F9F7F1) — passes WCAG AA */
   --color-graphite: #6B6B6B;
@@ -34,7 +40,8 @@
   :root.dark {
     --background: var(--color-leather);
     --foreground: var(--color-chalk);
-    --muted: #B5B5B5; /* Better contrast on leather background */
+    --muted: #B5B5B5;
+    /* Better contrast on leather background */
     --border-color: rgba(234, 229, 217, 0.15);
     --accent-primary: var(--color-academic-yellow);
   }
@@ -65,7 +72,7 @@
     letter-spacing: 0.05em;
   }
 
-  /* Subtle grain texture instead of heavy noise */
+  /* Subtle grain texture — GPU-composited to prevent scroll repaint */
   body::before {
     content: "";
     position: fixed;
@@ -75,14 +82,24 @@
     height: 100%;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
-    /* z-index 2: above background (0) but below grid lines (z-0 relative), content (z-10), and navbar (z-50) */
+    /* z-index 2: above background (0) but below grid lines, content (z-10), navbar (z-50) */
     z-index: 2;
     mix-blend-mode: multiply;
+    /*
+     * Performance: promote to its own GPU compositing layer.
+     * `will-change: transform` tells the browser to keep this layer
+     * in VRAM — avoids CPU repaint on every scroll tick.
+     * `contain: strict` prevents the pseudo-element from triggering
+     * layout/style recalculations in the rest of the document.
+     */
+    will-change: transform;
+    contain: strict;
   }
 
   :root.dark body::before {
     opacity: 0.03;
-    mix-blend-mode: overlay;
+    /* `screen` blend mode is GPU-friendly unlike `overlay` */
+    mix-blend-mode: screen;
   }
 }
 
@@ -104,11 +121,23 @@
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

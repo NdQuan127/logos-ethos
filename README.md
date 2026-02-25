@@ -113,10 +113,8 @@ Tạo file `.mdx` mới trong `content/blog/`:
 title: "Tiêu đề bài viết"
 category: "Nhận thức luận"
 excerpt: "Tóm tắt ngắn gọn cho bài viết..."
-author: "Tên tác giả"
 date: "2026-03-01"
 image: "https://picsum.photos/seed/example/800/600"
-readingTime: 6
 ---
 
 Nội dung bài viết viết bằng Markdown...

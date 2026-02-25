@@ -1,28 +1,7 @@
 import type { Metadata } from 'next';
-import { Crimson_Pro, Be_Vietnam_Pro, IBM_Plex_Mono } from 'next/font/google';
+import type { ReactNode } from 'react';
+import './fonts.css';
 import './globals.css';
-
-const crimsonPro = Crimson_Pro({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-serif',
-  weight: ['200', '300', '400', '600', '700'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
-
-const beVietnamPro = Be_Vietnam_Pro({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-sans',
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const ibmMono = IBM_Plex_Mono({
-  subsets: ['latin', 'vietnamese'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-});
 
 const BASE_URL = 'https://logos-ethos.web.app';
 
@@ -55,14 +34,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="vi" className={`${crimsonPro.variable} ${beVietnamPro.variable} ${ibmMono.variable}`}>
+    <html lang="vi">
       <head>
+        {/* theme-color: tints the mobile browser address bar to match the site palette */}
+        <meta name="theme-color" content="#F9F7F1" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1C1B1A" media="(prefers-color-scheme: dark)" />
+
         {/* Preconnect to image CDN — reduces LCP latency for above-the-fold images */}
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="dns-prefetch" href="https://picsum.photos" />
