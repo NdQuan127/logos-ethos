@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BlogPost } from '@/lib/blog-data';
 import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
+import { getCategoryColor } from '@/lib/category-utils';
 
 interface FeaturedSectionProps {
   post: BlogPost;
 }
 
 export function FeaturedSection({ post }: FeaturedSectionProps) {
+  const categoryColor = getCategoryColor(post.category);
+
   return (
     <section className="w-full border-b border-[var(--border-color)]" aria-label="Bài viết nổi bật">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
@@ -20,8 +23,8 @@ export function FeaturedSection({ post }: FeaturedSectionProps) {
             </span>
           </div>
 
-          {/* Category label */}
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-3">
+          {/* Category label — category-specific color (Idea #10) */}
+          <p className="font-mono text-[10px] uppercase tracking-widest mb-3" style={{ color: categoryColor.hex }}>
             {post.category}
           </p>
 
@@ -56,7 +59,8 @@ export function FeaturedSection({ post }: FeaturedSectionProps) {
             blurDataURL={IMAGE_BLUR_PLACEHOLDER}
             className="object-cover grayscale contrast-[1.1] group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
           />
-          <div className="absolute inset-0 bg-[var(--accent-primary)]/10 mix-blend-multiply dark:mix-blend-overlay" aria-hidden="true" />
+          {/* Category-tinted overlay using categoryColor (Idea #10) */}
+          <div className="absolute inset-0 mix-blend-multiply dark:mix-blend-overlay" aria-hidden="true" style={{ background: `${categoryColor.hex}18` }} />
 
           {/* Technical overlay graphics */}
           <div className="absolute inset-0 p-6 border-[16px] border-[var(--background)]/20 pointer-events-none" aria-hidden="true">

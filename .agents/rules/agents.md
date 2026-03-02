@@ -2,36 +2,51 @@
 trigger: always_on
 ---
 
-# CLAUDE.md
+# Repository Guidelines
 
-This file provides guidance to AI when working with code in this repository.
+## Project Structure & Module Organization
+This project is a Next.js App Router site.
+- `app/`: route entry points and layouts (`page.tsx`, `layout.tsx`, `blog/[slug]/page.tsx`).
+- `components/`: reusable UI components in PascalCase files (for example, `Navbar.tsx`, `ArticleCard.tsx`).
+- `lib/`: shared utilities and content loaders (`mdx.ts`, `image-utils.ts`, `constants.ts`).
+- `content/blog/`: MDX posts; each filename becomes the post slug.
+- Root config: `next.config.ts`, `eslint.config.mjs`, `tsconfig.json`, `netlify.toml`.
 
-## Project Overview
+## Build, Test, and Development Commands
+Use Node.js 20+ and npm 10+.
+- `npm install`: install dependencies.
+- `npm run dev`: start local dev server at `http://localhost:3000`.
+- `npm run build`: create a production build.
+- `npm run start`: serve the production build locally.
+- `npm run lint`: run ESLint checks across the repo.
+- `npm run clean`: clear Next.js build cache/artifacts.
 
-"Logos & Ethos" is a Vietnamese-language blog about the intersection of Mathematics and Philosophy. Built with Next.js 15 (App Router), React 19, Tailwind CSS v4, and Motion (Framer Motion successor). Originally scaffolded from Google AI Studio.
+## Coding Style & Naming Conventions
+- Language: TypeScript/TSX with `strict` mode enabled in `tsconfig.json`.
+- Imports: prefer the `@/*` path alias for internal modules.
+- Style observed in repo: 2-space indentation and single quotes in TS/TSX files.
+- Naming:
+  - Components: PascalCase (`HeroSection.tsx`).
+  - Utilities/modules: lowercase or kebab-case (`blog-data.ts`).
+  - Route folders and content slugs: lowercase (`blog/[slug]`, `dinh-ly-godel.mdx`).
+- Run `npm run lint` before opening a PR.
 
-## Commands
+## Testing Guidelines
+There is currently no automated test framework configured (no Jest/Vitest scripts).
+- Minimum validation before PR:
+  - Run `npm run lint`.
+  - Manually verify `/`, `/about`, `/blog`, and one `/blog/[slug]` page.
+  - If you change `lib/mdx.ts`, verify post ordering and frontmatter parsing.
+- If adding tests, use `*.test.ts` or `*.test.tsx` naming and document new commands in `package.json`.
 
-- `npm run dev` — Start dev server
-- `npm run build` — Production build
-- `npm run lint` — ESLint (flat config, `eslint.config.mjs`)
-- `npm run clean` — Clear Next.js cache
-
-
-## Architecture
-
-- **app/page.tsx** — Main landing page (client component). Renders nav, featured post, recent posts grid, and footer. All blog data comes from `lib/blog-data.ts`.
-- **app/blog/[slug]/page.tsx** — Dynamic blog post detail page.
-- **app/layout.tsx** — Root layout. Loads three Google Fonts (Source Serif 4, DM Sans, IBM Plex Mono) as CSS variables (`--font-serif`, `--font-sans`, `--font-mono`). HTML lang is `vi`.
-- **lib/blog-data.ts** — Static blog post data (no CMS/API). `BlogPost` interface with slug, title, category, excerpt, content, image, author, date.
-- **components/ThemeToggle.tsx** — Dark/light theme toggle.
-- **hooks/use-mobile.ts** — Mobile breakpoint detection hook.
-
-## Key Technical Details
-
-- Tailwind v4 uses `@tailwindcss/postcss` plugin (not the classic `tailwindcss` PostCSS plugin). Config is in `postcss.config.mjs` and `app/globals.css`, not `tailwind.config.js`.
-- CSS custom properties (`--border-color`, `--background`, `--foreground`, etc.) drive theming in `globals.css`.
-- `motion` package (not `framer-motion`) is used for animations and is listed in `transpilePackages` in `next.config.ts`.
-- Images use `picsum.photos` placeholder service (allowed in `next.config.ts` remote patterns).
-- Build output is `standalone` mode for containerized deployment.
-- ESLint ignores errors during builds (`ignoreDuringBuilds: true`).
+## Commit & Pull Request Guidelines
+Git history currently uses short lowercase summaries (for example, `update`, `initial commit`).
+- Prefer clearer, scoped, imperative commits going forward, such as:
+  - `feat(blog): add MDX frontmatter validation`
+  - `fix(layout): correct mobile navbar spacing`
+- PRs should include:
+  - what changed and why,
+  - linked issue (if any),
+  - screenshots/GIFs for UI changes,
+  - concise manual test steps.
+Keep PR scope focused; separate content-only MDX edits from code refactors when possible.

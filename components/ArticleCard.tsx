@@ -1,57 +1,85 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { BlogPost } from '@/lib/blog-data';
+import Image from 'next/image';
 import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
+import { getCategoryColor } from '@/lib/category-utils';
+import type { BlogPost } from '@/lib/blog-data';
 
 interface ArticleCardProps {
-  post: BlogPost;
+  post: Pick<BlogPost, 'slug' | 'title' | 'category' | 'excerpt' | 'image' | 'date' | 'readingTime'>;
   index: number;
 }
 
+/**
+ * ArticleCard — card component for the blog index and homepage grid.
+ * Idea #10: category accent color on the image top border + category dot.
+ * Idea #3: readingTime displayed in the card footer.
+ */
 export function ArticleCard({ post, index }: ArticleCardProps) {
+  const categoryColor = getCategoryColor(post.category);
+  const displayIndex = String(index + 1).padStart(2, '0');
+
   return (
-    <Link href={`/blog/${post.slug}`} aria-label={`Đọc bài: ${post.title}`}>
-      <article className="group cursor-pointer flex flex-col h-full transition-transform duration-200 ease-out hover:-translate-y-1">
-        <div className="relative aspect-[3/2] overflow-hidden bg-[var(--muted)]/10 mb-4 border border-[var(--border-color)]">
-          <Image
-            src={post.image}
-            alt={`Ảnh minh họa cho bài: ${post.title}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            placeholder="blur"
-            blurDataURL={IMAGE_BLUR_PLACEHOLDER}
-            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group block border border-[var(--border-color)] hover:border-[var(--foreground)]/20 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+      aria-label={`Đọc bài: ${post.title}`}
+    >
+      {/* Image container — category-colored 3px top accent border */}
+      <div
+        className="relative w-full aspect-[16/9] overflow-hidden"
+        style={{ borderTop: `3px solid ${categoryColor.hex}` }}
+      >
+        <Image
+          src={post.image}
+          alt={post.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          placeholder="blur"
+          blurDataURL={IMAGE_BLUR_PLACEHOLDER}
+        />
+        {/* Index number badge */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 right-3 font-mono text-xs text-white/70 bg-black/30 backdrop-blur-sm px-1.5 py-0.5 rounded-sm"
+        >
+          {displayIndex}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        {/* Category badge — category-specific color */}
+        <div className="flex items-center gap-1.5 mb-3">
+          <span
+            className="w-1.5 h-1.5 rounded-full shrink-0"
+            aria-hidden="true"
+            style={{ background: categoryColor.hex }}
           />
-          {/* Number badge */}
-          <div className="absolute top-0 left-0 bg-[var(--background)] border-r border-b border-[var(--border-color)] px-3 py-1 font-mono text-xs font-bold text-[var(--foreground)]" aria-hidden="true">
-            0{index + 2}
-          </div>
+          <span
+            className="font-mono text-[10px] uppercase tracking-widest font-semibold"
+            style={{ color: categoryColor.hex }}
+          >
+            {post.category}
+          </span>
         </div>
 
-        <div className="flex flex-col gap-3 flex-grow">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-[var(--accent-primary)] rounded-full" aria-hidden="true" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)]">{post.category}</span>
-          </div>
+        <h3 className="font-serif text-lg leading-snug text-[var(--foreground)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
+          {post.title}
+        </h3>
 
-          <h3 className="font-serif text-2xl text-[var(--foreground)] group-hover:text-[var(--accent-primary)] transition-colors duration-300 leading-snug">
-            {post.title}
-          </h3>
+        <p className="font-sans text-sm text-[var(--muted)] leading-relaxed line-clamp-3 mb-4">
+          {post.excerpt}
+        </p>
 
-          <p className="font-sans text-[var(--muted)] text-sm leading-relaxed line-clamp-3 mb-4">
-            {post.excerpt}
-          </p>
-
-          <div className="mt-auto pt-4 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] text-xs font-mono">
-            <div className="flex items-center gap-3">
-              <time dateTime={post.isoDate ?? post.date}>{post.date}</time>
-
-            </div>
-            <span className="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
-          </div>
+        {/* Footer: date + reading time */}
+        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
+          <time dateTime={post.date}>{post.date}</time>
+          <span aria-hidden="true">·</span>
+          <span>{post.readingTime} phút đọc</span>
         </div>
-      </article>
+      </div>
     </Link>
   );
 }

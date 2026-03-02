@@ -9,11 +9,18 @@ import { getPostBySlug, getPostSlugs, getAllPostsMeta } from '@/lib/mdx';
 import { BlogPost } from '@/lib/blog-data';
 import { IMAGE_BLUR_PLACEHOLDER } from '@/lib/image-utils';
 import { SITE_URL } from '@/lib/constants';
+import { getCategoryColor } from '@/lib/category-utils';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { GridLines } from '@/components/GridLines';
 import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/BookmarkButton';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { TableOfContents } from '@/components/TableOfContents';
+import { Callout } from '@/components/mdx/Callout';
+import { PullQuote } from '@/components/mdx/PullQuote';
+import { Sidenote } from '@/components/mdx/Sidenote';
+import { CodeBlock } from '@/components/mdx/CodeBlock';
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
@@ -86,6 +93,7 @@ function ArticleJsonLd({ post, slug }: { post: BlogPost; slug: string }) {
       url: SITE_URL,
     },
     articleSection: post.category,
+    timeRequired: `PT${post.readingTime}M`,
   };
 
   return (
@@ -98,9 +106,24 @@ function ArticleJsonLd({ post, slug }: { post: BlogPost; slug: string }) {
 
 // ─── Related Posts ────────────────────────────────────────────────────────────
 
-function RelatedPosts({ posts, currentSlug }: { posts: BlogPost[]; currentSlug: string }) {
-  const related = posts.filter((p) => p.slug !== currentSlug).slice(0, 3);
-  if (related.length === 0) return null;
+function RelatedPosts({
+  posts,
+  currentSlug,
+  currentCategory,
+}: {
+  posts: Array<Omit<BlogPost, 'content'> & { content: '' }>;
+  currentSlug: string;
+  currentCategory: string;
+}) {
+  // Score: same category = 3, otherwise show by recency
+  const scored = posts
+    .filter((p) => p.slug !== currentSlug)
+    .map((p) => ({ post: p, score: p.category === currentCategory ? 3 : 0 }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map((s) => s.post);
+
+  if (scored.length === 0) return null;
 
   return (
     <section className="mt-20 pt-12 border-t border-[var(--border-color)]" aria-label="Bài viết liên quan">
@@ -108,27 +131,30 @@ function RelatedPosts({ posts, currentSlug }: { posts: BlogPost[]; currentSlug: 
         Có thể bạn cũng quan tâm
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {related.map((post) => (
-          <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
-            className="group flex flex-col gap-3 p-4 border border-[var(--border-color)] hover:border-[var(--accent-primary)] transition-colors rounded-sm"
-          >
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--accent-primary)]">
-              {post.category}
-            </span>
-            <h3 className="font-serif text-lg text-[var(--foreground)] group-hover:text-[var(--accent-primary)] transition-colors leading-snug">
-              {post.title}
-            </h3>
-            <p className="font-sans text-xs text-[var(--muted)] leading-relaxed line-clamp-2">
-              {post.excerpt}
-            </p>
-            <div className="mt-auto font-mono text-xs text-[var(--muted)] flex items-center justify-between">
-              <time dateTime={post.isoDate ?? post.date}>{post.date}</time>
-              <span className="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
-            </div>
-          </Link>
-        ))}
+        {scored.map((post) => {
+          const cc = getCategoryColor(post.category);
+          return (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col gap-3 p-4 border border-[var(--border-color)] hover:border-[var(--accent-primary)] transition-colors rounded-sm"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: cc.hex }}>
+                {post.category}
+              </span>
+              <h3 className="font-serif text-lg text-[var(--foreground)] group-hover:text-[var(--accent-primary)] transition-colors leading-snug">
+                {post.title}
+              </h3>
+              <p className="font-sans text-xs text-[var(--muted)] leading-relaxed line-clamp-2">
+                {post.excerpt}
+              </p>
+              <div className="mt-auto font-mono text-xs text-[var(--muted)] flex items-center justify-between">
+                <time dateTime={post.isoDate ?? post.date}>{post.date}</time>
+                <span className="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
@@ -136,40 +162,82 @@ function RelatedPosts({ posts, currentSlug }: { posts: BlogPost[]; currentSlug: 
 
 // ─── MDX Custom Components ────────────────────────────────────────────────────
 
+/**
+ * Generate a URL-friendly id from heading text.
+ * Used to auto-assign id attributes so TableOfContents can link to them.
+ */
+function slugifyHeading(text: unknown): string {
+  if (typeof text !== 'string') {
+    // ReactNode children — flatten to string best-effort
+    return String(text ?? '').toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  }
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')     // Remove diacritics for ASCII-safe IDs
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
+// Track used heading IDs per render to deduplicate (e.g. two "Phát biểu" headings → phat-bieu, phat-bieu-2)
+const usedHeadingIds = new Map<string, number>();
+
+function getUniqueHeadingId(text: unknown): string {
+  const base = slugifyHeading(text);
+  const count = usedHeadingIds.get(base) ?? 0;
+  usedHeadingIds.set(base, count + 1);
+  return count === 0 ? base : `${base}-${count + 1}`;
+}
+
 const mdxComponents = {
-  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2
-      className="font-serif text-2xl md:text-3xl font-medium text-[var(--foreground)] mt-12 mb-4"
-      {...props}
-    />
-  ),
-  h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3
-      className="font-serif text-xl md:text-2xl font-medium text-[var(--foreground)] mt-8 mb-3"
-      {...props}
-    />
-  ),
-  // Body text: use foreground color (not muted) for long-form reading — WCAG AAA contrast
+  // ── Headings with auto-generated unique IDs for TOC ──
+  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = getUniqueHeadingId(props.children);
+    return (
+      <h2
+        id={id}
+        className="font-serif text-2xl md:text-3xl font-medium text-[var(--foreground)] mt-14 mb-5 scroll-mt-24"
+        {...props}
+      />
+    );
+  },
+  h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = getUniqueHeadingId(props.children);
+    return (
+      <h3
+        id={id}
+        className="font-serif text-xl md:text-2xl font-medium text-[var(--foreground)] mt-10 mb-4 scroll-mt-24"
+        {...props}
+      />
+    );
+  },
+
+  // ── Body text: full opacity (Idea #4 — removed opacity-85) ──
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p
-      className="font-sans text-[var(--foreground)] leading-loose mb-6 opacity-85"
+      className="font-sans text-[var(--foreground)] leading-loose mb-7"
+      style={{ fontSize: 'var(--text-body)' }}
       {...props}
     />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
     <ul
-      className="list-disc list-outside font-sans text-[var(--foreground)] leading-loose mb-6 pl-6 space-y-2 opacity-85"
+      className="list-disc list-outside font-sans text-[var(--foreground)] leading-loose mb-6 pl-6 space-y-2"
+      style={{ fontSize: 'var(--text-body)' }}
       {...props}
     />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
     <ol
-      className="list-decimal list-outside font-sans text-[var(--foreground)] leading-loose mb-6 pl-6 space-y-2 opacity-85"
+      className="list-decimal list-outside font-sans text-[var(--foreground)] leading-loose mb-6 pl-6 space-y-2"
+      style={{ fontSize: 'var(--text-body)' }}
       {...props}
     />
   ),
   li: (props: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="font-sans text-[var(--foreground)] opacity-85" {...props} />
+    <li className="font-sans text-[var(--foreground)]" {...props} />
   ),
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
@@ -189,6 +257,12 @@ const mdxComponents = {
       {...props}
     />
   ),
+  // Override <pre> with enhanced CodeBlock (Idea #17)
+  pre: CodeBlock,
+  // Custom components available in MDX files
+  Callout,
+  PullQuote,
+  Sidenote,
 };
 
 // ─── Page Component ───────────────────────────────────────────────────────────
@@ -200,78 +274,98 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
 
-  let post;
+  let post: BlogPost;
   try {
     post = await getPostBySlug(slug);
   } catch {
     notFound();
   }
 
-  // Fetch metadata of all posts for related articles — cheaper than getAllPosts
-  // which would parse the full MDX content of every post unnecessarily.
   const allPosts = await getAllPostsMeta();
+  const categoryColor = getCategoryColor(post.category);
 
   return (
     <div className="min-h-screen flex flex-col relative font-serif">
-      {/* JSON-LD for SEO */}
+      {/* JSON-LD for SEO — includes timeRequired for reading time */}
       <ArticleJsonLd post={post} slug={slug} />
 
-      {/* Decorative grid lines */}
-      <GridLines />
+      {/* Idea #2: Reading progress bar (fixed at top, above navbar) */}
+      <ReadingProgress />
 
+      <GridLines />
       <Navbar backLink={{ href: '/', label: 'Quay lại' }} />
 
-      <main id="main-content" className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-20 relative z-10">
-        {/* Article header */}
-        <header className="mb-12 text-center animate-fade-in-up">
-          <span className="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-widest block mb-4">
-            {post.category}
-          </span>
-          <h1 className="font-serif text-4xl md:text-6xl text-[var(--foreground)] mb-6 leading-tight font-medium">
-            {post.title}
-          </h1>
-          <div className="flex items-center justify-center gap-6 text-[var(--muted)] text-sm font-sans flex-wrap">
+      <main id="main-content" className="flex-grow w-full relative z-10">
+        <div className="max-w-5xl mx-auto px-6 py-12 md:py-20">
 
-            {/* dateTime now uses ISO format for semantic correctness */}
-            <time className="font-mono text-xs" dateTime={post.isoDate ?? post.date}>
-              {post.date}
-            </time>
+          {/* Article header */}
+          <header className="mb-12 text-center animate-fade-in-up max-w-3xl mx-auto">
+            {/* Category badge — Idea #10: category-specific color */}
+            <span
+              className="font-mono text-[10px] uppercase tracking-widest block mb-4 font-semibold"
+              style={{ color: categoryColor.hex }}
+            >
+              {post.category}
+            </span>
+            <h1 className="font-serif text-4xl md:text-6xl text-[var(--foreground)] mb-6 leading-tight font-medium">
+              {post.title}
+            </h1>
 
+            {/* Metadata row — Idea #3: reading time */}
+            <div className="flex items-center justify-center gap-3 text-[var(--muted)] font-mono text-xs flex-wrap">
+              <time dateTime={post.isoDate ?? post.date}>{post.date}</time>
+              <span aria-hidden="true">·</span>
+              <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>
+                {post.readingTime} phút đọc
+              </span>
+            </div>
+          </header>
+
+          {/* Featured image */}
+          <div
+            className="relative w-full aspect-[16/9] mb-16 overflow-hidden border border-[var(--border-color)]"
+          >
+            <Image
+              src={post.image}
+              alt={`Ảnh minh họa: ${post.title}`}
+              fill
+              sizes="(max-width: 896px) 100vw, 896px"
+              placeholder="blur"
+              blurDataURL={IMAGE_BLUR_PLACEHOLDER}
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+              priority
+            />
           </div>
-        </header>
 
-        {/* Featured image */}
-        <div className="relative w-full aspect-[16/9] mb-16 rounded-sm overflow-hidden border border-[var(--border-color)]">
-          <Image
-            src={post.image}
-            alt={`Ảnh minh họa: ${post.title}`}
-            fill
-            sizes="(max-width: 896px) 100vw, 896px"
-            placeholder="blur"
-            blurDataURL={IMAGE_BLUR_PLACEHOLDER}
-            className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-            priority
-          />
-        </div>
+          {/* Article layout: content + TOC sidebar */}
+          <div className="relative xl:flex xl:gap-12 xl:items-start max-w-3xl xl:max-w-none mx-auto">
 
-        {/* MDX content — body text now uses foreground color for reading comfort */}
-        <article className="max-w-none">
-          <MDXRemote source={post.content} components={mdxComponents} />
-        </article>
+            {/* Idea #1: TOC — mobile accordion appears here (above article);
+                desktop sidebar uses xl:order-last to sit on the right */}
+            <TableOfContents />
 
-        {/* Related Posts */}
-        <RelatedPosts posts={allPosts} currentSlug={slug} />
+            {/* Main article content */}
+            <div className="min-w-0 flex-1 max-w-3xl">
 
-        {/* Footer actions */}
-        <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-mono text-xs uppercase tracking-wider">
-          <div className="flex gap-6">
-            <ShareButton title={post.title} />
-            <BookmarkButton slug={post.slug} />
+              <article>
+                <MDXRemote source={post.content} components={mdxComponents} />
+              </article>
+
+              <RelatedPosts posts={allPosts} currentSlug={slug} currentCategory={post.category} />
+
+              {/* Footer actions */}
+              <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-mono text-xs uppercase tracking-wider">
+                <div className="flex gap-6">
+                  <ShareButton title={post.title} />
+                  <BookmarkButton slug={post.slug} />
+                </div>
+                <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
+                  <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+                  <span>Trang chủ</span>
+                </Link>
+              </div>
+            </div>
           </div>
-          <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
-            <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
-            <span>Trang chủ</span>
-          </Link>
         </div>
       </main>
 

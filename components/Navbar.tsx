@@ -44,7 +44,7 @@ export function Navbar({ backLink }: NavbarProps) {
   useEffect(() => {
     if (menuOpen) {
       const firstLink = menuRef.current?.querySelector('a');
-      (firstLink as HTMLElement | null)?.focus();
+      setTimeout(() => (firstLink as HTMLElement | null)?.focus(), 50);
     }
   }, [menuOpen]);
 
@@ -58,9 +58,9 @@ export function Navbar({ backLink }: NavbarProps) {
         Chuyển đến nội dung chính
       </a>
 
-      {/* z-50 keeps navbar above all content (grid lines z-0, main content z-10) */}
+      {/* z-50 keeps navbar above all content */}
       <nav
-        className="w-full py-5 px-6 md:px-12 flex justify-between items-center z-50 border-b border-[var(--border-color)] bg-[var(--background)]/90 backdrop-blur-md sticky top-0"
+        className="w-full py-5 px-6 md:px-12 flex justify-between items-center z-50 border-b border-[var(--border-color)] bg-[var(--background)]/90 dark:bg-[var(--surface-raised)]/90 backdrop-blur-md sticky top-0 transition-colors duration-300"
         role="navigation"
         aria-label="Navigation chính"
       >
@@ -114,10 +114,19 @@ export function Navbar({ backLink }: NavbarProps) {
               aria-controls="mobile-menu"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              {menuOpen
-                ? <X size={18} aria-hidden="true" />
-                : <Menu size={18} aria-hidden="true" />
-              }
+              {/* Animated hamburger/close icon */}
+              <span className="relative block w-[18px] h-[18px]">
+                <Menu
+                  size={18}
+                  aria-hidden="true"
+                  className={`absolute inset-0 transition-all duration-300 ${menuOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'}`}
+                />
+                <X
+                  size={18}
+                  aria-hidden="true"
+                  className={`absolute inset-0 transition-all duration-300 ${menuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'}`}
+                />
+              </span>
             </button>
           )}
 
@@ -132,54 +141,58 @@ export function Navbar({ backLink }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile drawer — z-[60] above navbar (z-50) */}
-      {menuOpen && (
+      {/* ── Mobile drawer (Idea #8) — always in DOM, slide-in/out via CSS ── */}
+      <div
+        id="mobile-menu"
+        className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ${menuOpen ? 'visible' : 'invisible pointer-events-none'}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu điều hướng"
+        aria-hidden={!menuOpen}
+      >
+        {/* Backdrop — fade in/out */}
         <div
-          id="mobile-menu"
-          className="fixed inset-0 z-[60] md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu điều hướng"
+          className={`absolute inset-0 bg-[var(--foreground)]/30 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+
+        {/* Panel — slide in/out from right */}
+        <div
+          ref={menuRef}
+          className={`absolute top-0 right-0 h-full w-72 bg-[var(--background)] border-l border-[var(--border-color)] p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-[var(--foreground)]/30 backdrop-blur-sm"
-            onClick={closeMenu}
-            aria-hidden="true"
-          />
-          {/* Panel */}
-          <div
-            ref={menuRef}
-            className="absolute top-0 right-0 h-full w-72 bg-[var(--background)] border-l border-[var(--border-color)] p-8 flex flex-col gap-8 shadow-2xl"
-          >
-            <div className="flex justify-between items-center">
-              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">Menu</span>
-              <button
-                onClick={() => {
-                  closeMenu();
-                  triggerRef.current?.focus();
-                }}
-                className="p-2 hover:bg-[var(--foreground)]/5 rounded-full transition-colors"
-                aria-label="Đóng menu"
-              >
-                <X size={18} aria-hidden="true" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-6" aria-label="Menu điều hướng di động">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={closeMenu}
-                  className="font-serif text-2xl text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-colors focus:outline-none focus:text-[var(--accent-primary)]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          <div className="flex justify-between items-center">
+            <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">Menu</span>
+            <button
+              onClick={() => {
+                closeMenu();
+                triggerRef.current?.focus();
+              }}
+              className="p-2 hover:bg-[var(--foreground)]/5 rounded-full transition-colors"
+              aria-label="Đóng menu"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
           </div>
+
+          <nav className="flex flex-col gap-6" aria-label="Menu điều hướng di động">
+            {NAV_LINKS.map((link, i) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                style={{
+                  transitionDelay: menuOpen ? `${i * 60 + 80}ms` : '0ms',
+                }}
+                className={`font-serif text-2xl text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-all duration-300 focus:outline-none focus:text-[var(--accent-primary)] ${menuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-      )}
+      </div>
     </>
   );
 }

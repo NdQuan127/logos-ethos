@@ -5,7 +5,31 @@ import { BlogPost } from './blog-data';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content', 'blog');
 
+/**
+ * Calculate estimated reading time in minutes.
+ * Uses ~200 words/min for Vietnamese text (slower than English ~250 wpm).
+ * Strips MDX syntax, code blocks, and HTML before counting words.
+ */
+function calculateReadingTime(content: string): number {
+  const stripped = content
+    // Remove code blocks (``` ... ```)
+    .replace(/```[\s\S]*?```/g, '')
+    // Remove inline code
+    .replace(/`[^`]+`/g, '')
+    // Remove MDX/JSX tags
+    .replace(/<[^>]+>/g, '')
+    // Remove markdown links, keeping link text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // Remove markdown headings markers
+    .replace(/^#{1,6}\s+/gm, '')
+    // Remove bold/italic markers
+    .replace(/[*_]{1,3}/g, '')
+    // Collapse whitespace
+    .trim();
 
+  const wordCount = stripped.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / 200));
+}
 
 /** Read and parse a single MDX file by slug */
 export async function getPostBySlug(slug: string): Promise<BlogPost> {
@@ -34,6 +58,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     isoDate: rawIsoDate, // ISO format kept for sorting, <time> dateTime, OG dates
     image: frontmatter.image as string,
     content, // MDX source — will be compiled by MDXRemote in the page
+    readingTime: calculateReadingTime(content),
   };
 }
 
@@ -68,6 +93,7 @@ export async function getPostMetaBySlug(slug: string): Promise<Omit<BlogPost, 'c
     isoDate: rawIsoDate,
     image: frontmatter.image as string,
     content: '', // empty — intentionally omitted for lightweight index use
+    readingTime: calculateReadingTime(content),
   };
 }
 
