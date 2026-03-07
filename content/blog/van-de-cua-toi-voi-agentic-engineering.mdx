@@ -10,27 +10,30 @@ Vấn đề của tôi với workflow agentic coding là mấy cái hệ thống
 
 Nó không thực sự phù hợp cho workflow nghiên cứu hiện tại của tôi, kể cả mấy cái claude scientific cũng kiểu hơi bullshit vì nó chủ yếu chỉ là 1 skill ngắn gọn cho 1 mớ các tác vụ scientific mà đôi khi tôi không cần như kiểu hoá học, sinh học,...
 
-Tôi có 1 vài ý tưởng nảy ra, nhưng cái chính vẫn phải là xoay quanh first principle "Context is all you need". Trong mô hình truyền thống, chất lượng code là hàm của *skill(developer) × quality(tools) × time(available)*. Nhưng trong agentic engineering, phương trình chỉ phụ thuộc vào *quality(tools) = quality(context)*, đây cũng là biến duy nhất bạn điều khiển được.[1]
+Tôi có 1 vài ý tưởng nảy ra, nhưng cái chính vẫn phải là xoay quanh first principle "Context is all you need". Trong mô hình truyền thống, chất lượng code là hàm của *skill(developer) × quality(tools) × time(available)*. Nhưng trong agentic engineering, phương trình chỉ phụ thuộc vào *quality(tools) = quality(context)*, đây cũng là biến duy nhất bạn điều khiển được [1].
 
-Mà context không chỉ quyết định model biết gì, nó quyết định *model đang tối ưu cho điều gì*. Có 1 cái gọi là "reinforcement learning from human feedback", nó khiến cho model đưa ra phản hồi phù hợp với niềm tin của con người hơn là các phản hồi trung thực, 1 hành vi có tên là "sycophancy" A.K.A "nịnh hót"[2]. Đặc biệt trong 1 số chủ đề phức tạp, nó có thể đề xuất việc xây dựng cả 1 hệ thống phức tạp - 1 lâu đài đẹp đẽ của sự thừa thãi; thay vì có lẽ ta chỉ mất 1 dòng để giải quyết. Nó tạo ra 1 khoảng cách giữa ý định và sự chính xác.
+Mà context không chỉ quyết định model biết gì, nó quyết định *model đang tối ưu cho điều gì*. Có 1 cái gọi là "reinforcement learning from human feedback", nó khiến cho model đưa ra phản hồi phù hợp với niềm tin của con người hơn là các phản hồi trung thực, 1 hành vi có tên là "sycophancy" A.K.A "nịnh hót" [2]. Đặc biệt trong 1 số chủ đề phức tạp, nó có thể đề xuất việc xây dựng cả 1 hệ thống phức tạp - 1 lâu đài đẹp đẽ của sự thừa thãi; thay vì có lẽ ta chỉ mất 1 dòng để giải quyết. Nó tạo ra 1 khoảng cách giữa ý định và sự chính xác.
 
 Và cách ta tổ chức workflow cũng là 1 dạng context. Hiện tại, thiết kế 1 system chủ yếu xoay quanh việc ta có sẵn 1 tiên đề, hay là 1 thiết kế hoàn thiện ban đầu, giống như 1 cái plan chi tiết và cả các test case cover các bugs. Bằng cách này, việc oneshot hay vibe ngay ra 1 cái product khá dễ dàng.
 
 Nhưng tôi không nghĩ nó hợp cho môi trường nghiên cứu hay phát triển khám phá 1 thứ gì đó. Không hẳn là AI sẽ giải được bài toán thiên niên kỷ hay chữa ung thư hay thậm chí là du hành thời gian, nhưng nó hoàn toàn có thể thành 1 hệ thống agent giống như 1 assistant professor vậy.
 
-Thế nhưng các thiết kế truyền thống thật sự là không phù hợp cho nó. Chúng ta không thực sự biết chúng ta đang đi đúng hay sai, chúng ta đang đi trong 1 sa mạc không có định hướng. Cách tiếp cận waterfall truyền thống đóng khung Phase 1 phần nghiên cứu, thiết kế như 1 *gate*, thay vì 1 **giả thuyết**.[3]
+Thế nhưng các thiết kế truyền thống thật sự là không phù hợp cho nó. Chúng ta không thực sự biết chúng ta đang đi đúng hay sai, chúng ta đang đi trong 1 sa mạc không có định hướng. Cách tiếp cận waterfall truyền thống đóng khung Phase 1 phần nghiên cứu, thiết kế như 1 *gate*, thay vì 1 *hypothesis* [3].
 
-"Không có gì được xây dựng cho đến khi hợp đồng được đóng kín", chính cái nguyên tắc first principle này của waterfall đã khiến cho mô hình này không bao giờ phù hợp với lĩnh vực research. Xét về mặt nhận thức luận, yêu cầu "chốt plan trước khi làm" là một nghịch lý về mặt thông tin. Với các hệ thống, độ phức tạp Kolmogorov K(s) của bản đặc tả sẽ tiệm cận với độ phức tạp của chính mã nguồn. Nếu 1 bản đặc tả đủ chi tiết để không gây nhầm lẫn, nó chính là 1 giải pháp - khi đó, **implementation** chỉ còn là việc gõ lại 1 cách máy móc.
+"Không có gì được xây dựng cho đến khi hợp đồng được đóng kín", chính cái nguyên tắc first principle này của waterfall đã khiến cho mô hình này không bao giờ phù hợp với lĩnh vực research. Xét về mặt nhận thức luận, yêu cầu "chốt plan trước khi làm" là một nghịch lý về mặt thông tin. Với các hệ thống, độ phức tạp Kolmogorov K(s) của bản đặc tả sẽ tiệm cận với độ phức tạp của chính mã nguồn. Nếu 1 bản đặc tả đủ chi tiết để không gây nhầm lẫn, nó chính là 1 giải pháp - khi đó, *implementation* chỉ còn là việc gõ lại 1 cách máy móc.
 
 Nhưng rõ ràng tri thức về hệ thống không thể đạt được bằng cách tiên nghiệm. Bởi lẽ, quá trình *"implementation"* chính là việc khám phá tri thức bằng hành động. Các phân tách kiến trúc rõ ràng giữa các phần của hệ thống, đòi hỏi thấu hiểu toàn bộ vấn đề - điều mà ta sẽ không có được cho đến khi đã xây dựng một phần của nó. Các hệ thống tích luỹ những phụ thuộc tạo ra tác động ngoài dự kiến khi các yêu cầu dần được làm rõ. Một ranh giới rõ ràng tại thời điểm viết đặc tả lại trở nên sai lệch vào thời điểm triển khai.
 
-Cách tiếp cận khả thi hơn là tôi sẽ coi phase 1 như là **bản nháp linh hoạt** thay vì *gate*. Ta chỉ cần 1 bản đặc tả đủ tốt để bắt đầu, ví dụ ta có thể mô hình hoá nó thành 1 bài toán với hàm mục tiêu cùng với các ràng buộc sơ bộ. Sau đó, *spec, implementation, và verification* sẽ diễn ra song song; bất kỳ phát hiện mới nào cũng sẽ cập nhật lại cho cả ba.
+Cách tiếp cận khả thi hơn là tôi sẽ coi phase 1 như là *bản nháp linh hoạt* thay vì *gate*. Ta chỉ cần 1 bản đặc tả đủ tốt để bắt đầu, ví dụ ta có thể mô hình hoá nó thành 1 bài toán với hàm mục tiêu cùng với các ràng buộc sơ bộ. Sau đó, *spec, implementation, và verification* sẽ diễn ra song song; bất kỳ phát hiện mới nào cũng sẽ cập nhật lại cho cả ba.
 
 Điểm khác biệt là ta không ép bản đặc tả phải hoàn hảo khi chưa thực sự nắm rõ vấn đề, giả thuyết thì vẫn chỉ là giả thuyết, không phải tiên đề. Đặc tả trở nên hoàn hảo vì bạn đã xây dựng nó, chứ không phải *trước khi* bạn xây dựng nó. *Thực tiễn là tiêu chuẩn duy nhất để kiểm nghiệm chân lý.*
 
-> Nếu ta coi quá trình phát triển như một *stochastic process*, **spec** chính là *prior distribution*, **implementation** là *observation process*. Về cơ bản, nó sẽ giống như 1 cái **Bayesian update loop** - spec bắt đầu như 1 tiên nghiệm (prior) yếu, mỗi iteration của implementation sẽ cập nhật lại cái tiên nghiệm, và *hội tụ* xảy ra qua nhiều lần thử chứ không phải 1 cái fixed gate.
+> Nếu ta coi quá trình phát triển như một stochastic process, spec chính là prior distribution, implementation là observation process. Về cơ bản, nó sẽ giống như 1 cái Bayesian update loop - spec bắt đầu như 1 tiên nghiệm (prior) yếu, mỗi iteration của implementation sẽ cập nhật lại cái tiên nghiệm, và hội tụ xảy ra qua nhiều lần thử chứ không phải 1 cái fixed gate.
 
 ---
-[1] https://x.com/systematicls/status/2028814227004395561?s=20
-[2] Sharma, M. et al. “Towards Understanding Sycophancy in Language Models.” ICLR 2024.
-[3] https://gist.github.com/dollspace-gay/d8d3bc3ecf4188df049d7a4726bb2a00?permalink_comment_id=6008291#gistcomment-6008291
+
+<small>
+- [1] sysls (@systematicls). [“How To Be A World-Class Agentic Engineer”](https://x.com/systematicls/status/2028814227004395561). X.
+- [2] Sharma, M. et al. [“Towards Understanding Sycophancy in Language Models.”](https://arxiv.org/abs/2310.13548) ICLR 2024.
+- [3] gitcnd. [Comment on “Verifiable Specification Driven Development”](https://gist.github.com/dollspace-gay/d8d3bc3ecf4188df049d7a4726bb2a00?permalink_comment_id=6008291#gistcomment-6008291). GitHub Gist.
+</small>
