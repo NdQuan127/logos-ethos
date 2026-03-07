@@ -112,17 +112,23 @@ export function TableOfContents() {
 
     return (
         <>
-            {/* ── Desktop: sticky sidebar (visible xl+) ── */}
-            <aside
-                aria-label="Mục lục bài viết"
-                className="hidden xl:block xl:order-last sticky top-24 w-52 shrink-0 self-start"
+            {/* ── Desktop: sticky sidebar floating in right margin (visible xl+) ── */}
+            <div
+                className="hidden xl:block absolute left-full ml-12 top-0 w-52 h-full"
+                aria-hidden="true"
             >
-                <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-3 flex items-center gap-1.5">
-                    <List size={12} aria-hidden="true" />
-                    Mục lục
-                </p>
-                <HeadingList headings={headings} activeId={activeId} onScrollTo={scrollTo} />
-            </aside>
+                <aside
+                    aria-label="Mục lục bài viết"
+                    className="sticky top-24"
+                    aria-hidden={undefined}
+                >
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-3 flex items-center gap-1.5">
+                        <List size={12} aria-hidden="true" />
+                        Mục lục
+                    </p>
+                    <HeadingList headings={headings} activeId={activeId} onScrollTo={scrollTo} />
+                </aside>
+            </div>
 
             {/* ── Mobile: collapsible accordion (hidden xl+) ── */}
             <div className="xl:hidden mb-8 border border-[var(--border-color)] rounded-sm overflow-hidden">

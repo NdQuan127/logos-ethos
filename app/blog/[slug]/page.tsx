@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import type { Metadata } from 'next';
 import { getPostBySlug, getPostSlugs, getAllPostsMeta } from '@/lib/mdx';
 import { BlogPost } from '@/lib/blog-data';
@@ -337,33 +339,39 @@ export default async function BlogPostPage({
             />
           </div>
 
-          {/* Article layout: content + TOC sidebar */}
-          <div className="relative xl:flex xl:gap-12 xl:items-start max-w-3xl xl:max-w-none mx-auto">
+          {/* Article layout: content matches image width + TOC floating in right margin */}
+          <div className="relative">
 
-            {/* Idea #1: TOC — mobile accordion appears here (above article);
-                desktop sidebar uses xl:order-last to sit on the right */}
+            {/* TOC: on desktop, positioned absolutely in right margin;
+                on mobile, accordion stays in normal flow above article */}
             <TableOfContents />
 
-            {/* Main article content */}
-            <div className="min-w-0 flex-1 max-w-3xl">
+            {/* Main article content — takes full max-w-3xl width */}
+            <article>
+              <MDXRemote
+                source={post.content}
+                components={mdxComponents}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkMath],
+                    rehypePlugins: [rehypeKatex as never],
+                  },
+                }}
+              />
+            </article>
 
-              <article>
-                <MDXRemote source={post.content} components={mdxComponents} />
-              </article>
+            <RelatedPosts posts={allPosts} currentSlug={slug} currentCategory={post.category} />
 
-              <RelatedPosts posts={allPosts} currentSlug={slug} currentCategory={post.category} />
-
-              {/* Footer actions */}
-              <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-mono text-xs uppercase tracking-wider">
-                <div className="flex gap-6">
-                  <ShareButton title={post.title} />
-                  <BookmarkButton slug={post.slug} />
-                </div>
-                <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
-                  <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
-                  <span>Trang chủ</span>
-                </Link>
+            {/* Footer actions */}
+            <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-mono text-xs uppercase tracking-wider">
+              <div className="flex gap-6">
+                <ShareButton title={post.title} />
+                <BookmarkButton slug={post.slug} />
               </div>
+              <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
+                <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+                <span>Trang chủ</span>
+              </Link>
             </div>
           </div>
         </div>

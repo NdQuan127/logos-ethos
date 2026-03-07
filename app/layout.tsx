@@ -46,6 +46,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* Preconnect to image CDN — reduces LCP latency for above-the-fold images */}
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="dns-prefetch" href="https://picsum.photos" />
+
+        {/* KaTeX — math formula rendering for MDX blog posts */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+          integrity="sha384-zh0CIslj3dQfDAlg2p9LBz0j6Zyt2az03xOqGVruDkqA8gDiPVEoHlckm47szmr"
+          crossOrigin="anonymous"
+        />
       </head>
       <body suppressHydrationWarning className="antialiased selection:bg-[var(--color-academic-yellow)]/30">
         {children}
