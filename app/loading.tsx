@@ -23,7 +23,7 @@ export default function Loading() {
 
         {/* Academic detail text — Idea: "Finding truth between lines" */}
         <p className="font-serif italic text-[var(--muted)] text-sm opacity-60">
-          "Tìm kiếm sự thật giữa những dòng kẻ..."
+          &quot;Tìm kiếm sự thật giữa những dòng kẻ...&quot;
         </p>
       </div>
     </div>
