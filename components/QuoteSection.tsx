@@ -16,14 +16,15 @@ export function QuoteSection({ quote, author }: QuoteSectionProps) {
       aria-label="Trích dẫn"
       className="relative overflow-hidden py-24 px-6 text-center isolate"
       style={{
-        background:
-          'linear-gradient(135deg, var(--color-ink) 0%, #2B2B28 50%, var(--color-ink) 100%)',
+        background: 'var(--quote-section-bg)',
+        borderTop: '1px solid var(--border-color)',
+        borderBottom: '1px solid var(--border-color)',
       }}
     >
       {/* Decorative large opening quote mark */}
       <span
         aria-hidden="true"
-        className="absolute top-0 left-6 font-serif leading-none select-none pointer-events-none text-white/8"
+        className="absolute top-0 left-6 font-serif leading-none select-none pointer-events-none text-[var(--quote-mark-color)]"
         style={{ fontSize: 'clamp(8rem, 15vw, 14rem)', lineHeight: 1 }}
       >
         &ldquo;
@@ -32,21 +33,21 @@ export function QuoteSection({ quote, author }: QuoteSectionProps) {
       {/* Decorative large closing quote mark */}
       <span
         aria-hidden="true"
-        className="absolute bottom-0 right-6 font-serif leading-none select-none pointer-events-none text-white/8"
+        className="absolute bottom-0 right-6 font-serif leading-none select-none pointer-events-none text-[var(--quote-mark-color)]"
         style={{ fontSize: 'clamp(8rem, 15vw, 14rem)', lineHeight: 1 }}
       >
         &rdquo;
       </span>
 
       <div className="relative z-10 max-w-2xl mx-auto">
-        <blockquote className="font-serif text-[var(--color-chalk)] italic leading-loose" style={{ fontSize: 'clamp(1.25rem, 1rem + 1.3vw, 2rem)' }}>
+        <blockquote className="font-serif text-[var(--quote-text-color)] italic leading-loose" style={{ fontSize: 'clamp(1.25rem, 1rem + 1.3vw, 2rem)' }}>
           {quote}
         </blockquote>
 
-        <cite className="not-italic block mt-6 font-mono text-xs uppercase tracking-widest text-white/50">
+        <cite className="not-italic block mt-6 font-mono text-xs uppercase tracking-widest text-[var(--quote-author-color)]">
           — {author}
           {/* Decorative underline accent */}
-          <span aria-hidden="true" className="block w-8 h-px bg-white/20 mx-auto mt-3" />
+          <span aria-hidden="true" className="block w-8 h-px bg-[var(--quote-rule-color)] mx-auto mt-3" />
         </cite>
       </div>
     </section>

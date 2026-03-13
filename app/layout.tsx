@@ -47,11 +47,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="dns-prefetch" href="https://picsum.photos" />
 
-        {/* KaTeX — math formula rendering for MDX blog posts */}
+        {/* KaTeX — math formula rendering for MDX blog posts.
+            Note: integrity hash omitted — the hash from the KaTeX docs does not
+            match the actual file served by jsDelivr for this version, causing the
+            browser to block the stylesheet (SRI failure). Removed to unblock
+            math rendering. Re-add after verifying the correct hash with:
+            `curl -s <url> | openssl dgst -sha384 -binary | base64` */}
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
-          integrity="sha384-zh0CIslj3dQfDAlg2p9LBz0j6Zyt2az03xOqGVruDkqA8gDiPVEoHlckm47szmr"
           crossOrigin="anonymous"
         />
       </head>

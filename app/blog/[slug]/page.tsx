@@ -183,17 +183,24 @@ function slugifyHeading(text: unknown): string {
     .replace(/\s+/g, '-');
 }
 
-// Track used heading IDs per render to deduplicate (e.g. two "Phát biểu" headings → phat-bieu, phat-bieu-2)
-const usedHeadingIds = new Map<string, number>();
+/**
+ * makeMdxComponents — factory that creates a fresh set of MDX components per
+ * page render. Each call gets its own `usedHeadingIds` Map, which is
+ * critical for SSG: a module-level Map would accumulate IDs across all page
+ * builds and generate wrong anchors from the second page onward.
+ */
+function makeMdxComponents() {
+  // Per-render dedupliction map — reset on every call
+  const usedHeadingIds = new Map<string, number>();
 
-function getUniqueHeadingId(text: unknown): string {
-  const base = slugifyHeading(text);
-  const count = usedHeadingIds.get(base) ?? 0;
-  usedHeadingIds.set(base, count + 1);
-  return count === 0 ? base : `${base}-${count + 1}`;
-}
+  function getUniqueHeadingId(text: unknown): string {
+    const base = slugifyHeading(text);
+    const count = usedHeadingIds.get(base) ?? 0;
+    usedHeadingIds.set(base, count + 1);
+    return count === 0 ? base : `${base}-${count + 1}`;
+  }
 
-const mdxComponents = {
+  return {
   // ── Headings with auto-generated unique IDs for TOC ──
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = getUniqueHeadingId(props.children);
@@ -261,11 +268,12 @@ const mdxComponents = {
   ),
   // Override <pre> with enhanced CodeBlock (Idea #17)
   pre: CodeBlock,
-  // Custom components available in MDX files
-  Callout,
-  PullQuote,
-  Sidenote,
-};
+    // Custom components available in MDX files
+    Callout,
+    PullQuote,
+    Sidenote,
+  };
+}
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -304,7 +312,7 @@ export default async function BlogPostPage({
           <header className="mb-12 text-center animate-fade-in-up max-w-3xl mx-auto">
             {/* Category badge — Idea #10: category-specific color */}
             <span
-              className="font-mono text-[10px] uppercase tracking-widest block mb-4 font-semibold"
+              className="font-mono text-[11px] uppercase tracking-widest block mb-4 font-semibold"
               style={{ color: categoryColor.hex }}
             >
               {post.category}
@@ -334,7 +342,7 @@ export default async function BlogPostPage({
               sizes="(max-width: 896px) 100vw, 896px"
               placeholder="blur"
               blurDataURL={IMAGE_BLUR_PLACEHOLDER}
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+              className="object-cover transition-all duration-700 ease-out md:grayscale md:hover:grayscale-0 hover:scale-[1.02]"
               priority
             />
           </div>
@@ -350,7 +358,7 @@ export default async function BlogPostPage({
             <article>
               <MDXRemote
                 source={post.content}
-                components={mdxComponents}
+                components={makeMdxComponents()}
                 options={{
                   mdxOptions: {
                     remarkPlugins: [remarkMath],
@@ -363,7 +371,9 @@ export default async function BlogPostPage({
             <RelatedPosts posts={allPosts} currentSlug={slug} currentCategory={post.category} />
 
             {/* Footer actions */}
-            <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-mono text-xs uppercase tracking-wider">
+            {/* Footer actions — Idea: Switch to sans-serif for secondary actions
+                to differentiate from core system metadata labels. */}
+            <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center text-[var(--muted)] font-sans text-xs font-medium">
               <div className="flex gap-6">
                 <ShareButton title={post.title} />
                 <BookmarkButton slug={post.slug} />

@@ -38,6 +38,7 @@ export function ArticleCard({ post, index }: ArticleCardProps) {
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           placeholder="blur"
           blurDataURL={IMAGE_BLUR_PLACEHOLDER}
+          loading="lazy"
         />
         {/* Index number badge */}
         <span
@@ -58,7 +59,7 @@ export function ArticleCard({ post, index }: ArticleCardProps) {
             style={{ background: categoryColor.hex }}
           />
           <span
-            className="font-mono text-[10px] uppercase tracking-widest font-semibold"
+            className="font-mono text-[11px] uppercase tracking-widest font-semibold"
             style={{ color: categoryColor.hex }}
           >
             {post.category}
@@ -74,7 +75,7 @@ export function ArticleCard({ post, index }: ArticleCardProps) {
         </p>
 
         {/* Footer: date + reading time */}
-        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
+        <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-[var(--muted)]">
           <time dateTime={post.date}>{post.date}</time>
           <span aria-hidden="true">·</span>
           <span>{post.readingTime} phút đọc</span>

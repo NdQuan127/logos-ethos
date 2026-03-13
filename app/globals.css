@@ -37,7 +37,8 @@
 
   /* ── Animation Tokens ── */
   --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Note: --ease-spring (bounce easing) removed — conflicts with brand's
+     composed, deliberate aesthetic. Use --ease-out for all transitions. */
   --duration-fast:   150ms;
   --duration-normal: 300ms;
   --duration-slow:   500ms;
@@ -56,6 +57,13 @@
     --surface-overlay: #E8E4DB;
     --border-subtle:   rgba(0, 0, 0, 0.06);
     --border-default:  var(--color-sand);
+
+    /* ── QuoteSection theme tokens (light) ── */
+    --quote-section-bg:   var(--color-sand);
+    --quote-text-color:   var(--color-ink);
+    --quote-mark-color:   rgba(26, 26, 26, 0.08);
+    --quote-author-color: var(--color-graphite);
+    --quote-rule-color:   rgba(26, 26, 26, 0.2);
   }
 
   :root.dark {
@@ -75,6 +83,13 @@
 
     /* Glow accents */
     --glow-primary: rgba(217, 164, 65, 0.12);
+
+    /* ── QuoteSection theme tokens (dark) ── */
+    --quote-section-bg:   linear-gradient(135deg, var(--color-ink) 0%, #2B2B28 50%, var(--color-ink) 100%);
+    --quote-text-color:   var(--color-chalk);
+    --quote-mark-color:   rgba(255, 255, 255, 0.06);
+    --quote-author-color: rgba(255, 255, 255, 0.45);
+    --quote-rule-color:   rgba(255, 255, 255, 0.18);
   }
 
   body {
@@ -103,27 +118,28 @@
     letter-spacing: 0.05em;
   }
 
-  /* Subtle grain texture — GPU-composited to prevent scroll repaint */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    /* z-index 2: above background (0) but below grid lines, content (z-10), navbar (z-50) */
-    z-index: 2;
-    mix-blend-mode: multiply;
-    will-change: transform;
-    contain: strict;
-  }
+  /* Subtle grain texture — GPU-composited to prevent scroll repaint.
+     Hidden on mobile (<768px) to reduce GPU overhead and visual noise. */
+  @media (min-width: 768px) {
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 2;
+      mix-blend-mode: multiply;
+      will-change: transform;
+      contain: strict;
+    }
 
-  :root.dark body::before {
-    opacity: 0.03;
-    /* `screen` blend mode is GPU-friendly unlike `overlay` */
-    mix-blend-mode: screen;
+    :root.dark body::before {
+      opacity: 0.03;
+      mix-blend-mode: screen;
+    }
   }
 
   /* ── Dark Mode Hero Glow (Idea #7) ── */

@@ -17,14 +17,9 @@ export function FeaturedSection({ post }: FeaturedSectionProps) {
     <section className="w-full border-b border-[var(--border-color)]" aria-label="Bài viết nổi bật">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
         <div className="p-6 md:p-12 lg:border-r border-[var(--border-color)] flex flex-col justify-center">
-          <div className="mb-8">
-            <span className="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-widest bg-[var(--accent-primary)]/10 px-2 py-1 rounded-sm">
-              Tiêu điểm
-            </span>
-          </div>
 
           {/* Category label — category-specific color (Idea #10) */}
-          <p className="font-mono text-[10px] uppercase tracking-widest mb-3" style={{ color: categoryColor.hex }}>
+          <p className="font-mono text-[11px] uppercase tracking-widest mb-3" style={{ color: categoryColor.hex }}>
             {post.category}
           </p>
 
@@ -57,7 +52,7 @@ export function FeaturedSection({ post }: FeaturedSectionProps) {
             priority
             placeholder="blur"
             blurDataURL={IMAGE_BLUR_PLACEHOLDER}
-            className="object-cover grayscale contrast-[1.1] group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
+            className="object-cover lg:grayscale lg:hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-103"
           />
           {/* Category-tinted overlay using categoryColor (Idea #10) */}
           <div className="absolute inset-0 mix-blend-multiply dark:mix-blend-overlay" aria-hidden="true" style={{ background: `${categoryColor.hex}18` }} />

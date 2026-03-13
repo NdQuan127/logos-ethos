@@ -68,7 +68,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full hover:bg-[var(--foreground)]/5 transition-colors text-[var(--foreground)]"
+      className="p-3 sm:p-2 rounded-full hover:bg-[var(--foreground)]/5 transition-colors text-[var(--foreground)]"
       aria-label={isDark ? 'Bật chế độ sáng' : 'Bật chế độ tối'}
     >
       {/* CSS rotation replaces motion.div — same visual effect, zero JS overhead */}

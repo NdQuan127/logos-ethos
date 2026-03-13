@@ -10,7 +10,7 @@
 export function GridLines() {
   return (
     <div
-      className="fixed inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-0 hidden md:block"
       aria-hidden="true"
       style={{
         backgroundImage: `

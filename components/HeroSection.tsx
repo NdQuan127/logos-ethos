@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Grid, Circle, Triangle } from 'lucide-react';
 
 export function HeroSection() {
@@ -22,20 +23,40 @@ export function HeroSection() {
             </blockquote>
           </div>
 
-          <div className="lg:col-span-4 flex flex-col justify-end animate-fade-in" style={{ animationDelay: '400ms' }}>
-            <div className="font-mono text-xs text-[var(--muted)] space-y-4">
+          {/* Category navigation — links to /blog filtered by category.
+              Previously these were static decorative labels with no affordance.
+              Now they are navigable links so users understand them as clickable. */}
+          <nav
+            className="lg:col-span-4 flex flex-col justify-end animate-fade-in"
+            style={{ animationDelay: '400ms' }}
+            aria-label="Khám phá theo chủ đề"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-4 opacity-60">
+              Chủ đề
+            </p>
+            <div className="font-mono text-xs text-[var(--muted)] space-y-0">
               {[
-                { Icon: Grid, label: 'Lập luận & Phân tích' },
-                { Icon: Circle, label: 'Nghịch lý & Bất toàn' },
-                { Icon: Triangle, label: 'Logic & Đạo đức luận' },
-              ].map(({ Icon, label }) => (
-                <div key={label} className="flex items-center gap-4 pb-4 border-b border-[var(--border-color)]">
-                  <Icon size={16} aria-hidden="true" />
-                  <span>{label}</span>
-                </div>
+                { Icon: Grid,     label: 'Lập luận & Phân tích', category: 'Phương pháp luận' },
+                { Icon: Circle,   label: 'Nghịch lý & Bất toàn', category: 'Logic học' },
+                { Icon: Triangle, label: 'Logic & Đạo đức luận', category: 'Nhận thức luận' },
+              ].map(({ Icon, label, category }) => (
+                <Link
+                  key={label}
+                  href={`/blog?category=${encodeURIComponent(category)}`}
+                  className="group flex items-center gap-4 py-4 border-b border-[var(--border-color)] hover:text-[var(--foreground)] hover:border-[var(--foreground)]/30 transition-all duration-200"
+                >
+                  <Icon
+                    size={16}
+                    aria-hidden="true"
+                    className="shrink-0 group-hover:text-[var(--accent-primary)] transition-colors"
+                  />
+                  <span className="group-hover:translate-x-0.5 transition-transform duration-200">
+                    {label}
+                  </span>
+                </Link>
               ))}
             </div>
-          </div>
+          </nav>
         </div>
       </div>
     </header>

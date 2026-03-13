@@ -69,7 +69,7 @@ export function Navbar({ backLink }: NavbarProps) {
           {backLink ? (
             <Link
               href={backLink.href}
-              className="flex items-center gap-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors group font-mono text-xs uppercase tracking-wider"
+              className="flex items-center gap-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors group font-sans text-sm font-medium"
               aria-label={`Quay lại ${backLink.label}`}
             >
               <span aria-hidden="true" className="group-hover:-translate-x-1 transition-transform inline-block">←</span>
@@ -87,7 +87,7 @@ export function Navbar({ backLink }: NavbarProps) {
 
         {/* Center: Desktop nav — hidden on mobile */}
         {!backLink && (
-          <div className="hidden md:flex gap-8 font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+          <div className="hidden md:flex gap-8 font-sans text-sm font-medium text-[var(--muted)]">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -163,7 +163,7 @@ export function Navbar({ backLink }: NavbarProps) {
           className={`absolute top-0 right-0 h-full w-72 bg-[var(--background)] border-l border-[var(--border-color)] p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           <div className="flex justify-between items-center">
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">Menu</span>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-[var(--muted)]">Menu</span>
             <button
               onClick={() => {
                 closeMenu();

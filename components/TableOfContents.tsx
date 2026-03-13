@@ -122,7 +122,7 @@ export function TableOfContents() {
                     className="sticky top-24"
                     aria-hidden={undefined}
                 >
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-3 flex items-center gap-1.5">
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-[var(--muted)] mb-3 flex items-center gap-1.5">
                         <List size={12} aria-hidden="true" />
                         Mục lục
                     </p>
@@ -148,11 +148,21 @@ export function TableOfContents() {
                         className={`transition-transform duration-300 ${mobileOpen ? 'rotate-180' : ''}`}
                     />
                 </button>
-                {mobileOpen && (
-                    <div id="mobile-toc" className="px-4 py-3 border-t border-[var(--border-color)]">
-                        <HeadingList headings={headings} activeId={activeId} onScrollTo={scrollTo} />
+                {/* CSS grid trick: grid-rows 0fr → 1fr animates height without JS.
+                    The inner div needs min-h-0 to collapse fully. */}
+                <div
+                    id="mobile-toc"
+                    role="region"
+                    aria-label="Nội dung mục lục"
+                    className="grid transition-[grid-template-rows] duration-300 ease-out overflow-hidden border-t border-[var(--border-color)]"
+                    style={{ gridTemplateRows: mobileOpen ? '1fr' : '0fr' }}
+                >
+                    <div className="min-h-0">
+                        <div className="px-4 py-3">
+                            <HeadingList headings={headings} activeId={activeId} onScrollTo={scrollTo} />
+                        </div>
                     </div>
-                )}
+                </div>
             </div>
         </>
     );

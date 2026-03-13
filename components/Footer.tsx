@@ -33,7 +33,7 @@ export function Footer() {
 
         {/* Explore */}
         <div className="flex flex-col gap-3">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-1">Khám phá</h3>
+          <h3 className="font-mono text-[11px] uppercase tracking-widest text-[var(--muted)] mb-1">Khám phá</h3>
           {EXPLORE_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -48,7 +48,7 @@ export function Footer() {
 
         {/* Legal */}
         <div className="flex flex-col gap-3">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-1">Liên hệ</h3>
+          <h3 className="font-mono text-[11px] uppercase tracking-widest text-[var(--muted)] mb-1">Liên hệ</h3>
           {LEGAL_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -68,14 +68,9 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-[var(--border-color)] flex justify-between items-center">
-        <p className="text-[var(--muted)] text-xs font-mono">
+        <p className="text-[var(--muted)] text-[11px] font-sans">
           © {currentYear} Logos &amp; Ethos. Mọi quyền được bảo lưu.
         </p>
-        <div className="flex gap-2" aria-hidden="true">
-          <div className="w-2 h-2 rounded-full bg-[var(--color-academic-red)]" />
-          <div className="w-2 h-2 rounded-full bg-[var(--color-academic-blue)]" />
-          <div className="w-2 h-2 rounded-full bg-[var(--color-academic-yellow)]" />
-        </div>
       </div>
     </footer>
   );
