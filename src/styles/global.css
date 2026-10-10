@@ -294,6 +294,123 @@
     font-size: 0.9em;
   }
 
+  /* ── Theorem-like blocks (components/mdx/Statement.astro) ── */
+  .article-content .statement {
+    margin: 2rem 0;
+    border-left: 2px solid var(--accent-primary);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+  }
+
+  .article-content .statement-label {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: var(--text-article);
+    font-weight: 700;
+  }
+
+  .article-content .statement-title { font-weight: 400; }
+
+  /* Classical convention: claims are set in italics, definitions and
+     examples upright. */
+  .article-content :is(.statement-theorem, .statement-lemma, .statement-proposition, .statement-corollary, .statement-axiom) .statement-body {
+    font-style: italic;
+  }
+
+  .article-content :is(.statement-example, .statement-remark) {
+    border-left-color: var(--border-color);
+  }
+
+  .article-content .statement-body > :last-child,
+  .article-content .proof-body > :last-child { margin-bottom: 0; }
+
+  .article-content .proof {
+    position: relative;
+    margin: -0.5rem 0 2rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .article-content .proof-label {
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  .article-content .proof-qed {
+    display: block;
+    text-align: right;
+    line-height: 1;
+    color: var(--muted);
+  }
+
+  /* ── Figures ── */
+  .article-content .figure { margin: 2.5rem 0; }
+
+  .article-content .figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border-color);
+  }
+
+  .article-content .figure figcaption {
+    margin-top: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .article-content .figure-credit {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  /* ── Terms ── */
+  .article-content .term {
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .article-content .term-original { color: var(--muted); }
+
+  /* ── Footnotes ([^1] syntax) ── */
+  .article-content sup a {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    padding: 0 0.1em;
+  }
+
+  .article-content .footnotes {
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+
+  .article-content .footnotes h2 {
+    margin-top: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .article-content .footnotes :is(p, li) {
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+
+  /* KaTeX display math can be wider than the measure on phones. */
+  .article-content .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25rem 0;
+  }
+
   /* Reading progress — scaled on the compositor instead of animating width */
   .reading-progress {
     transform: scaleX(0);

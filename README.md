@@ -3,7 +3,7 @@
   <p><em>Vẻ đẹp thuần khiết của Logic & chiều sâu tư duy con người</em></p>
   <br />
   <p>
-    <img src="https://img.shields.io/badge/Astro-6-FF5D01?logo=astro" alt="Astro" />
+    <img src="https://img.shields.io/badge/Astro-7-FF5D01?logo=astro" alt="Astro" />
     <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript" alt="TypeScript" />
     <img src="https://img.shields.io/badge/MDX-Content-FCB32C?logo=mdx" alt="MDX" />
@@ -18,19 +18,20 @@
 
 ### Đặc điểm
 
-- **Editorial design** — bảng màu Paper/Ink/Leather, grain texture, grid lines.
+- **Editorial design** — bảng màu Paper/Ink/Leather, typography kiểu tạp chí in.
 - **Typography tối ưu cho tiếng Việt** — Crimson Pro + Be Vietnam Pro + IBM Plex Mono.
 - **Dark mode** — chuyển đổi qua CSS custom properties và script nhỏ.
 - **Static generation** — Astro pre-render toàn bộ route tại build time.
 - **MDX content collections** — frontmatter được validate bằng schema.
-- **SEO** — metadata, JSON-LD, sitemap.xml, robots.txt.
+- **Hệ thống nội dung chuẩn hoá** — chủ đề, thẻ, loạt bài, bản nháp; component MDX cho định lý, chứng minh, định nghĩa.
+- **SEO** — metadata, JSON-LD, sitemap.xml, robots.txt, RSS.
 - **Accessible** — ARIA labels, skip-to-content, keyboard navigation.
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | [Astro](https://astro.build) |
+| Framework | [Astro 7](https://astro.build) |
 | Language | [TypeScript 5.9](https://www.typescriptlang.org) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) + CSS Custom Properties |
 | Content | [MDX](https://mdxjs.com) + Astro content collections |
@@ -57,6 +58,7 @@ Mở `http://localhost:4321` để xem trang web.
 
 ```bash
 npm run check
+npm run check:content
 npm run lint
 npm run build
 npm run verify
@@ -83,21 +85,11 @@ logos-and-ethos/
 
 ## Viết bài mới
 
-Tạo file `.mdx` mới trong `src/content/blog/`:
-
-```mdx
----
-title: "Tiêu đề bài viết"
-category: "Nhận thức luận"
-excerpt: "Tóm tắt ngắn gọn cho bài viết..."
-date: "2026-03-01"
-image: "https://picsum.photos/seed/example/800/600"
----
-
-Nội dung bài viết viết bằng Markdown...
+```bash
+npm run new -- "Tiêu đề bài viết" --category logic-hoc
 ```
 
-Bài viết sẽ tự động xuất hiện trên trang chủ và `/blog/` nếu frontmatter hợp lệ.
+Quy ước frontmatter, chủ đề, thẻ, loạt bài và các component MDX (`<Theorem>`, `<Proof>`, `<Sidenote>`…) nằm trong [docs/CONTENT.md](docs/CONTENT.md).
 
 ## License
 

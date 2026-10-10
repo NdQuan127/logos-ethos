@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import Footer from '../../../components/Footer.astro';
+import Navbar from '../../../components/Navbar.astro';
+import { getPosts, summarizeTags } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return summarizeTags(posts).map(({ item }) => ({
+    params: { tag: item.slug },
+    props: { tag: item, posts: posts.filter((post) => post.tags.some((tag) => tag.slug === item.slug)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Thẻ: ${tag.name}`}
+  description={`Các bài viết gắn thẻ ${tag.name} trên Logos & Ethos.`}
+  canonicalPath={tag.href}
+>
+  <div class="min-h-screen flex flex-col relative font-serif">
+    <Navbar />
+    <main id="main-content" class="flex-grow">
+      <header class="w-full py-20 md:py-28 px-6 md:px-12 border-b border-[var(--border-color)]">
+        <div class="max-w-7xl mx-auto relative z-10">
+          <p class="mb-6 font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] animate-fade-in">Thẻ</p>
+          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight animate-fade-in-up">#{tag.name}</h1>
+          <p class="font-sans text-[var(--muted)] text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">{posts.length} bài viết</p>
+        </div>
+      </header>
+      <section class="w-full py-16 px-6 md:px-12" aria-label={`Bài viết gắn thẻ ${tag.name}`}>
+        <div class="max-w-7xl mx-auto">
+          <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <li>
+                <ArticleCard post={post} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>

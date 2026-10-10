@@ -4,26 +4,25 @@ import ArticleCard from '../../../components/ArticleCard.astro';
 import CategoryFilter from '../../../components/CategoryFilter.astro';
 import Footer from '../../../components/Footer.astro';
 import Navbar from '../../../components/Navbar.astro';
-import { getAllPosts, summarizeCategories } from '../../../lib/blog';
-import { getCategoryMeta } from '../../../lib/category-utils';
+import { getPosts, summarizeCategories } from '../../../lib/content';
 
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
+  const posts = await getPosts();
   const categories = summarizeCategories(posts);
-  return categories.map((category) => ({
-    params: { category: category.slug },
+  return categories.map(({ item }) => ({
+    params: { category: item.id },
     props: {
-      name: category.name,
+      meta: item,
       categories,
       total: posts.length,
-      posts: posts.filter((post) => post.category === category.name),
+      posts: posts.filter((post) => post.category.id === item.id),
     },
   }));
 }
 
 const { category } = Astro.params;
-const { name, categories, total, posts } = Astro.props;
-const meta = getCategoryMeta(name);
+const { meta, categories, total, posts } = Astro.props;
+const { name } = meta;
 ---
 
 <BaseLayout

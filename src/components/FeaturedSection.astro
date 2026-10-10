@@ -1,31 +1,29 @@
 ---
 import { ArrowRight } from 'lucide-astro';
 import PostCover from './PostCover.astro';
-import { getCategoryMeta } from '../lib/category-utils';
-import type { BlogPostView } from '../lib/blog';
+import type { PostView } from '../lib/content';
 
 interface Props {
-  post: BlogPostView;
+  post: PostView;
 }
 
 const { post } = Astro.props;
-const meta = getCategoryMeta(post.category);
 ---
 
 <section class="w-full border-b border-[var(--border-color)]" aria-label="Bài viết nổi bật">
   <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
     <div class="p-6 md:p-12 lg:border-r border-[var(--border-color)] flex flex-col justify-center">
-      <p class="font-mono text-xs font-semibold tracking-wide mb-3" style={{ color: meta.color }}>
-        {post.category}
+      <p class="font-mono text-xs font-semibold tracking-wide mb-3" style={{ color: post.category.color }}>
+        {post.category.name}
       </p>
       <h2 class="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6 leading-tight">
         {post.title}
       </h2>
       <p class="font-sans text-[var(--muted)] text-lg leading-relaxed mb-8 line-clamp-4">
-        {post.excerpt}
+        {post.description}
       </p>
       <a
-        href={`/blog/${post.slug}/`}
+        href={post.href}
         class="group flex items-center gap-3 text-[var(--foreground)] font-mono text-sm uppercase tracking-wider hover:text-[var(--accent-primary)] transition-colors w-fit"
         aria-label={`Đọc bài viết: ${post.title}`}
       >
@@ -33,6 +31,6 @@ const meta = getCategoryMeta(post.category);
         <ArrowRight size={16} class="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
       </a>
     </div>
-    <PostCover category={post.category} ratio="" glyph="text-[12rem]" class="min-h-[320px] lg:min-h-[400px]" />
+    <PostCover category={post.category} cover={post.cover} coverAlt={post.coverAlt} sizes="(min-width: 1024px) 40rem, 100vw" ratio="" glyph="text-[12rem]" class="min-h-[320px] lg:min-h-[400px]" />
   </div>
 </section>

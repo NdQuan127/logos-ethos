@@ -1,20 +1,19 @@
 ---
 import { Circle, Grid, Triangle } from 'lucide-astro';
-import { categoryHref, getCategoryMeta } from '../lib/category-utils';
-import type { CategorySummary } from '../lib/blog';
+import type { CategoryView, Summary } from '../lib/content';
 
 interface Props {
-  categories: CategorySummary[];
+  categories: Summary<CategoryView>[];
 }
 
 const { categories } = Astro.props;
 const icons = [Grid, Circle, Triangle];
-const topics = categories.slice(0, 3).map((category, index) => ({
+const topics = categories.slice(0, 3).map(({ item, count }, index) => ({
   Icon: icons[index % icons.length],
-  name: category.name,
-  count: category.count,
-  description: getCategoryMeta(category.name).description,
-  href: categoryHref(category.name),
+  name: item.name,
+  count,
+  description: item.description,
+  href: item.href,
 }));
 ---
 

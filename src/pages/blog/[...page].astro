@@ -5,11 +5,11 @@ import ArticleCard from '../../components/ArticleCard.astro';
 import CategoryFilter from '../../components/CategoryFilter.astro';
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
-import { getAllPosts, summarizeCategories } from '../../lib/blog';
+import { getPosts, summarizeCategories } from '../../lib/content';
 import { BLOG_PAGE_SIZE } from '../../lib/constants';
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const posts = await getAllPosts();
+  const posts = await getPosts();
   const categories = summarizeCategories(posts);
   return paginate(posts, { pageSize: BLOG_PAGE_SIZE, props: { categories, total: posts.length } });
 }) satisfies GetStaticPaths;

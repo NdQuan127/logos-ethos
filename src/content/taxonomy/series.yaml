@@ -1,0 +1,7 @@
+# Loạt bài nhiều kỳ. Bài thuộc loạt khai báo `series: <id>` và `seriesOrder: <số thứ tự>`.
+# id: chữ thường không dấu, dùng làm URL /blog/loat-bai/<id>/
+#
+# - id: nhap-mon-logic
+#   title: Nhập môn logic
+#   description: Từ mệnh đề đến định lý bất toàn, từng bước một.
+[]

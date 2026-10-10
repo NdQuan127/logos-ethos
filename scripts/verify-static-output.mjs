@@ -9,6 +9,7 @@ const required = [
   'blog/cogito-ergo-sum/index.html',
   'blog/dinh-ly-godel/index.html',
   'robots.txt',
+  'rss.xml',
 ];
 
 const missing = required.filter((file) => !fs.existsSync(path.join(dist, file)));

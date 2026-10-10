@@ -3,10 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
 import Navbar from '../components/Navbar.astro';
 import QuoteSection from '../components/QuoteSection.astro';
-import { getAllPosts, summarizeCategories } from '../lib/blog';
-import { categoryHref, getCategoryMeta } from '../lib/category-utils';
+import { getPosts, summarizeCategories } from '../lib/content';
 
-const categories = summarizeCategories(await getAllPosts());
+const categories = summarizeCategories(await getPosts());
 
 // TODO(content): replace this sample bio with the author's real introduction.
 const author = {
@@ -93,11 +92,11 @@ const pillars = [
             <p class="font-mono text-xs text-[var(--muted)] uppercase tracking-widest mb-4">Đang viết về</p>
             <h2 id="topics-heading" class="font-serif text-3xl text-[var(--foreground)] mb-8 font-medium">Các chủ đề</h2>
             <ul>
-              {categories.map((category) => (
+              {categories.map(({ item, count }) => (
                 <li class="border-b border-[var(--border-color)]">
-                  <a href={categoryHref(category.name)} class="group flex min-h-11 items-center justify-between gap-4 py-4 text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-colors">
-                    <span class="font-serif text-xl">{category.name}</span>
-                    <span class="font-sans text-sm text-[var(--muted)]">{getCategoryMeta(category.name).description} · {category.count} bài</span>
+                  <a href={item.href} class="group flex min-h-11 items-center justify-between gap-4 py-4 text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-colors">
+                    <span class="font-serif text-xl">{item.name}</span>
+                    <span class="font-sans text-sm text-[var(--muted)]">{item.description} · {count} bài</span>
                   </a>
                 </li>
               ))}

@@ -22,6 +22,10 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [remarkMath],
       rehypePlugins: [rehypeKatex, rehypeSlug],
+      remarkRehype: {
+        footnoteLabel: 'Chú thích',
+        footnoteBackLabel: (index) => `Quay lại chỗ tham chiếu ${index + 1}`,
+      },
     }),
   },
   vite: {

@@ -1,34 +1,32 @@
 ---
 import PostCover from './PostCover.astro';
-import { getCategoryMeta } from '../lib/category-utils';
-import type { BlogPostView } from '../lib/blog';
+import type { PostView } from '../lib/content';
 
 interface Props {
-  post: Pick<BlogPostView, 'slug' | 'title' | 'category' | 'excerpt' | 'date' | 'isoDate' | 'readingTime'>;
+  post: PostView;
 }
 
 const { post } = Astro.props;
-const meta = getCategoryMeta(post.category);
 ---
 
 <a
-  href={`/blog/${post.slug}/`}
+  href={post.href}
   class="group block h-full border border-[var(--border-color)] text-[var(--foreground)] no-underline transition-colors duration-300 hover:border-[var(--foreground)]/30"
 >
-  <PostCover category={post.category} />
+  <PostCover category={post.category} cover={post.cover} coverAlt={post.coverAlt} />
   <div class="p-5">
-    <p class="mb-3 flex items-center gap-2 font-mono text-xs font-semibold tracking-wide" style={{ color: meta.color }}>
-      <span class="h-1.5 w-1.5 shrink-0 rounded-full" aria-hidden="true" style={{ background: meta.color }}></span>
-      <span>{post.category}</span>
+    <p class="mb-3 flex items-center gap-2 font-mono text-xs font-semibold tracking-wide" style={{ color: post.category.color }}>
+      <span class="h-1.5 w-1.5 shrink-0 rounded-full" aria-hidden="true" style={{ background: post.category.color }}></span>
+      <span>{post.category.name}</span>
     </p>
     <h3 class="mb-2 line-clamp-2 font-serif text-xl leading-snug transition-colors group-hover:text-[var(--accent-primary)]">
       {post.title}
     </h3>
     <p class="mb-4 line-clamp-3 font-sans text-sm leading-relaxed text-[var(--muted)]">
-      {post.excerpt}
+      {post.description}
     </p>
     <p class="flex items-center gap-2 font-mono text-xs tracking-wide text-[var(--muted)]">
-      <time datetime={post.isoDate}>{post.date}</time>
+      <time datetime={post.isoDate}>{post.dateLabel}</time>
       <span aria-hidden="true">·</span>
       <span>{post.readingTime} phút đọc</span>
     </p>

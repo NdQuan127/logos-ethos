@@ -1,9 +1,9 @@
 ---
-import { categoryHref } from '../lib/category-utils';
-import type { CategorySummary } from '../lib/blog';
+import type { CategoryView, Summary } from '../lib/content';
+import { routes } from '../lib/routes';
 
 interface Props {
-  categories: CategorySummary[];
+  categories: Summary<CategoryView>[];
   total: number;
   activeSlug?: string;
 }
@@ -17,18 +17,18 @@ const active = 'border-[var(--foreground)] bg-[var(--foreground)] text-[var(--ba
 <nav aria-label="Lọc bài viết theo chủ đề" class="mb-12">
   <ul class="flex flex-wrap gap-3">
     <li>
-      <a href="/blog/" aria-current={activeSlug ? undefined : 'page'} class:list={[base, activeSlug ? idle : active]}>
+      <a href={routes.blog} aria-current={activeSlug ? undefined : 'page'} class:list={[base, activeSlug ? idle : active]}>
         Tất cả <span class="text-xs">{total}</span>
       </a>
     </li>
-    {categories.map((category) => (
+    {categories.map(({ item, count }) => (
       <li>
         <a
-          href={categoryHref(category.name)}
-          aria-current={activeSlug === category.slug ? 'page' : undefined}
-          class:list={[base, activeSlug === category.slug ? active : idle]}
+          href={item.href}
+          aria-current={activeSlug === item.id ? 'page' : undefined}
+          class:list={[base, activeSlug === item.id ? active : idle]}
         >
-          {category.name} <span class="text-xs">{category.count}</span>
+          {item.name} <span class="text-xs">{count}</span>
         </a>
       </li>
     ))}

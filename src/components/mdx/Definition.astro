@@ -1,0 +1,9 @@
+---
+import Statement from './Statement.astro';
+
+interface Props {
+  title?: string;
+}
+---
+
+<Statement kind="definition" {...Astro.props}><slot /></Statement>

@@ -91,19 +91,6 @@ bookmarkButton?.addEventListener('click', () => {
 });
 renderBookmark();
 
-document.querySelectorAll<HTMLButtonElement>('[data-code-copy]').forEach((button) => {
-  button.addEventListener('click', async () => {
-    const code = button.closest('figure')?.querySelector('[data-code-text]')?.textContent ?? '';
-    try {
-      await navigator.clipboard.writeText(code);
-      button.textContent = 'Đã sao chép';
-      setTimeout(() => {
-        button.textContent = 'Sao chép';
-      }, 2000);
-    } catch {}
-  });
-});
-
 document.querySelectorAll<HTMLButtonElement>('[data-sidenote-toggle]').forEach((button) => {
   button.addEventListener('click', () => {
     const note = button.closest<HTMLElement>('.sidenote');

@@ -1,0 +1,16 @@
+---
+interface Props {
+  /** Replaces the "Chứng minh" label, e.g. "Phác thảo chứng minh". */
+  label?: string;
+}
+
+const { label = 'Chứng minh' } = Astro.props;
+---
+
+<div class="proof" role="group" aria-label={label}>
+  <p class="proof-label">{label}.</p>
+  <div class="proof-body">
+    <slot />
+  </div>
+  <span class="proof-qed" role="img" aria-label="Hết chứng minh">∎</span>
+</div>

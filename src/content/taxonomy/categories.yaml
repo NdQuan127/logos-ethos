@@ -1,0 +1,46 @@
+# Chủ đề bài viết. Mỗi bài chọn đúng một chủ đề qua trường `category: <id>`.
+# id: chữ thường không dấu, dùng làm URL /blog/chu-de/<id>/
+# color: blue | red | green | yellow (xem --cat-* trong src/styles/global.css)
+# symbol: ký tự hiển thị trên ảnh bìa chữ khi bài không có ảnh bìa
+
+- id: logic-hoc
+  name: Logic học
+  description: Nghịch lý và bất toàn
+  color: blue
+  symbol: ∴
+
+- id: nhan-thuc-luan
+  name: Nhận thức luận
+  description: Giới hạn của sự hiểu biết
+  color: red
+  symbol: '?'
+
+- id: dao-duc-luan
+  name: Đạo đức luận
+  description: Lý trí và giá trị sống
+  color: green
+  symbol: Η
+
+- id: nghich-ly
+  name: Nghịch lý
+  description: Khi lập luận tự mâu thuẫn
+  color: yellow
+  symbol: ∞
+
+- id: triet-hoc
+  name: Triết học
+  description: Những câu hỏi nền tảng
+  color: red
+  symbol: Φ
+
+- id: toan-hoc
+  name: Toán học
+  description: Ngôn ngữ của cấu trúc
+  color: blue
+  symbol: ∑
+
+- id: phuong-phap-luan
+  name: Phương pháp luận
+  description: Lập luận và phân tích
+  color: green
+  symbol: §

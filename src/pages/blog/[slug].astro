@@ -1,48 +1,57 @@
 ---
 import { ArrowLeft, Bookmark, BookmarkCheck, ChevronRight, Share2 } from 'lucide-astro';
+import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
 import PostCover from '../../components/PostCover.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
-import Callout from '../../components/mdx/Callout.astro';
-import PullQuote from '../../components/mdx/PullQuote.astro';
-import Sidenote from '../../components/mdx/Sidenote.astro';
-import { getAllPosts, getRelatedPosts } from '../../lib/blog';
-import { categoryHref, getCategoryMeta } from '../../lib/category-utils';
+import SeriesNav from '../../components/SeriesNav.astro';
+import { mdxComponents } from '../../components/mdx';
+import { getPosts, getRelatedPosts, getSeriesPosts } from '../../lib/content';
 import { SITE_TITLE, SITE_URL } from '../../lib/constants';
+import { routes } from '../../lib/routes';
 
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
+  const posts = await getPosts();
   return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
 }
 
 const { post } = Astro.props;
+const posts = await getPosts();
 const { Content, headings } = await render(post.entry);
-const relatedPosts = await getRelatedPosts(post.slug, post.category);
-const categoryMeta = getCategoryMeta(post.category);
-const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
-const articlePath = `/blog/${post.slug}/`;
-const articleUrl = new URL(articlePath, SITE_URL).toString();
+const relatedPosts = getRelatedPosts(posts, post);
+const seriesPosts = post.series ? getSeriesPosts(posts, post.series.id) : [];
+// `footnote-label` is the visually hidden heading of the footnotes section.
+const tocHeadings = post.toc
+  ? headings.filter((heading) => (heading.depth === 2 || heading.depth === 3) && heading.slug !== 'footnote-label')
+  : [];
+const articleUrl = new URL(post.href, SITE_URL).toString();
+const socialImage = post.cover
+  ? (await getImage({ src: post.cover, width: 1200, height: 630, fit: 'cover', format: 'jpeg' })).src
+  : undefined;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: post.title,
-  description: post.excerpt,
+  description: post.description,
   datePublished: post.isoDate,
+  ...(post.updatedIsoDate && { dateModified: post.updatedIsoDate }),
   url: articleUrl,
+  ...(socialImage && { image: new URL(socialImage, SITE_URL).toString() }),
   publisher: {
     '@type': 'Organization',
     name: SITE_TITLE,
     url: SITE_URL,
   },
-  articleSection: post.category,
+  articleSection: post.category.name,
+  ...(post.tags.length > 0 && { keywords: post.tags.map((tag) => tag.name).join(', ') }),
   timeRequired: `PT${post.readingTime}M`,
 };
 ---
 
-<BaseLayout title={post.title} description={post.excerpt} canonicalPath={articlePath} image={post.image} type="article" jsonLd={jsonLd}>
+<BaseLayout title={post.title} description={post.description} canonicalPath={post.href} image={socialImage} type="article" jsonLd={jsonLd}>
   <script>
     import '../../scripts/article.ts';
   </script>
@@ -54,27 +63,47 @@ const jsonLd = {
         <header class="mb-12 max-w-3xl mx-auto animate-fade-in-up">
           <nav aria-label="Vị trí hiện tại" class="mb-6">
             <ol class="flex flex-wrap items-center gap-2 font-mono text-xs text-[var(--muted)]">
-              <li><a href="/blog/" class="hover:text-[var(--accent-primary)] transition-colors">Bài viết</a></li>
+              <li><a href={routes.blog} class="hover:text-[var(--accent-primary)] transition-colors">Bài viết</a></li>
               <li aria-hidden="true"><ChevronRight size={12} /></li>
               <li>
-                <a href={categoryHref(post.category)} class="font-semibold hover:underline" style={{ color: categoryMeta.color }}>
-                  {post.category}
+                <a href={post.category.href} class="font-semibold hover:underline" style={{ color: post.category.color }}>
+                  {post.category.name}
                 </a>
               </li>
             </ol>
           </nav>
+          {post.draft && (
+            <p class="mb-4 inline-block border border-[var(--accent-primary)] px-2 py-1 font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)]">
+              Bản nháp — không xuất hiện khi build production
+            </p>
+          )}
           <h1 class="font-serif text-4xl md:text-6xl text-[var(--foreground)] mb-6 leading-tight font-medium">
             {post.title}
           </h1>
           <div class="flex items-center gap-3 text-[var(--muted)] font-mono text-xs flex-wrap">
-            <time datetime={post.isoDate}>{post.date}</time>
+            <time datetime={post.isoDate}>{post.dateLabel}</time>
+            {post.updatedLabel && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time></span>
+              </>
+            )}
             <span aria-hidden="true">·</span>
             <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>
               {post.readingTime} phút đọc
             </span>
           </div>
         </header>
-        <PostCover category={post.category} ratio="aspect-[21/9]" glyph="text-[9rem]" class="max-w-3xl mx-auto mb-12 border border-[var(--border-color)]" />
+        <PostCover
+          category={post.category}
+          cover={post.cover}
+          coverAlt={post.coverAlt}
+          ratio="aspect-[21/9]"
+          glyph="text-[9rem]"
+          sizes="(min-width: 768px) 48rem, 100vw"
+          eager
+          class="max-w-3xl mx-auto mb-12 border border-[var(--border-color)]"
+        />
         <div class="xl:grid xl:grid-cols-[12rem_minmax(0,38rem)_12rem] xl:gap-12 xl:justify-center">
           {tocHeadings.length > 0 && (
             <aside data-toc class="hidden xl:block xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-8rem)] xl:overflow-y-auto font-sans text-sm">
@@ -93,6 +122,7 @@ const jsonLd = {
             </aside>
           )}
           <div class="max-w-[38rem] mx-auto w-full xl:max-w-none xl:col-start-2 xl:row-start-1">
+            {post.series && <SeriesNav series={post.series} posts={seriesPosts} current={post} />}
             {tocHeadings.length > 0 && (
               <details class="xl:hidden mb-10 border border-[var(--border-color)] font-sans text-sm">
                 <summary class="min-h-11 flex items-center px-4 cursor-pointer font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
@@ -112,8 +142,36 @@ const jsonLd = {
               </details>
             )}
             <article class="article-content">
-              <Content components={{ Callout, PullQuote, Sidenote }} />
+              <Content components={mdxComponents} />
             </article>
+            {post.sources.length > 0 && (
+              <section class="mt-16 border-t border-[var(--border-color)] pt-6" aria-labelledby="sources-heading">
+                <h2 id="sources-heading" class="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">Tài liệu tham khảo</h2>
+                <ol class="list-decimal pl-5 space-y-2 font-sans text-sm text-[var(--muted)] leading-relaxed">
+                  {post.sources.map((source) => (
+                    <li>
+                      {source.author && <span>{source.author}, </span>}
+                      {source.url ? (
+                        <a href={source.url} class="italic text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-colors" rel="noopener">{source.title}</a>
+                      ) : (
+                        <cite>{source.title}</cite>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+            {post.tags.length > 0 && (
+              <ul class="mt-10 flex flex-wrap gap-2 font-mono text-xs" aria-label="Thẻ">
+                {post.tags.map((tag) => (
+                  <li>
+                    <a href={tag.href} class="inline-flex min-h-8 items-center border border-[var(--border-color)] px-3 text-[var(--muted)] hover:border-[var(--foreground)]/30 hover:text-[var(--foreground)] transition-colors">
+                      #{tag.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
         <div class="max-w-3xl mx-auto">
@@ -129,9 +187,9 @@ const jsonLd = {
                 <span data-bookmark-on class="hidden" aria-hidden="true"><BookmarkCheck size={16} /></span>
                 <span data-bookmark-label>Lưu</span>
               </button>
-              <a href="/da-luu/" class="min-h-11 px-3 flex items-center hover:text-[var(--accent-primary)] transition-colors">Xem bài đã lưu</a>
+              <a href={routes.saved} class="min-h-11 px-3 flex items-center hover:text-[var(--accent-primary)] transition-colors">Xem bài đã lưu</a>
             </div>
-            <a href="/blog/" class="min-h-11 px-3 hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
+            <a href={routes.blog} class="min-h-11 px-3 hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 group">
               <ArrowLeft size={14} class="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
               <span>Tất cả bài viết</span>
             </a>

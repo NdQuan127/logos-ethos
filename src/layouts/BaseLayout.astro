@@ -67,6 +67,7 @@ const socialImage = image ? new URL(image, SITE_URL).toString() : undefined;
         } catch {}
       })();
     </script>
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('/rss.xml', SITE_URL)} />
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body class="antialiased selection:bg-[var(--color-academic-yellow)]/30">

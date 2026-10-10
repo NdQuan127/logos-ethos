@@ -3,9 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import Footer from '../components/Footer.astro';
 import Navbar from '../components/Navbar.astro';
-import { getAllPosts } from '../lib/blog';
+import { getPosts } from '../lib/content';
 
-const posts = await getAllPosts();
+const posts = await getPosts();
 ---
 
 <BaseLayout title="Bài đã lưu" description="Các bài viết bạn đã lưu trên thiết bị này." canonicalPath="/da-luu/">
