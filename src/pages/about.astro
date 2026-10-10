@@ -1,9 +1,10 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Footer from '../components/Footer.astro';
-import Navbar from '../components/Navbar.astro';
-import QuoteSection from '../components/QuoteSection.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import QuoteSection from '../components/blocks/QuoteSection.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { site } from '../config/site';
 import { getPosts, summarizeCategories } from '../lib/content';
+import { routes } from '../lib/routes';
 
 const categories = summarizeCategories(await getPosts());
 
@@ -33,90 +34,73 @@ const pillars = [
 ];
 ---
 
-<BaseLayout title="Về chúng tôi" description="Logos & Ethos — về những giới hạn của sự hiểu biết, nơi toán học và triết học cùng đặt câu hỏi cho lý trí." canonicalPath="/about/">
-  <div class="min-h-screen flex flex-col relative font-serif">
-    <Navbar />
-    <main id="main-content" class="flex-grow">
-      <header class="w-full py-24 md:py-32 px-6 md:px-12 border-b border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto relative z-10">
-          <div class="flex items-center gap-2 mb-6 text-[var(--accent-primary)] font-mono text-xs uppercase tracking-widest animate-fade-in">
-            <span class="w-2 h-2 bg-current rounded-full" aria-hidden="true"></span>
-            <span>Về chúng tôi</span>
-          </div>
-          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight tracking-tight animate-fade-in-up max-w-4xl">
-            Câu hỏi đi trước
-            <span class="italic font-light text-[var(--muted)] block">những câu trả lời</span>
-          </h1>
+<SiteLayout title="Về chúng tôi" description="Logos & Ethos — về những giới hạn của sự hiểu biết, nơi toán học và triết học cùng đặt câu hỏi cho lý trí." canonicalPath={routes.about}>
+  <PageHeader eyebrow="Về chúng tôi" dot title="Câu hỏi đi trước" titleAccent="những câu trả lời" size="lg" />
+  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-label="Sứ mệnh">
+    <div class="max-w-4xl mx-auto">
+      <p class="font-mono text-xs text-accent uppercase tracking-widest mb-6">Sứ mệnh</p>
+      <p class="font-serif text-2xl md:text-3xl text-fg leading-relaxed mb-6">
+        Lý trí có những đường biên mà chính nó không thể nhìn thấy. Toán học và triết học là hai cách tiếp cận khác nhau để sờ vào những đường biên đó.
+      </p>
+      <p class="font-sans text-muted text-lg leading-loose">
+        Logos & Ethos là nơi dành cho những ai thấy rằng một định lý toán học có thể gây rúng động ngang một câu hỏi triết học, và rằng câu hỏi quan trọng hơn câu trả lời.
+      </p>
+    </div>
+  </section>
+  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-label="Hai trụ cột">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-line">
+      {pillars.map((pillar) => (
+        <div class="p-8 md:p-12">
+          <div class="font-serif text-7xl text-accent opacity-20 mb-4 leading-none" aria-hidden="true">{pillar.symbol}</div>
+          <p class="font-mono text-sm uppercase tracking-widest text-accent mb-2">{pillar.latin}</p>
+          <h2 class="font-serif text-3xl text-fg mb-6 font-medium">{pillar.meaning}</h2>
+          <p class="font-sans text-muted text-base leading-loose">{pillar.description}</p>
         </div>
-      </header>
-      <section class="w-full py-20 px-6 md:px-12 border-b border-[var(--border-color)]" aria-label="Sứ mệnh">
-        <div class="max-w-4xl mx-auto">
-          <p class="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-widest mb-6">Sứ mệnh</p>
-          <p class="font-serif text-2xl md:text-3xl text-[var(--foreground)] leading-relaxed mb-6">
-            Lý trí có những đường biên mà chính nó không thể nhìn thấy. Toán học và triết học là hai cách tiếp cận khác nhau để sờ vào những đường biên đó.
-          </p>
-          <p class="font-sans text-[var(--muted)] text-lg leading-loose">
-            Logos & Ethos là nơi dành cho những ai thấy rằng một định lý toán học có thể gây rúng động ngang một câu hỏi triết học, và rằng câu hỏi quan trọng hơn câu trả lời.
-          </p>
-        </div>
-      </section>
-      <section class="w-full py-20 px-6 md:px-12 border-b border-[var(--border-color)]" aria-label="Hai trụ cột">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-[var(--border-color)]">
-          {pillars.map((pillar) => (
-            <div class="p-8 md:p-12">
-              <div class="font-serif text-7xl text-[var(--accent-primary)] opacity-20 mb-4 leading-none" aria-hidden="true">{pillar.symbol}</div>
-              <p class="font-mono text-sm uppercase tracking-widest text-[var(--accent-primary)] mb-2">{pillar.latin}</p>
-              <h2 class="font-serif text-3xl text-[var(--foreground)] mb-6 font-medium">{pillar.meaning}</h2>
-              <p class="font-sans text-[var(--muted)] text-base leading-loose">{pillar.description}</p>
-            </div>
+      ))}
+    </div>
+  </section>
+  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-labelledby="author-heading">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-[10rem_minmax(0,1fr)] gap-10 items-start">
+      <div class="flex h-40 w-40 items-center justify-center border border-line bg-surface font-serif text-4xl italic text-accent" aria-hidden="true">
+        {author.initials}
+      </div>
+      <div>
+        <p class="font-mono text-xs text-accent uppercase tracking-widest mb-4">Người viết</p>
+        <h2 id="author-heading" class="font-serif text-3xl text-fg mb-6 font-medium">{author.name}</h2>
+        {author.bio.map((paragraph) => (
+          <p class="font-serif text-fg text-xl leading-relaxed mb-4">{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+  {categories.length > 0 && (
+    <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-labelledby="topics-heading">
+      <div class="max-w-4xl mx-auto">
+        <p class="font-mono text-xs text-muted uppercase tracking-widest mb-4">Đang viết về</p>
+        <h2 id="topics-heading" class="font-serif text-3xl text-fg mb-8 font-medium">Các chủ đề</h2>
+        <ul>
+          {categories.map(({ item, count }) => (
+            <li class="border-b border-line">
+              <a href={item.href} class="group flex min-h-11 items-center justify-between gap-4 py-4 text-fg hover:text-accent transition-colors">
+                <span class="font-serif text-xl">{item.name}</span>
+                <span class="font-sans text-sm text-muted">{item.description} · {count} bài</span>
+              </a>
+            </li>
           ))}
-        </div>
-      </section>
-      <section class="w-full py-20 px-6 md:px-12 border-b border-[var(--border-color)]" aria-labelledby="author-heading">
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-[10rem_minmax(0,1fr)] gap-10 items-start">
-          <div class="flex h-40 w-40 items-center justify-center border border-[var(--border-color)] bg-[var(--surface-raised)] font-serif text-4xl italic text-[var(--accent-primary)]" aria-hidden="true">
-            {author.initials}
-          </div>
-          <div>
-            <p class="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-widest mb-4">Người viết</p>
-            <h2 id="author-heading" class="font-serif text-3xl text-[var(--foreground)] mb-6 font-medium">{author.name}</h2>
-            {author.bio.map((paragraph) => (
-              <p class="font-serif text-[var(--foreground)] text-xl leading-relaxed mb-4">{paragraph}</p>
-            ))}
-          </div>
-        </div>
-      </section>
-      {categories.length > 0 && (
-        <section class="w-full py-20 px-6 md:px-12 border-b border-[var(--border-color)]" aria-labelledby="topics-heading">
-          <div class="max-w-4xl mx-auto">
-            <p class="font-mono text-xs text-[var(--muted)] uppercase tracking-widest mb-4">Đang viết về</p>
-            <h2 id="topics-heading" class="font-serif text-3xl text-[var(--foreground)] mb-8 font-medium">Các chủ đề</h2>
-            <ul>
-              {categories.map(({ item, count }) => (
-                <li class="border-b border-[var(--border-color)]">
-                  <a href={item.href} class="group flex min-h-11 items-center justify-between gap-4 py-4 text-[var(--foreground)] hover:text-[var(--accent-primary)] transition-colors">
-                    <span class="font-serif text-xl">{item.name}</span>
-                    <span class="font-sans text-sm text-[var(--muted)]">{item.description} · {count} bài</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-      <section id="contact" class="w-full py-20 px-6 md:px-12" aria-label="Liên hệ">
-        <div class="max-w-4xl mx-auto text-center">
-          <p class="font-mono text-xs text-[var(--muted)] uppercase tracking-widest mb-6">Liên hệ</p>
-          <p class="font-serif text-2xl text-[var(--foreground)] mb-8 leading-relaxed">
-            Có ý tưởng, câu hỏi, hay chỉ muốn nói về Gödel lúc nửa đêm?
-          </p>
-          <a href="mailto:contact@logos-ethos.web.app" class="inline-flex min-h-11 items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--foreground)] border border-[var(--border-color)] px-6 py-3 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors">
-            Gửi thư cho chúng tôi
-          </a>
-        </div>
-      </section>
-      <QuoteSection quote="Triết học là sự luyện tập để học cách chết." author="Plato (Phaidon)" />
-    </main>
-    <Footer />
-  </div>
-</BaseLayout>
+        </ul>
+      </div>
+    </section>
+  )}
+  <section id="contact" class="w-full py-20 px-6 md:px-12" aria-label="Liên hệ">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="font-mono text-xs text-muted uppercase tracking-widest mb-6">Liên hệ</p>
+      <p class="font-serif text-2xl text-fg mb-8 leading-relaxed">
+        Có ý tưởng, câu hỏi, hay chỉ muốn nói về Gödel lúc nửa đêm?
+      </p>
+      <a href={`mailto:${site.email}`} class="inline-flex min-h-11 items-center gap-2 font-mono text-sm uppercase tracking-wider text-fg border border-line px-6 py-3 hover:border-accent hover:text-accent transition-colors">
+        Gửi thư cho chúng tôi
+      </a>
+    </div>
+  </section>
+  <QuoteSection quote="Triết học là sự luyện tập để học cách chết." author="Plato (Phaidon)" />
+</SiteLayout>

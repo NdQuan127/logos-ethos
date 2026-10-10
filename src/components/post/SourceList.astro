@@ -1,0 +1,27 @@
+---
+import type { PostView } from '../../lib/content';
+
+interface Props {
+  sources: PostView['sources'];
+}
+
+const { sources } = Astro.props;
+---
+
+{sources.length > 0 && (
+  <section class="mt-16 border-t border-line pt-6" aria-labelledby="sources-heading">
+    <h2 id="sources-heading" class="font-mono text-xs uppercase tracking-widest text-muted mb-4">Tài liệu tham khảo</h2>
+    <ol class="list-decimal pl-5 space-y-2 font-sans text-sm text-muted leading-relaxed">
+      {sources.map((source) => (
+        <li>
+          {source.author && <span>{source.author}, </span>}
+          {source.url ? (
+            <a href={source.url} class="italic text-fg hover:text-accent transition-colors" rel="noopener">{source.title}</a>
+          ) : (
+            <cite>{source.title}</cite>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+)}

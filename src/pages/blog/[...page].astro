@@ -1,76 +1,47 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
-import CategoryFilter from '../../components/CategoryFilter.astro';
-import Footer from '../../components/Footer.astro';
-import Navbar from '../../components/Navbar.astro';
+import ListingLayout from '../../layouts/ListingLayout.astro';
+import CategoryFilter from '../../components/post/CategoryFilter.astro';
+import PostGrid from '../../components/post/PostGrid.astro';
+import EmptyState from '../../components/ui/EmptyState.astro';
+import { site } from '../../config/site';
 import { getPosts, summarizeCategories } from '../../lib/content';
-import { BLOG_PAGE_SIZE } from '../../lib/constants';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPosts();
   const categories = summarizeCategories(posts);
-  return paginate(posts, { pageSize: BLOG_PAGE_SIZE, props: { categories, total: posts.length } });
+  return paginate(posts, { pageSize: site.pageSize, props: { categories, total: posts.length } });
 }) satisfies GetStaticPaths;
 
 const { page, categories, total } = Astro.props;
 const canonicalPath = page.url.current.endsWith('/') ? page.url.current : `${page.url.current}/`;
+const pagerLink = 'inline-flex min-h-11 items-center px-4 border border-line hover:border-fg/30';
 ---
 
-<BaseLayout
+<ListingLayout
   title={page.currentPage > 1 ? `Tất cả bài viết — trang ${page.currentPage}` : 'Tất cả bài viết'}
   description="Khám phá toàn bộ bộ sưu tập bài viết về Toán học và Triết học của Logos & Ethos."
   canonicalPath={canonicalPath}
+  header={{
+    eyebrow: 'Tuyển tập',
+    dot: true,
+    title: 'Tất cả',
+    titleAccent: 'bài viết',
+    description: `${total} bài viết về Toán học, Triết học và những giao thoa của tư duy con người.`,
+  }}
+  sectionLabel="Danh sách bài viết"
 >
-  <div class="min-h-screen flex flex-col relative font-serif">
-    <Navbar />
-    <main id="main-content" class="flex-grow">
-      <header class="w-full py-20 md:py-28 px-6 md:px-12 border-b border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto relative z-10">
-          <div class="flex items-center gap-2 mb-6 text-[var(--accent-primary)] font-mono text-xs uppercase tracking-widest animate-fade-in">
-            <span class="w-2 h-2 bg-current rounded-full" aria-hidden="true"></span>
-            <span>Tuyển tập</span>
-          </div>
-          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight animate-fade-in-up">
-            Tất cả <span class="italic font-light text-[var(--muted)]">bài viết</span>
-          </h1>
-          <p class="font-sans text-[var(--muted)] text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">
-            {total} bài viết về Toán học, Triết học và những giao thoa của tư duy con người.
-          </p>
-        </div>
-      </header>
-      <section class="w-full py-16 px-6 md:px-12" aria-label="Danh sách bài viết">
-        <div class="max-w-7xl mx-auto">
-          <CategoryFilter categories={categories} total={total} />
-          {page.data.length > 0 ? (
-            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {page.data.map((post) => (
-                <li>
-                  <ArticleCard post={post} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div class="text-center py-24">
-              <p class="font-serif text-3xl text-[var(--muted)] italic mb-4">Chưa có bài viết nào.</p>
-              <p class="font-sans text-[var(--muted)] text-sm">Hãy quay lại sớm — chúng tôi đang viết!</p>
-            </div>
-          )}
-          {page.lastPage > 1 && (
-            <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between font-sans text-sm">
-              {page.url.prev ? (
-                <a href={page.url.prev} rel="prev" class="inline-flex min-h-11 items-center px-4 border border-[var(--border-color)] hover:border-[var(--foreground)]/30">Trang trước</a>
-              ) : <span />}
-              <span class="text-[var(--muted)]">Trang {page.currentPage} / {page.lastPage}</span>
-              {page.url.next ? (
-                <a href={page.url.next} rel="next" class="inline-flex min-h-11 items-center px-4 border border-[var(--border-color)] hover:border-[var(--foreground)]/30">Trang sau</a>
-              ) : <span />}
-            </nav>
-          )}
-        </div>
-      </section>
-    </main>
-    <Footer />
-  </div>
-</BaseLayout>
+  <CategoryFilter categories={categories} total={total} />
+  {page.data.length > 0 ? (
+    <PostGrid posts={page.data} />
+  ) : (
+    <EmptyState title="Chưa có bài viết nào." description="Hãy quay lại sớm — chúng tôi đang viết!" />
+  )}
+  {page.lastPage > 1 && (
+    <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between font-sans text-sm">
+      {page.url.prev ? <a href={page.url.prev} rel="prev" class={pagerLink}>Trang trước</a> : <span />}
+      <span class="text-muted">Trang {page.currentPage} / {page.lastPage}</span>
+      {page.url.next ? <a href={page.url.next} rel="next" class={pagerLink}>Trang sau</a> : <span />}
+    </nav>
+  )}
+</ListingLayout>

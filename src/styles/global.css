@@ -46,6 +46,22 @@
   --duration-slow:   500ms;
 }
 
+/* `dark:` follows the theme toggle (the .dark class on <html>), not the OS
+   setting — Tailwind 4 defaults to prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic colour utilities: text-fg, bg-canvas, border-line, text-accent…
+   They resolve to the theme-aware custom properties below, so components never
+   name a raw colour and a new palette only touches this file. */
+@theme inline {
+  --color-canvas: var(--background);
+  --color-fg: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--border-color);
+  --color-accent: var(--accent-primary);
+  --color-surface: var(--surface-raised);
+}
+
 @layer base {
   :root {
     --background: var(--color-paper);

@@ -1,9 +1,7 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ArticleCard from '../../../components/ArticleCard.astro';
-import CategoryFilter from '../../../components/CategoryFilter.astro';
-import Footer from '../../../components/Footer.astro';
-import Navbar from '../../../components/Navbar.astro';
+import ListingLayout from '../../../layouts/ListingLayout.astro';
+import CategoryFilter from '../../../components/post/CategoryFilter.astro';
+import PostGrid from '../../../components/post/PostGrid.astro';
 import { getPosts, summarizeCategories } from '../../../lib/content';
 
 export async function getStaticPaths() {
@@ -12,7 +10,7 @@ export async function getStaticPaths() {
   return categories.map(({ item }) => ({
     params: { category: item.id },
     props: {
-      meta: item,
+      category: item,
       categories,
       total: posts.length,
       posts: posts.filter((post) => post.category.id === item.id),
@@ -20,43 +18,21 @@ export async function getStaticPaths() {
   }));
 }
 
-const { category } = Astro.params;
-const { meta, categories, total, posts } = Astro.props;
-const { name } = meta;
+const { category, categories, total, posts } = Astro.props;
 ---
 
-<BaseLayout
-  title={`Chủ đề: ${name}`}
-  description={`Các bài viết thuộc chủ đề ${name} của Logos & Ethos.`}
-  canonicalPath={`/blog/chu-de/${category}/`}
+<ListingLayout
+  title={`Chủ đề: ${category.name}`}
+  description={`Các bài viết thuộc chủ đề ${category.name} của Logos & Ethos.`}
+  canonicalPath={category.href}
+  header={{
+    eyebrow: 'Chủ đề',
+    eyebrowColor: category.color,
+    title: category.name,
+    description: `${category.description} · ${posts.length} bài viết`,
+  }}
+  sectionLabel={`Bài viết thuộc chủ đề ${category.name}`}
 >
-  <div class="min-h-screen flex flex-col relative font-serif">
-    <Navbar />
-    <main id="main-content" class="flex-grow">
-      <header class="w-full py-20 md:py-28 px-6 md:px-12 border-b border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto relative z-10">
-          <p class="mb-6 font-mono text-xs uppercase tracking-widest animate-fade-in" style={{ color: meta.color }}>Chủ đề</p>
-          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight animate-fade-in-up">{name}</h1>
-          {meta.description && (
-            <p class="font-sans text-[var(--muted)] text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">
-              {meta.description} · {posts.length} bài viết
-            </p>
-          )}
-        </div>
-      </header>
-      <section class="w-full py-16 px-6 md:px-12" aria-label={`Bài viết thuộc chủ đề ${name}`}>
-        <div class="max-w-7xl mx-auto">
-          <CategoryFilter categories={categories} total={total} activeSlug={category} />
-          <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <li>
-                <ArticleCard post={post} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    </main>
-    <Footer />
-  </div>
-</BaseLayout>
+  <CategoryFilter categories={categories} total={total} activeSlug={category.id} />
+  <PostGrid posts={posts} />
+</ListingLayout>

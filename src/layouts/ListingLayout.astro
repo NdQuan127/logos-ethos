@@ -1,0 +1,31 @@
+---
+/**
+ * Pages that list posts: /blog/, categories, tags, series, saved posts.
+ * Renders the page header; the default slot fills the listing section.
+ */
+import type { ComponentProps } from 'astro/types';
+import SiteLayout from './SiteLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+
+interface Props {
+  /** <title> and meta description. */
+  title: string;
+  description: string;
+  canonicalPath: string;
+  header: ComponentProps<typeof PageHeader>;
+  /** aria-label of the listing section. */
+  sectionLabel: string;
+}
+
+const { title, description, canonicalPath, header, sectionLabel } = Astro.props;
+---
+
+<SiteLayout title={title} description={description} canonicalPath={canonicalPath}>
+  <slot name="head" slot="head" />
+  <PageHeader {...header} />
+  <section class="w-full py-16 px-6 md:px-12" aria-label={sectionLabel}>
+    <div class="max-w-7xl mx-auto">
+      <slot />
+    </div>
+  </section>
+</SiteLayout>

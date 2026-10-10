@@ -1,54 +1,46 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import Footer from '../components/Footer.astro';
-import Navbar from '../components/Navbar.astro';
+import ListingLayout from '../layouts/ListingLayout.astro';
+import PostGrid from '../components/post/PostGrid.astro';
+import EmptyState from '../components/ui/EmptyState.astro';
+import { site } from '../config/site';
 import { getPosts } from '../lib/content';
+import { routes } from '../lib/routes';
 
+if (!site.features.bookmarks) return Astro.redirect(routes.home);
+
+// Every post is rendered hidden; the client script reveals the saved ones.
 const posts = await getPosts();
 ---
 
-<BaseLayout title="Bài đã lưu" description="Các bài viết bạn đã lưu trên thiết bị này." canonicalPath="/da-luu/">
+<ListingLayout
+  title="Bài đã lưu"
+  description="Các bài viết bạn đã lưu trên thiết bị này."
+  canonicalPath={routes.saved}
+  header={{
+    eyebrow: 'Đọc sau',
+    title: 'Bài',
+    titleAccent: 'đã lưu',
+    description: 'Danh sách này được lưu ngay trên trình duyệt của bạn, không cần tài khoản.',
+  }}
+  sectionLabel="Danh sách bài đã lưu"
+>
   <script>
-    import '../scripts/saved.ts';
+    import { initSaved } from '../scripts/saved';
+    initSaved();
   </script>
-  <div class="min-h-screen flex flex-col relative font-serif">
-    <Navbar />
-    <main id="main-content" class="flex-grow">
-      <header class="w-full py-20 md:py-28 px-6 md:px-12 border-b border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto relative z-10">
-          <p class="mb-6 font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] animate-fade-in">Đọc sau</p>
-          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight animate-fade-in-up">
-            Bài <span class="italic font-light text-[var(--muted)]">đã lưu</span>
-          </h1>
-          <p class="font-sans text-[var(--muted)] text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">
-            Danh sách này được lưu ngay trên trình duyệt của bạn, không cần tài khoản.
-          </p>
-        </div>
-      </header>
-      <section class="w-full py-16 px-6 md:px-12" aria-label="Danh sách bài đã lưu">
-        <div class="max-w-7xl mx-auto">
-          <p data-saved-status class="sr-only" role="status"></p>
-          <ul data-saved-list class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <li data-saved-slug={post.slug} hidden>
-                <ArticleCard post={post} />
-              </li>
-            ))}
-          </ul>
-          <div data-saved-empty hidden class="text-center py-24">
-            <p class="font-serif text-3xl text-[var(--muted)] italic mb-4">Bạn chưa lưu bài nào.</p>
-            <p class="font-sans text-[var(--muted)] text-sm mb-8">Nhấn “Lưu” ở cuối mỗi bài viết để đọc lại sau.</p>
-            <a href="/blog/" class="inline-flex min-h-11 items-center border border-[var(--border-color)] px-6 font-mono text-sm uppercase tracking-wider text-[var(--foreground)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors">
-              Xem tất cả bài viết
-            </a>
-          </div>
-          <noscript>
-            <p class="font-sans text-[var(--muted)]">Cần bật JavaScript để xem danh sách bài đã lưu trên trình duyệt này.</p>
-          </noscript>
-        </div>
-      </section>
-    </main>
-    <Footer />
-  </div>
-</BaseLayout>
+  <p data-saved-status class="sr-only" role="status"></p>
+  <PostGrid posts={posts} data-saved-list itemAttributes={(post) => ({ 'data-saved-slug': post.slug, hidden: true })} />
+  <EmptyState
+    data-saved-empty
+    hidden
+    title="Bạn chưa lưu bài nào."
+    description="Nhấn “Lưu” ở cuối mỗi bài viết để đọc lại sau."
+  >
+    <a href={routes.blog} class="inline-flex min-h-11 items-center border border-line px-6 font-mono text-sm uppercase tracking-wider text-fg hover:border-accent hover:text-accent transition-colors">
+      Xem tất cả bài viết
+    </a>
+  </EmptyState>
+  <noscript>
+    <p class="font-sans text-muted">Cần bật JavaScript để xem danh sách bài đã lưu trên trình duyệt này.</p>
+  </noscript>
+</ListingLayout>

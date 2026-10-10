@@ -1,6 +1,6 @@
 ---
-import type { CategoryView, Summary } from '../lib/content';
-import { routes } from '../lib/routes';
+import type { CategoryView, Summary } from '../../lib/content';
+import { routes } from '../../lib/routes';
 
 interface Props {
   categories: Summary<CategoryView>[];
@@ -10,8 +10,8 @@ interface Props {
 
 const { categories, total, activeSlug } = Astro.props;
 const base = 'inline-flex min-h-11 items-center gap-2 border px-4 font-sans text-sm transition-colors';
-const idle = 'border-[var(--border-color)] text-[var(--muted)] hover:border-[var(--foreground)]/30 hover:text-[var(--foreground)]';
-const active = 'border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]';
+const idle = 'border-line text-muted hover:border-fg/30 hover:text-fg';
+const active = 'border-fg bg-fg text-canvas';
 ---
 
 <nav aria-label="Lọc bài viết theo chủ đề" class="mb-12">

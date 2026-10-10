@@ -1,7 +1,7 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-import type { CategoryView } from '../lib/content';
+import type { CategoryView } from '../../lib/content';
 
 interface Props {
   category: CategoryView;
@@ -33,7 +33,7 @@ const {
 
 {cover ? (
   <div
-    class:list={['relative w-full overflow-hidden bg-[var(--surface-raised)]', ratio, className]}
+    class:list={['relative w-full overflow-hidden bg-surface', ratio, className]}
     style={{ borderTop: `3px solid ${category.color}` }}
   >
     <Image
@@ -47,7 +47,7 @@ const {
   </div>
 ) : (
   <div
-    class:list={['relative flex w-full items-center justify-center overflow-hidden bg-[var(--surface-raised)]', ratio, className]}
+    class:list={['relative flex w-full items-center justify-center overflow-hidden bg-surface', ratio, className]}
     style={{ borderTop: `3px solid ${category.color}` }}
     aria-hidden="true"
   >

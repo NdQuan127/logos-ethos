@@ -1,8 +1,6 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ArticleCard from '../../../components/ArticleCard.astro';
-import Footer from '../../../components/Footer.astro';
-import Navbar from '../../../components/Navbar.astro';
+import ListingLayout from '../../../layouts/ListingLayout.astro';
+import PostGrid from '../../../components/post/PostGrid.astro';
 import { getAllSeries, getPosts, getSeriesPosts } from '../../../lib/content';
 
 export async function getStaticPaths() {
@@ -17,31 +15,12 @@ export async function getStaticPaths() {
 const { series, posts } = Astro.props;
 ---
 
-<BaseLayout title={`Loạt bài: ${series.title}`} description={series.description} canonicalPath={series.href}>
-  <div class="min-h-screen flex flex-col relative font-serif">
-    <Navbar />
-    <main id="main-content" class="flex-grow">
-      <header class="w-full py-20 md:py-28 px-6 md:px-12 border-b border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto relative z-10">
-          <p class="mb-6 font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] animate-fade-in">Loạt bài</p>
-          <h1 class="font-serif text-5xl md:text-7xl text-[var(--foreground)] font-medium leading-tight animate-fade-in-up">{series.title}</h1>
-          <p class="font-sans text-[var(--muted)] text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">
-            {series.description} · {posts.length} phần
-          </p>
-        </div>
-      </header>
-      <section class="w-full py-16 px-6 md:px-12" aria-label={`Các phần của loạt bài ${series.title}`}>
-        <div class="max-w-7xl mx-auto">
-          <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <li>
-                <ArticleCard post={post} />
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-    </main>
-    <Footer />
-  </div>
-</BaseLayout>
+<ListingLayout
+  title={`Loạt bài: ${series.title}`}
+  description={series.description}
+  canonicalPath={series.href}
+  header={{ eyebrow: 'Loạt bài', title: series.title, description: `${series.description} · ${posts.length} phần` }}
+  sectionLabel={`Các phần của loạt bài ${series.title}`}
+>
+  <PostGrid posts={posts} ordered />
+</ListingLayout>

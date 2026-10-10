@@ -6,12 +6,12 @@ interface Props {
 const { author } = Astro.props;
 ---
 
-<figure class="my-12 border-y border-[var(--border-color)] py-8 text-center">
-  <blockquote class="font-serif text-2xl md:text-3xl italic leading-snug text-[var(--foreground)]">
+<figure class="my-12 border-y border-line py-8 text-center">
+  <blockquote class="font-serif text-2xl md:text-3xl italic leading-snug text-fg">
     <slot />
   </blockquote>
   {author && (
-    <figcaption class="mt-5 font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+    <figcaption class="mt-5 font-mono text-xs uppercase tracking-widest text-muted">
       {author}
     </figcaption>
   )}

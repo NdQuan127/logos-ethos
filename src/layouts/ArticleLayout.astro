@@ -1,0 +1,135 @@
+---
+/**
+ * A blog post: header, cover, table of contents, rendered MDX, sources,
+ * tags, related posts and actions. Pages only pass the post.
+ */
+import 'katex/dist/katex.min.css';
+import { ChevronRight } from 'lucide-astro';
+import { getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import SiteLayout from './SiteLayout.astro';
+import { mdxComponents } from '../components/mdx';
+import ArticleActions from '../components/post/ArticleActions.astro';
+import PostCover from '../components/post/PostCover.astro';
+import RelatedPosts from '../components/post/RelatedPosts.astro';
+import SeriesNav from '../components/post/SeriesNav.astro';
+import SourceList from '../components/post/SourceList.astro';
+import TableOfContents from '../components/post/TableOfContents.astro';
+import TagList from '../components/post/TagList.astro';
+import { site } from '../config/site';
+import { getPosts, getRelatedPosts, getSeriesPosts, type PostView } from '../lib/content';
+import { routes } from '../lib/routes';
+
+interface Props {
+  post: PostView;
+}
+
+const { post } = Astro.props;
+const posts = await getPosts();
+const { Content, headings } = await render(post.entry);
+const relatedPosts = getRelatedPosts(posts, post);
+const seriesPosts = post.series ? getSeriesPosts(posts, post.series.id) : [];
+// `footnote-label` is the visually hidden heading of the footnotes section.
+const tocHeadings = post.toc
+  ? headings.filter((heading) => (heading.depth === 2 || heading.depth === 3) && heading.slug !== 'footnote-label')
+  : [];
+const socialImage = post.cover
+  ? (await getImage({ src: post.cover, width: 1200, height: 630, fit: 'cover', format: 'jpeg' })).src
+  : undefined;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.description,
+  datePublished: post.isoDate,
+  ...(post.updatedIsoDate && { dateModified: post.updatedIsoDate }),
+  url: new URL(post.href, site.url).toString(),
+  ...(socialImage && { image: new URL(socialImage, site.url).toString() }),
+  publisher: {
+    '@type': 'Organization',
+    name: site.title,
+    url: site.url,
+  },
+  articleSection: post.category.name,
+  ...(post.tags.length > 0 && { keywords: post.tags.map((tag) => tag.name).join(', ') }),
+  timeRequired: `PT${post.readingTime}M`,
+};
+---
+
+<SiteLayout
+  title={post.title}
+  description={post.description}
+  canonicalPath={post.href}
+  image={socialImage}
+  type="article"
+  jsonLd={jsonLd}
+  mainClass="w-full relative z-10"
+>
+  <script>
+    import { initArticle } from '../scripts/article';
+    initArticle();
+  </script>
+  <div slot="before-nav" data-reading-progress class="reading-progress fixed left-0 top-0 h-1 w-full bg-accent z-[70]" aria-hidden="true"></div>
+  <div class="max-w-6xl mx-auto px-6 py-12 md:py-20">
+    <header class="mb-12 max-w-3xl mx-auto animate-fade-in-up">
+      <nav aria-label="Vị trí hiện tại" class="mb-6">
+        <ol class="flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
+          <li><a href={routes.blog} class="hover:text-accent transition-colors">Bài viết</a></li>
+          <li aria-hidden="true"><ChevronRight size={12} /></li>
+          <li>
+            <a href={post.category.href} class="font-semibold hover:underline" style={{ color: post.category.color }}>
+              {post.category.name}
+            </a>
+          </li>
+        </ol>
+      </nav>
+      {post.draft && (
+        <p class="mb-4 inline-block border border-accent px-2 py-1 font-mono text-xs uppercase tracking-widest text-accent">
+          Bản nháp — không xuất hiện khi build production
+        </p>
+      )}
+      <h1 class="font-serif text-4xl md:text-6xl text-fg mb-6 leading-tight font-medium">
+        {post.title}
+      </h1>
+      <div class="flex items-center gap-3 text-muted font-mono text-xs flex-wrap">
+        <time datetime={post.isoDate}>{post.dateLabel}</time>
+        {post.updatedLabel && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time></span>
+          </>
+        )}
+        <span aria-hidden="true">·</span>
+        <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>
+          {post.readingTime} phút đọc
+        </span>
+      </div>
+    </header>
+    <PostCover
+      category={post.category}
+      cover={post.cover}
+      coverAlt={post.coverAlt}
+      ratio="aspect-[21/9]"
+      glyph="text-[9rem]"
+      sizes="(min-width: 768px) 48rem, 100vw"
+      eager
+      class="max-w-3xl mx-auto mb-12 border border-line"
+    />
+    <div class="xl:grid xl:grid-cols-[12rem_minmax(0,38rem)_12rem] xl:gap-12 xl:justify-center">
+      {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} variant="sidebar" />}
+      <div class="max-w-[38rem] mx-auto w-full xl:max-w-none xl:col-start-2 xl:row-start-1">
+        {post.series && <SeriesNav series={post.series} posts={seriesPosts} current={post} />}
+        {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} variant="inline" />}
+        <article class="article-content">
+          <Content components={mdxComponents} />
+        </article>
+        <SourceList sources={post.sources} />
+        <TagList tags={post.tags} class="mt-10" />
+      </div>
+    </div>
+    <div class="max-w-3xl mx-auto">
+      <RelatedPosts posts={relatedPosts} />
+      <ArticleActions post={post} />
+    </div>
+  </div>
+</SiteLayout>

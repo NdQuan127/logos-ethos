@@ -1,7 +1,7 @@
 ---
 import { ArrowRight } from 'lucide-astro';
-import PostCover from './PostCover.astro';
-import type { PostView } from '../lib/content';
+import PostCover from '../post/PostCover.astro';
+import type { PostView } from '../../lib/content';
 
 interface Props {
   post: PostView;
@@ -10,21 +10,21 @@ interface Props {
 const { post } = Astro.props;
 ---
 
-<section class="w-full border-b border-[var(--border-color)]" aria-label="Bài viết nổi bật">
+<section class="w-full border-b border-line" aria-label="Bài viết nổi bật">
   <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-    <div class="p-6 md:p-12 lg:border-r border-[var(--border-color)] flex flex-col justify-center">
+    <div class="p-6 md:p-12 lg:border-r border-line flex flex-col justify-center">
       <p class="font-mono text-xs font-semibold tracking-wide mb-3" style={{ color: post.category.color }}>
         {post.category.name}
       </p>
-      <h2 class="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6 leading-tight">
+      <h2 class="font-serif text-4xl md:text-5xl text-fg mb-6 leading-tight">
         {post.title}
       </h2>
-      <p class="font-sans text-[var(--muted)] text-lg leading-relaxed mb-8 line-clamp-4">
+      <p class="font-sans text-muted text-lg leading-relaxed mb-8 line-clamp-4">
         {post.description}
       </p>
       <a
         href={post.href}
-        class="group flex items-center gap-3 text-[var(--foreground)] font-mono text-sm uppercase tracking-wider hover:text-[var(--accent-primary)] transition-colors w-fit"
+        class="group flex items-center gap-3 text-fg font-mono text-sm uppercase tracking-wider hover:text-accent transition-colors w-fit"
         aria-label={`Đọc bài viết: ${post.title}`}
       >
         <span>Đọc bài viết</span>

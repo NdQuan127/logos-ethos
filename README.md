@@ -68,20 +68,33 @@ npm run preview
 ## Cấu trúc dự án
 
 ```text
-logos-and-ethos/
-├── astro.config.mjs
-├── src/
-│   ├── pages/             # Public routes
-│   ├── layouts/           # HTML shell and metadata
-│   ├── components/        # Astro UI components
-│   ├── content/blog/      # MDX blog posts
-│   ├── lib/               # Blog helpers and constants
-│   ├── scripts/           # Browser-only interactions
-│   └── styles/            # Design tokens and fonts
-├── scripts/
-│   └── verify-static-output.mjs
-└── public/                # Static assets
+src/
+├── config/site.ts         # tên site, menu, footer, bật/tắt tính năng
+├── content/
+│   ├── blog/<slug>/       # mỗi bài một thư mục (index.mdx + ảnh)
+│   └── taxonomy/          # chủ đề và loạt bài (YAML)
+├── content.config.ts      # schema frontmatter
+├── layouts/
+│   ├── BaseLayout.astro   # <head>, SEO, theme
+│   ├── SiteLayout.astro   # menu + <main> + footer
+│   ├── ListingLayout.astro# trang danh sách bài
+│   └── ArticleLayout.astro# trang bài viết
+├── components/
+│   ├── site/              # Navbar, Footer, Logo, ThemeButton
+│   ├── ui/                # PageHeader, EmptyState, AnimateOnScroll
+│   ├── blocks/            # khối trang chủ: Hero, Featured, Quote
+│   ├── post/              # thẻ bài, lưới bài, mục lục, loạt bài, thẻ…
+│   └── mdx/               # component dùng trong bài (đăng ký ở index.ts)
+├── lib/
+│   ├── content.ts         # API duy nhất để lấy bài, chủ đề, thẻ, loạt bài
+│   ├── routes.ts          # mọi URL nội bộ
+│   └── format.ts, slug.ts
+├── pages/                 # route; chỉ lấy dữ liệu và chọn layout
+├── scripts/               # JS phía trình duyệt, mỗi file một hàm init*()
+└── styles/global.css      # token màu, typography, style bài viết
 ```
+
+Màu dùng qua utility semantic (`text-fg`, `bg-canvas`, `border-line`, `text-accent`, `text-muted`, `bg-surface`) ánh xạ tới biến CSS trong `global.css`; đổi bảng màu chỉ cần sửa file đó.
 
 ## Viết bài mới
 

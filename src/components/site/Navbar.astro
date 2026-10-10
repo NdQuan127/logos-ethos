@@ -1,0 +1,98 @@
+---
+import { Menu, X } from 'lucide-astro';
+import Logo from './Logo.astro';
+import ThemeButton from './ThemeButton.astro';
+import { enabledLinks, site } from '../../config/site';
+
+const pathname = Astro.url.pathname;
+const navLinks = enabledLinks(site.nav).map((link) => ({
+  ...link,
+  current: !!link.match && pathname.startsWith(`${link.match}/`),
+}));
+---
+
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent focus:text-canvas focus:rounded-sm focus:font-mono focus:text-xs"
+>
+  Chuyển đến nội dung chính
+</a>
+
+<nav
+  class="w-full py-5 px-6 md:px-12 flex justify-between items-center z-50 border-b border-line bg-canvas/90 dark:bg-surface/90 backdrop-blur-md sticky top-0 transition-colors duration-300"
+  aria-label="Điều hướng chính"
+>
+  <Logo />
+
+  <div class="hidden md:flex gap-8 font-sans text-sm font-medium">
+    {navLinks.map((link) => (
+      <a
+        href={link.href}
+        aria-current={link.current ? 'page' : undefined}
+        class:list={[
+          'border-b-2 py-1 transition-colors hover:text-accent',
+          link.current
+            ? 'border-accent text-fg'
+            : 'border-transparent text-muted',
+        ]}
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+
+  <div class="flex items-center gap-1 text-fg">
+    <ThemeButton />
+    <button
+      data-nav-toggle
+      class="md:hidden p-3 hover:bg-fg/5 rounded-full transition-colors"
+      aria-label="Mở menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="relative block w-[18px] h-[18px]">
+        <span data-nav-menu-icon class="absolute inset-0 transition-all duration-300"><Menu size={18} /></span>
+        <span data-nav-close-icon class="absolute inset-0 transition-all duration-300 opacity-0 -rotate-90 scale-75"><X size={18} /></span>
+      </span>
+    </button>
+  </div>
+</nav>
+
+<div
+  id="mobile-menu"
+  data-nav-drawer
+  class="fixed inset-0 z-[60] md:hidden transition-all duration-300 invisible pointer-events-none"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu điều hướng"
+  aria-hidden="true"
+>
+  <div data-nav-backdrop class="absolute inset-0 bg-fg/30 backdrop-blur-sm transition-opacity duration-300 opacity-0" aria-hidden="true" />
+  <div
+    data-nav-panel
+    class="absolute top-0 right-0 h-full w-72 bg-canvas border-l border-line p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] translate-x-full"
+  >
+    <div class="flex justify-between items-center">
+      <span class="font-mono text-xs uppercase tracking-widest text-muted">Menu</span>
+      <button data-nav-close class="p-3 hover:bg-fg/5 rounded-full transition-colors" aria-label="Đóng menu">
+        <X size={18} aria-hidden="true" />
+      </button>
+    </div>
+    <nav class="flex flex-col gap-6" aria-label="Menu điều hướng di động">
+      {navLinks.map((link, index) => (
+        <a
+          href={link.href}
+          data-nav-link
+          aria-current={link.current ? 'page' : undefined}
+          style={`transition-delay: ${index * 60 + 80}ms`}
+          class:list={[
+            'font-serif text-2xl transition-all duration-300 hover:text-accent focus:outline-none focus-visible:text-accent opacity-0 translate-x-4',
+            link.current ? 'text-accent' : 'text-fg',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</div>

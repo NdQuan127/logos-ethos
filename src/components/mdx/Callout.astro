@@ -12,11 +12,11 @@ const labels = {
 };
 ---
 
-<aside class={`my-8 border-l-2 border-[var(--accent-primary)] bg-[var(--accent-primary)]/5 px-5 py-4 font-sans callout-${type}`}>
-  <p class="font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] mb-2">
+<aside class={`my-8 border-l-2 border-accent bg-accent/5 px-5 py-4 font-sans callout-${type}`}>
+  <p class="font-mono text-xs uppercase tracking-widest text-accent mb-2">
     {title ?? labels[type]}
   </p>
-  <div class="text-[var(--foreground)] leading-relaxed">
+  <div class="text-fg leading-relaxed">
     <slot />
   </div>
 </aside>
