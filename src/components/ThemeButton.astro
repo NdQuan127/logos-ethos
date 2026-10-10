@@ -1,0 +1,16 @@
+---
+import { Moon, Sun } from 'lucide-astro';
+---
+
+<button
+  data-theme-toggle
+  class="p-3 sm:p-2 rounded-full hover:bg-[var(--foreground)]/5 transition-colors text-[var(--foreground)]"
+  aria-label="Đổi giao diện sáng tối"
+>
+  <span data-theme-sun class="block transition-transform duration-500 ease-in-out" aria-hidden="true">
+    <Sun size={20} />
+  </span>
+  <span data-theme-moon class="hidden transition-transform duration-500 ease-in-out" aria-hidden="true">
+    <Moon size={20} />
+  </span>
+</button>

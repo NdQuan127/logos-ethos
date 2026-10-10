@@ -1,0 +1,30 @@
+---
+import { getCategoryMeta } from '../lib/category-utils';
+
+interface Props {
+  category: string;
+  /** Tailwind aspect-ratio class; pass '' to let the parent size the cover */
+  ratio?: string;
+  /** Tailwind size class for the glyph */
+  glyph?: string;
+  class?: string;
+}
+
+const {
+  category,
+  ratio = 'aspect-[16/9]',
+  glyph = 'text-[7rem]',
+  class: className = '',
+} = Astro.props;
+const meta = getCategoryMeta(category);
+---
+
+<div
+  class:list={['relative flex w-full items-center justify-center overflow-hidden bg-[var(--surface-raised)]', ratio, className]}
+  style={{ borderTop: `3px solid ${meta.color}` }}
+  aria-hidden="true"
+>
+  <span class={`block select-none font-serif italic leading-none opacity-30 ${glyph}`} style={{ color: meta.color }}>
+    {meta.symbol}
+  </span>
+</div>

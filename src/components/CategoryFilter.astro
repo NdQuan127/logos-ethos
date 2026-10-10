@@ -1,0 +1,36 @@
+---
+import { categoryHref } from '../lib/category-utils';
+import type { CategorySummary } from '../lib/blog';
+
+interface Props {
+  categories: CategorySummary[];
+  total: number;
+  activeSlug?: string;
+}
+
+const { categories, total, activeSlug } = Astro.props;
+const base = 'inline-flex min-h-11 items-center gap-2 border px-4 font-sans text-sm transition-colors';
+const idle = 'border-[var(--border-color)] text-[var(--muted)] hover:border-[var(--foreground)]/30 hover:text-[var(--foreground)]';
+const active = 'border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]';
+---
+
+<nav aria-label="Lọc bài viết theo chủ đề" class="mb-12">
+  <ul class="flex flex-wrap gap-3">
+    <li>
+      <a href="/blog/" aria-current={activeSlug ? undefined : 'page'} class:list={[base, activeSlug ? idle : active]}>
+        Tất cả <span class="text-xs">{total}</span>
+      </a>
+    </li>
+    {categories.map((category) => (
+      <li>
+        <a
+          href={categoryHref(category.name)}
+          aria-current={activeSlug === category.slug ? 'page' : undefined}
+          class:list={[base, activeSlug === category.slug ? active : idle]}
+        >
+          {category.name} <span class="text-xs">{category.count}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

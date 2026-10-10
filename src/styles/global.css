@@ -1,0 +1,344 @@
+@import "tailwindcss" source(none);
+@source "../**/*.{astro,ts,mdx}";
+
+@theme {
+  /* Font stacks — fontsource self-hosted, defined in fonts.css */
+  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Arena-inspired Palette */
+  --color-paper: #F9F7F1;
+  /* Weathered notebook page */
+  --color-ink: #1A1A1A;
+  /* Sharp ink */
+  --color-leather: #1C1B1A;
+  /* Worn leatherback textbook (Dark Mode BG) */
+  --color-sand: #E6E1D3;
+  /* Darker paper for borders */
+  --color-chalk: #EAE5D9;
+  /* Off-white for dark mode text */
+
+  /* #6B6B6B: ~5.3:1 contrast ratio on paper (#F9F7F1) — passes WCAG AA */
+  --color-graphite: #6B6B6B;
+
+  /* Scholastic Accents */
+  --color-academic-blue: #2B4C7E;
+  --color-academic-red: #A63D40;
+  --color-academic-yellow: #D9A441;
+  --color-academic-green: #4A7C59;
+
+  /* ── Fluid Typography Scale (clamp: min → preferred → max) ── */
+  --text-display: clamp(3rem, 2.5rem + 2.5vw, 5.5rem);
+  --text-h1:      clamp(2.25rem, 1.8rem + 2vw, 4rem);
+  --text-h2:      clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
+  --text-h3:      clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  --text-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-small:   clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --text-article: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem);
+
+  /* ── Animation Tokens ── */
+  --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
+  /* Note: --ease-spring (bounce easing) removed — conflicts with brand's
+     composed, deliberate aesthetic. Use --ease-out for all transitions. */
+  --duration-fast:   150ms;
+  --duration-normal: 300ms;
+  --duration-slow:   500ms;
+}
+
+@layer base {
+  :root {
+    --background: var(--color-paper);
+    --foreground: var(--color-ink);
+    --muted: var(--color-graphite);
+    --border-color: var(--color-sand);
+    --accent-primary: var(--color-academic-blue);
+
+    /* Surface hierarchy (light mode — same as background) */
+    --surface-raised:  #F0EDE6;
+    --surface-overlay: #E8E4DB;
+    --border-subtle:   rgba(0, 0, 0, 0.06);
+    --border-default:  var(--color-sand);
+
+    /* Category colours — each pair passes 4.5:1 on paper and surface-raised */
+    --cat-blue:   #2B4C7E;
+    --cat-red:    #A63D40;
+    --cat-green:  #3D6B4B;
+    --cat-yellow: #7F5A0B;
+
+    /* ── QuoteSection theme tokens (light) ── */
+    --quote-section-bg:   var(--color-sand);
+    --quote-text-color:   var(--color-ink);
+    --quote-mark-color:   rgba(26, 26, 26, 0.08);
+    --quote-author-color: var(--color-graphite);
+    --quote-rule-color:   rgba(26, 26, 26, 0.2);
+  }
+
+  :root.dark {
+    --background: var(--color-leather);
+    --foreground: var(--color-chalk);
+    --muted: #B5B5B5;
+    /* Better contrast on leather background */
+    --border-color: rgba(234, 229, 217, 0.1);
+    --accent-primary: var(--color-academic-yellow);
+
+    /* ── Layered dark surfaces (Idea #7) ── */
+    --surface-raised:  #242320;
+    --surface-overlay: #2C2B28;
+    --surface-hover:   #343330;
+    --border-subtle:   rgba(255, 255, 255, 0.06);
+    --border-default:  rgba(255, 255, 255, 0.10);
+
+    /* Category colours — lightened for the leather background (≥ 7:1) */
+    --cat-blue:   #8FB0E3;
+    --cat-red:    #EE9A9D;
+    --cat-green:  #8FC9A2;
+    --cat-yellow: #E0B35A;
+
+    /* Glow accents */
+    --glow-primary: rgba(217, 164, 65, 0.12);
+
+    /* ── QuoteSection theme tokens (dark) ── */
+    --quote-section-bg:   linear-gradient(135deg, var(--color-ink) 0%, #2B2B28 50%, var(--color-ink) 100%);
+    --quote-text-color:   var(--color-chalk);
+    --quote-mark-color:   rgba(255, 255, 255, 0.06);
+    --quote-author-color: rgba(255, 255, 255, 0.45);
+    --quote-rule-color:   rgba(255, 255, 255, 0.18);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-serif), serif;
+    /* Crimson Pro has a lower x-height than Source Serif 4 —
+       bump base size slightly so body text reads at the same visual size */
+    font-size: var(--text-body);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+    min-height: 100vh;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  /* Be Vietnam Pro — give Vietnamese diacritics a hair more room to breathe
+     when used as sans-serif UI text (labels, buttons, captions) */
+  .font-sans {
+    letter-spacing: 0.01em;
+  }
+
+  /* Restore tight tracking on ALL-CAPS mono labels (already very wide) */
+  .font-mono {
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Dark Mode Hero Glow (Idea #7) ── */
+  :root.dark body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      var(--glow-primary) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hero section fade-in animations — CSS only (no motion library needed) */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* ── Scroll-triggered Animation Classes (Idea #6) ── */
+  /* Base state: hidden. AnimateOnScroll component adds 'is-visible' via IntersectionObserver */
+  .js .animate-on-scroll {
+    opacity: 0;
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+  }
+
+  .js .animate-on-scroll.fade-up   { transform: translateY(28px); }
+  .js .animate-on-scroll.fade-in   { transform: none; }
+  .js .animate-on-scroll.slide-left { transform: translateX(-28px); }
+  .js .animate-on-scroll.scale-up  { transform: scale(0.96); }
+
+  .js .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Respect prefers-reduced-motion for ALL animations */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up,
+    .animate-fade-in {
+      animation: none;
+      opacity: 1;
+    }
+
+    .js .animate-on-scroll,
+    .js .animate-on-scroll.fade-up,
+    .js .animate-on-scroll.slide-left,
+    .js .animate-on-scroll.scale-up {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    :root {
+      --duration-fast: 0ms;
+      --duration-normal: 0ms;
+      --duration-slow: 0ms;
+    }
+  }
+}
+
+@layer components {
+  .article-content h2 {
+    scroll-margin-top: 6rem;
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--foreground);
+  }
+
+  .article-content h3 {
+    scroll-margin-top: 6rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: var(--text-article);
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+
+  .article-content ul,
+  .article-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: var(--text-article);
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+
+  .article-content ul { list-style: disc; }
+  .article-content ol { list-style: decimal; }
+
+  .article-content li { margin-bottom: 0.5rem; }
+
+  .article-content blockquote {
+    margin: 2rem 0;
+    border-left: 2px solid var(--accent-primary);
+    background: color-mix(in srgb, var(--accent-primary) 8%, transparent);
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--foreground);
+  }
+
+  .article-content a {
+    color: var(--accent-primary);
+    text-decoration: none;
+  }
+
+  .article-content a:hover { text-decoration: underline; }
+
+  .article-content strong {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .article-content pre {
+    margin: 2rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    background: var(--surface-raised);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .article-content code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  /* Reading progress — scaled on the compositor instead of animating width */
+  .reading-progress {
+    transform: scaleX(0);
+    transform-origin: left;
+    will-change: transform;
+  }
+
+  /* Sidenotes: margin note on wide screens, inline collapsible below.
+     Without JS the note stays open inline. */
+  .sidenote-toggle { display: none; }
+  .js .sidenote-toggle { display: inline-flex; }
+
+  @media (max-width: 1279.98px) {
+    .js .sidenote[data-open="false"] .sidenote-body { display: none; }
+  }
+
+  @media (min-width: 1280px) {
+    .sidenote {
+      float: right;
+      clear: right;
+      width: 11rem;
+      margin: 0.25rem -15rem 1rem 0;
+    }
+    .js .sidenote-toggle { display: none; }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

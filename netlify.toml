@@ -1,13 +1,13 @@
 [build]
   command   = "npm run build"
-  publish   = "out"
+  publish   = "dist"
 
-# SPA-style fallback is NOT needed because Next.js static export
-# generates a separate .html file for every route.
+# SPA-style fallback is NOT needed because Astro emits a separate static file
+# for every public route.
 
 # Cache immutable assets (JS/CSS bundles with content hashes)
 [[headers]]
-  for = "/_next/static/*"
+  for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
