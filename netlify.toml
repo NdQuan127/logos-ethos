@@ -2,6 +2,11 @@
   command   = "npm run build"
   publish   = "dist"
 
+# The Netlify UI still has the Next.js runtime plugin from the old site. It
+# fails the deploy because dist holds no Next.js output.
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
 # SPA-style fallback is NOT needed because Astro emits a separate static file
 # for every public route.
 
