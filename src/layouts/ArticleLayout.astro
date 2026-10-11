@@ -3,7 +3,8 @@
  * A blog post: header, cover, table of contents, rendered MDX, sources,
  * tags, related posts and actions. Pages only pass the post.
  */
-import 'katex/dist/katex.min.css';
+// Linked per page instead of bundled, so posts without math skip it.
+import katexHref from 'katex/dist/katex.min.css?url';
 import { ChevronRight } from '@lucide/astro';
 import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
@@ -26,7 +27,7 @@ interface Props {
 
 const { post } = Astro.props;
 const posts = await getPosts();
-const { Content, headings } = await render(post.entry);
+const { Content, headings, remarkPluginFrontmatter } = await render(post.entry);
 const relatedPosts = getRelatedPosts(posts, post);
 const seriesPosts = post.series ? getSeriesPosts(posts, post.series.id) : [];
 // `footnote-label` is the visually hidden heading of the footnotes section.
@@ -69,6 +70,7 @@ const jsonLd = {
     import { initArticle } from '../scripts/article';
     initArticle();
   </script>
+  {remarkPluginFrontmatter.hasMath && <link slot="head" rel="stylesheet" href={katexHref} />}
   <div
     slot="before-nav"
     data-reading-progress
