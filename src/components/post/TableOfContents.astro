@@ -8,39 +8,39 @@ interface Props {
 }
 
 const { headings, variant } = Astro.props;
-const linkClass = 'text-muted hover:text-accent transition-colors';
+const sidebar = variant === 'sidebar';
+const Outer = sidebar ? 'aside' : 'details';
+const Label = sidebar ? 'p' : 'summary';
 ---
 
-{variant === 'sidebar' ? (
-  <aside class="hidden xl:block xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-8rem)] xl:overflow-y-auto font-sans text-sm">
-    <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">Mục lục</p>
-    <nav aria-label="Mục lục bài viết">
-      <ol class="space-y-2">
-        {headings.map((heading) => (
-          <li class={heading.depth === 3 ? 'pl-4' : ''}>
-            <a href={`#${heading.slug}`} data-toc-link class={linkClass}>
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  </aside>
-) : (
-  <details class="xl:hidden mb-10 border border-line font-sans text-sm">
-    <summary class="min-h-11 flex items-center px-4 cursor-pointer font-mono text-xs uppercase tracking-widest text-muted">
-      Mục lục
-    </summary>
-    <nav aria-label="Mục lục bài viết (thu gọn)" class="px-4 pb-4">
-      <ol class="space-y-3">
-        {headings.map((heading) => (
-          <li class={heading.depth === 3 ? 'pl-4' : ''}>
-            <a href={`#${heading.slug}`} data-toc-link class={linkClass}>
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  </details>
-)}
+<Outer
+  class={
+    sidebar
+      ? 'hidden xl:block xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-8rem)] xl:overflow-y-auto font-sans text-sm'
+      : 'xl:hidden mb-10 border border-line font-sans text-sm'
+  }
+>
+  <Label
+    class={
+      sidebar
+        ? 'font-mono text-xs uppercase tracking-widest text-muted mb-3'
+        : 'min-h-11 flex items-center px-4 cursor-pointer font-mono text-xs uppercase tracking-widest text-muted'
+    }
+  >
+    Mục lục
+  </Label>
+  <nav
+    aria-label={sidebar ? 'Mục lục bài viết' : 'Mục lục bài viết (thu gọn)'}
+    class={sidebar ? undefined : 'px-4 pb-4'}
+  >
+    <ol class={sidebar ? 'space-y-2' : 'space-y-3'}>
+      {headings.map((heading) => (
+        <li class={heading.depth === 3 ? 'pl-4' : ''}>
+          <a href={`#${heading.slug}`} data-toc-link class="text-muted hover:text-accent transition-colors">
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</Outer>

@@ -31,11 +31,17 @@ const {
 } = Astro.props;
 ---
 
-{cover ? (
-  <div
-    class:list={['relative w-full overflow-hidden bg-surface', ratio, className]}
-    style={{ borderTop: `3px solid ${category.color}` }}
-  >
+<div
+  class:list={[
+    'relative w-full overflow-hidden bg-surface',
+    !cover && 'flex items-center justify-center',
+    ratio,
+    className,
+  ]}
+  style={{ borderTop: `3px solid ${category.color}` }}
+  aria-hidden={cover ? undefined : 'true'}
+>
+  {cover ? (
     <Image
       src={cover}
       alt={coverAlt}
@@ -44,18 +50,12 @@ const {
       loading={eager ? 'eager' : 'lazy'}
       class="absolute inset-0 h-full w-full object-cover"
     />
-  </div>
-) : (
-  <div
-    class:list={['relative flex w-full items-center justify-center overflow-hidden bg-surface', ratio, className]}
-    style={{ borderTop: `3px solid ${category.color}` }}
-    aria-hidden="true"
-  >
+  ) : (
     <span
       class={`block select-none font-serif italic leading-none opacity-30 ${glyph}`}
       style={{ color: category.color }}
     >
       {category.symbol}
     </span>
-  </div>
-)}
+  )}
+</div>
