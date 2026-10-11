@@ -7,26 +7,16 @@
   --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 
-  /* Arena-inspired Palette */
-  --color-paper: #f9f7f1;
-  /* Weathered notebook page */
-  --color-ink: #1a1a1a;
-  /* Sharp ink */
-  --color-leather: #1c1b1a;
-  /* Worn leatherback textbook (Dark Mode BG) */
-  --color-sand: #e6e1d3;
-  /* Darker paper for borders */
-  --color-chalk: #eae5d9;
-  /* Off-white for dark mode text */
-
-  /* #6B6B6B: ~5.3:1 contrast ratio on paper (#F9F7F1) — passes WCAG AA */
-  --color-graphite: #6b6b6b;
-
-  /* Scholastic Accents */
-  --color-academic-blue: #2b4c7e;
-  --color-academic-red: #a63d40;
-  --color-academic-yellow: #d9a441;
-  --color-academic-green: #4a7c59;
+  /* Colours, used as text-fg, bg-canvas, border-line, text-accent, text-muted, bg-surface.
+     These are the light values; :root.dark below overrides them, so components
+     never name a raw colour and a new palette only touches this file. */
+  --color-canvas: #f9f7f1; /* paper */
+  --color-fg: #1a1a1a; /* ink */
+  --color-muted: #6b6b6b; /* 5.3:1 on canvas, WCAG AA */
+  --color-line: #e6e1d3;
+  --color-accent: #2b4c7e;
+  --color-surface: #f0ede6;
+  --color-highlight: #d9a441; /* text selection */
 
   /* ── Fluid Typography Scale (clamp: min → preferred → max) ── */
   --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
@@ -42,84 +32,45 @@
    setting — Tailwind 4 defaults to prefers-color-scheme. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Semantic colour utilities: text-fg, bg-canvas, border-line, text-accent…
-   They resolve to the theme-aware custom properties below, so components never
-   name a raw colour and a new palette only touches this file. */
-@theme inline {
-  --color-canvas: var(--background);
-  --color-fg: var(--foreground);
-  --color-muted: var(--muted);
-  --color-line: var(--border-color);
-  --color-accent: var(--accent-primary);
-  --color-surface: var(--surface-raised);
-}
-
 @layer base {
   :root {
-    --background: var(--color-paper);
-    --foreground: var(--color-ink);
-    --muted: var(--color-graphite);
-    --border-color: var(--color-sand);
-    --accent-primary: var(--color-academic-blue);
-
-    --surface-raised: #f0ede6;
-
-    /* Category colours — each pair passes 4.5:1 on paper and surface-raised */
+    /* Category colours — each passes 4.5:1 on canvas and surface */
     --cat-blue: #2b4c7e;
     --cat-red: #a63d40;
     --cat-green: #3d6b4b;
     --cat-yellow: #7f5a0b;
-
-    /* ── QuoteSection theme tokens (light) ── */
-    --quote-section-bg: var(--color-sand);
-    --quote-text-color: var(--color-ink);
-    --quote-mark-color: rgba(26, 26, 26, 0.08);
-    --quote-author-color: var(--color-graphite);
-    --quote-rule-color: rgba(26, 26, 26, 0.2);
   }
 
   :root.dark {
-    --background: var(--color-leather);
-    --foreground: var(--color-chalk);
-    --muted: #b5b5b5;
-    /* Better contrast on leather background */
-    --border-color: rgba(234, 229, 217, 0.1);
-    --accent-primary: var(--color-academic-yellow);
+    --color-canvas: #1c1b1a; /* leather */
+    --color-fg: #eae5d9; /* chalk */
+    --color-muted: #b5b5b5;
+    --color-line: rgba(234, 229, 217, 0.1);
+    --color-accent: #d9a441;
+    --color-surface: #242320;
 
-    --surface-raised: #242320;
-
-    /* Category colours — lightened for the leather background (≥ 7:1) */
+    /* Category colours — lightened for the dark canvas (≥ 7:1) */
     --cat-blue: #8fb0e3;
     --cat-red: #ee9a9d;
     --cat-green: #8fc9a2;
     --cat-yellow: #e0b35a;
-
-    /* Glow accents */
-    --glow-primary: rgba(217, 164, 65, 0.12);
-
-    /* ── QuoteSection theme tokens (dark) ── */
-    --quote-section-bg: linear-gradient(135deg, var(--color-ink) 0%, #2b2b28 50%, var(--color-ink) 100%);
-    --quote-text-color: var(--color-chalk);
-    --quote-mark-color: rgba(255, 255, 255, 0.06);
-    --quote-author-color: rgba(255, 255, 255, 0.45);
-    --quote-rule-color: rgba(255, 255, 255, 0.18);
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
     font-family: var(--font-serif), serif;
-    /* Crimson Pro has a lower x-height than Source Serif 4 —
-       bump base size slightly so body text reads at the same visual size */
+    /* Crimson Pro has a small x-height; a slightly larger base size keeps body text readable. */
     font-size: var(--text-body);
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
     min-height: 100vh;
+    /* The one place the theme change is animated; elements with their own background follow --duration-slow too. */
     transition:
-      background-color 0.5s ease,
-      color 0.5s ease;
+      background-color var(--duration-slow) ease,
+      color var(--duration-slow) ease;
   }
 
   /* Be Vietnam Pro — give Vietnamese diacritics a hair more room to breathe
@@ -133,7 +84,7 @@
     letter-spacing: 0.05em;
   }
 
-  /* ── Dark Mode Hero Glow ── */
+  /* Warm glow at the top of the page in dark mode */
   :root.dark body::after {
     content: '';
     position: fixed;
@@ -141,7 +92,7 @@
     left: 0;
     width: 100%;
     height: 60vh;
-    background: radial-gradient(ellipse at 50% 0%, var(--glow-primary) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(217, 164, 65, 0.12) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
   }
@@ -207,7 +158,7 @@
     font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
     font-weight: 500;
     line-height: 1.2;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content h3 {
@@ -218,7 +169,7 @@
     font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
     font-weight: 500;
     line-height: 1.3;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content p {
@@ -226,7 +177,7 @@
     font-family: var(--font-serif);
     font-size: var(--text-article);
     line-height: 1.75;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content ul,
@@ -236,7 +187,7 @@
     font-family: var(--font-serif);
     font-size: var(--text-article);
     line-height: 1.75;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content ul {
@@ -252,16 +203,16 @@
 
   .article-content blockquote {
     margin: 2rem 0;
-    border-left: 2px solid var(--accent-primary);
-    background: color-mix(in srgb, var(--accent-primary) 8%, transparent);
+    border-left: 2px solid var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
     padding: 0.5rem 0 0.5rem 1.5rem;
     font-family: var(--font-serif);
     font-style: italic;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content a {
-    color: var(--accent-primary);
+    color: var(--color-accent);
     text-decoration: none;
   }
 
@@ -271,14 +222,14 @@
 
   .article-content strong {
     font-weight: 700;
-    color: var(--foreground);
+    color: var(--color-fg);
   }
 
   .article-content pre {
     margin: 2rem 0;
     overflow-x: auto;
-    border: 1px solid var(--border-color);
-    background: var(--surface-raised);
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
     padding: 1rem;
     font-family: var(--font-mono);
     font-size: 0.875rem;
@@ -293,7 +244,7 @@
   /* ── Theorem-like blocks (components/mdx/Statement.astro) ── */
   .article-content .statement {
     margin: 2rem 0;
-    border-left: 2px solid var(--accent-primary);
+    border-left: 2px solid var(--color-accent);
     padding: 0.25rem 0 0.25rem 1.25rem;
   }
 
@@ -317,7 +268,7 @@
   }
 
   .article-content :is(.statement-example, .statement-remark) {
-    border-left-color: var(--border-color);
+    border-left-color: var(--color-line);
   }
 
   .article-content .statement-body > :last-child,
@@ -340,7 +291,7 @@
     display: block;
     text-align: right;
     line-height: 1;
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   /* ── Figures ── */
@@ -351,7 +302,7 @@
   .article-content .figure img {
     width: 100%;
     height: auto;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-line);
   }
 
   .article-content .figure figcaption {
@@ -359,7 +310,7 @@
     font-family: var(--font-sans);
     font-size: var(--text-small);
     line-height: 1.6;
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   .article-content .figure-credit {
@@ -375,7 +326,7 @@
   }
 
   .article-content .term-original {
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   /* ── Footnotes ([^1] syntax) ── */
@@ -387,11 +338,11 @@
 
   .article-content .footnotes {
     margin-top: 4rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--color-line);
     padding-top: 1.5rem;
     font-family: var(--font-sans);
     font-size: var(--text-small);
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   .article-content .footnotes h2 {
@@ -401,13 +352,13 @@
     font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   .article-content .footnotes :is(p, li) {
     font-family: var(--font-sans);
     font-size: var(--text-small);
-    color: var(--muted);
+    color: var(--color-muted);
   }
 
   /* KaTeX display math can be wider than the measure on phones. */

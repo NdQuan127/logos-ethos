@@ -70,7 +70,7 @@ const socialImage = image ? new URL(image, site.url).toString() : undefined;
     <slot name="head" />
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
-  <body class="antialiased selection:bg-academic-yellow/30">
+  <body class="antialiased selection:bg-highlight/30">
     <slot />
     <script>
       import { initSite } from '../scripts/site';

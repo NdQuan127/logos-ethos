@@ -17,7 +17,7 @@ const recentPosts = allPosts.filter((post) => post !== featuredPost).slice(0, RE
 const categories = summarizeCategories(allPosts);
 ---
 
-<SiteLayout class="overflow-hidden transition-colors duration-500">
+<SiteLayout class="overflow-hidden">
   <HeroSection categories={categories} />
   {featuredPost && (
     <AnimateOnScroll animation="fade-up" threshold={0.05}>
