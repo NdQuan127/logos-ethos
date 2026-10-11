@@ -2,7 +2,7 @@
 @source "../**/*.{astro,ts,mdx}";
 
 @theme {
-  /* Font stacks — fontsource self-hosted, defined in fonts.css */
+  /* Font stacks — the font files are imported in fonts.css */
   --font-serif: 'Crimson Pro', Georgia, serif;
   --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
@@ -29,20 +29,12 @@
   --color-academic-green: #4A7C59;
 
   /* ── Fluid Typography Scale (clamp: min → preferred → max) ── */
-  --text-display: clamp(3rem, 2.5rem + 2.5vw, 5.5rem);
-  --text-h1:      clamp(2.25rem, 1.8rem + 2vw, 4rem);
-  --text-h2:      clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
-  --text-h3:      clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
   --text-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --text-small:   clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
   --text-article: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem);
 
   /* ── Animation Tokens ── */
   --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
-  /* Note: --ease-spring (bounce easing) removed — conflicts with brand's
-     composed, deliberate aesthetic. Use --ease-out for all transitions. */
-  --duration-fast:   150ms;
-  --duration-normal: 300ms;
   --duration-slow:   500ms;
 }
 
@@ -70,11 +62,7 @@
     --border-color: var(--color-sand);
     --accent-primary: var(--color-academic-blue);
 
-    /* Surface hierarchy (light mode — same as background) */
     --surface-raised:  #F0EDE6;
-    --surface-overlay: #E8E4DB;
-    --border-subtle:   rgba(0, 0, 0, 0.06);
-    --border-default:  var(--color-sand);
 
     /* Category colours — each pair passes 4.5:1 on paper and surface-raised */
     --cat-blue:   #2B4C7E;
@@ -98,12 +86,7 @@
     --border-color: rgba(234, 229, 217, 0.1);
     --accent-primary: var(--color-academic-yellow);
 
-    /* ── Layered dark surfaces (Idea #7) ── */
     --surface-raised:  #242320;
-    --surface-overlay: #2C2B28;
-    --surface-hover:   #343330;
-    --border-subtle:   rgba(255, 255, 255, 0.06);
-    --border-default:  rgba(255, 255, 255, 0.10);
 
     /* Category colours — lightened for the leather background (≥ 7:1) */
     --cat-blue:   #8FB0E3;
@@ -148,7 +131,7 @@
     letter-spacing: 0.05em;
   }
 
-  /* ── Dark Mode Hero Glow (Idea #7) ── */
+  /* ── Dark Mode Hero Glow ── */
   :root.dark body::after {
     content: "";
     position: fixed;
@@ -167,10 +150,6 @@
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
   /* Hero section fade-in animations — CSS only (no motion library needed) */
   .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
@@ -182,7 +161,7 @@
     opacity: 0;
   }
 
-  /* ── Scroll-triggered Animation Classes (Idea #6) ── */
+  /* ── Scroll-triggered Animation Classes ── */
   /* Base state: hidden. AnimateOnScroll component adds 'is-visible' via IntersectionObserver */
   .js .animate-on-scroll {
     opacity: 0;
@@ -192,8 +171,6 @@
   }
 
   .js .animate-on-scroll.fade-up   { transform: translateY(28px); }
-  .js .animate-on-scroll.fade-in   { transform: none; }
-  .js .animate-on-scroll.slide-left { transform: translateX(-28px); }
   .js .animate-on-scroll.scale-up  { transform: scale(0.96); }
 
   .js .animate-on-scroll.is-visible {
@@ -211,18 +188,12 @@
 
     .js .animate-on-scroll,
     .js .animate-on-scroll.fade-up,
-    .js .animate-on-scroll.slide-left,
     .js .animate-on-scroll.scale-up {
       opacity: 1;
       transform: none;
       transition: none;
     }
 
-    :root {
-      --duration-fast: 0ms;
-      --duration-normal: 0ms;
-      --duration-slow: 0ms;
-    }
   }
 }
 

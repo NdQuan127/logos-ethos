@@ -1,5 +1,5 @@
 ---
-import { Circle, Grid, Triangle } from 'lucide-astro';
+import { Circle, Grid3x3, Triangle } from '@lucide/astro';
 import type { CategoryView, Summary } from '../../lib/content';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { categories } = Astro.props;
-const icons = [Grid, Circle, Triangle];
+const icons = [Grid3x3, Circle, Triangle];
 const topics = categories.slice(0, 3).map(({ item, count }, index) => ({
   Icon: icons[index % icons.length],
   name: item.name,
