@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getActiveSeries,
   getRelatedPosts,
   getSeriesPosts,
   pickFeatured,
@@ -72,6 +73,15 @@ describe('getSeriesPosts', () => {
     const other = post('other');
 
     expect(getSeriesPosts([second, other, first], 'bat-toan').map((p) => p.slug)).toEqual(['first', 'second']);
+  });
+});
+
+describe('getActiveSeries', () => {
+  it('lists each series that has posts once', () => {
+    const posts = [post('a', { series: series(1) }), post('b'), post('c', { series: series(2) })];
+
+    expect(getActiveSeries(posts).map((s) => s.id)).toEqual(['bat-toan']);
+    expect(getActiveSeries([post('d')])).toEqual([]);
   });
 });
 

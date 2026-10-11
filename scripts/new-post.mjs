@@ -1,14 +1,15 @@
 // Usage: npm run new -- "Tiêu đề bài viết" [--category logic-hoc]
 import fs from 'node:fs';
 import path from 'node:path';
+import { parse } from 'yaml';
+import { slugify } from '../src/lib/slug.ts';
 
 const args = process.argv.slice(2);
 const categoryFlag = args.indexOf('--category');
 const category = categoryFlag >= 0 ? args.splice(categoryFlag, 2)[1] : undefined;
 const title = args.join(' ').trim();
 
-const categoriesFile = fs.readFileSync('src/content/taxonomy/categories.yaml', 'utf8');
-const categoryIds = [...categoriesFile.matchAll(/^- id: ([a-z0-9-]+)$/gm)].map((match) => match[1]);
+const categoryIds = parse(fs.readFileSync('src/content/taxonomy/categories.yaml', 'utf8')).map((item) => item.id);
 
 if (!title) {
   console.error('Thiếu tiêu đề. Ví dụ: npm run new -- "Nghịch lý Russell" --category nghich-ly');
@@ -19,13 +20,7 @@ if (category && !categoryIds.includes(category)) {
   process.exit(1);
 }
 
-const slug = title
-  .normalize('NFD')
-  .replace(/[̀-ͯ]/g, '')
-  .replace(/[đĐ]/g, 'd')
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-+|-+$/g, '');
+const slug = slugify(title);
 const dir = path.join('src/content/blog', slug);
 
 if (fs.existsSync(dir)) {

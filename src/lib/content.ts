@@ -144,21 +144,29 @@ export function pickFeatured(posts: PostView[]): PostView | undefined {
 
 /** Categories that have at least one post, most used first. */
 export function summarizeCategories(posts: PostView[]): Summary<CategoryView>[] {
-  return summarize(posts.map((post) => [post.category.id, post.category]));
+  return summarize(
+    posts.map((post) => post.category),
+    (category) => category.id,
+    (category) => category.name,
+  );
 }
 
 /** Tags that have at least one post, most used first. */
 export function summarizeTags(posts: PostView[]): Summary<TagView>[] {
-  return summarize(posts.flatMap((post) => post.tags.map((tag) => [tag.slug, tag] as const)));
+  return summarize(
+    posts.flatMap((post) => post.tags),
+    (tag) => tag.slug,
+    (tag) => tag.name,
+  );
 }
 
-function summarize<T extends { name?: string; title?: string }>(pairs: (readonly [string, T])[]): Summary<T>[] {
+/** Each distinct item once with its number of occurrences, most frequent first, then by label. */
+function summarize<T>(items: T[], key: (item: T) => string, label: (item: T) => string): Summary<T>[] {
   const counts = new Map<string, Summary<T>>();
-  for (const [key, item] of pairs) {
-    const current = counts.get(key);
-    counts.set(key, { item: current?.item ?? item, count: (current?.count ?? 0) + 1 });
+  for (const item of items) {
+    const current = counts.get(key(item));
+    counts.set(key(item), { item: current?.item ?? item, count: (current?.count ?? 0) + 1 });
   }
-  const label = (item: T) => item.name ?? item.title ?? '';
   return [...counts.values()].sort((a, b) => b.count - a.count || label(a.item).localeCompare(label(b.item), 'vi'));
 }
 
@@ -169,8 +177,10 @@ export function getSeriesPosts(posts: PostView[], seriesId: string): PostView[] 
     .sort((a, b) => (a.series?.order ?? 0) - (b.series?.order ?? 0));
 }
 
-export async function getAllSeries(): Promise<SeriesView[]> {
-  return (await getCollection('series')).map(toSeriesView);
+/** Series that have at least one published post. */
+export function getActiveSeries(posts: PostView[]): SeriesView[] {
+  const series = new Map(posts.flatMap((post) => (post.series ? [[post.series.id, post.series] as const] : [])));
+  return [...series.values()];
 }
 
 /**

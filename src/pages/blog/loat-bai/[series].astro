@@ -1,15 +1,14 @@
 ---
 import ListingLayout from '../../../layouts/ListingLayout.astro';
 import PostGrid from '../../../components/post/PostGrid.astro';
-import { getAllSeries, getPosts, getSeriesPosts } from '../../../lib/content';
+import { getActiveSeries, getPosts, getSeriesPosts } from '../../../lib/content';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
-  const allSeries = await getAllSeries();
-  return allSeries
-    .map((series) => ({ series, posts: getSeriesPosts(posts, series.id) }))
-    .filter(({ posts }) => posts.length > 0)
-    .map(({ series, posts }) => ({ params: { series: series.id }, props: { series, posts } }));
+  return getActiveSeries(posts).map((series) => ({
+    params: { series: series.id },
+    props: { series, posts: getSeriesPosts(posts, series.id) },
+  }));
 }
 
 const { series, posts } = Astro.props;

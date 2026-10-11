@@ -24,7 +24,8 @@ export const site = {
   title: 'Logos & Ethos',
   shortName: 'L',
   description: 'Về những giới hạn của sự hiểu biết — nơi toán học và triết học cùng đặt câu hỏi cho lý trí.',
-  url: import.meta.env.SITE_URL ?? 'https://logos-ethos.netlify.app',
+  /** The `site` option from astro.config.mjs, which reads SITE_URL. */
+  url: import.meta.env.SITE,
   locale: 'vi_VN',
   lang: 'vi',
   email,
