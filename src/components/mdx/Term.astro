@@ -12,4 +12,12 @@ interface Props {
 const { original, lang = 'en' } = Astro.props;
 ---
 
-<dfn class="term"><slot /></dfn>{original && <span class="term-original"> (<i lang={lang}>{original}</i>)</span>}
+<dfn class="term">
+  <slot />
+</dfn>
+{original && (
+  <span class="term-original">
+    {' '}
+    (<i lang={lang}>{original}</i>)
+  </span>
+)}

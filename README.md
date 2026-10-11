@@ -29,20 +29,20 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [Astro 7](https://astro.build) |
-| Language | [TypeScript 5.9](https://www.typescriptlang.org) |
-| Styling | [Tailwind CSS 4](https://tailwindcss.com) + CSS Custom Properties |
-| Content | [MDX](https://mdxjs.com) + Astro content collections |
-| Icons | [Lucide Astro](https://lucide.dev) |
-| Hosting | [Netlify](https://www.netlify.com) |
+| Layer     | Technology                                                        |
+| --------- | ----------------------------------------------------------------- |
+| Framework | [Astro 7](https://astro.build)                                    |
+| Language  | [TypeScript 5.9](https://www.typescriptlang.org)                  |
+| Styling   | [Tailwind CSS 4](https://tailwindcss.com) + CSS Custom Properties |
+| Content   | [MDX](https://mdxjs.com) + Astro content collections              |
+| Icons     | [Lucide Astro](https://lucide.dev)                                |
+| Hosting   | [Netlify](https://www.netlify.com)                                |
 
 ## Cài đặt
 
 ### Yêu cầu
 
-- Node.js >= 20
+- Node.js >= 22.12 (khuyến nghị 24, xem `.node-version`)
 - npm >= 10
 
 ### Chạy local

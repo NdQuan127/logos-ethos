@@ -13,7 +13,10 @@ const { tags, class: className } = Astro.props;
   <ul class:list={['flex flex-wrap gap-2 font-mono text-xs', className]} aria-label="Thẻ">
     {tags.map((tag) => (
       <li>
-        <a href={tag.href} class="inline-flex min-h-8 items-center border border-line px-3 text-muted hover:border-fg/30 hover:text-fg transition-colors">
+        <a
+          href={tag.href}
+          class="inline-flex min-h-8 items-center border border-line px-3 text-muted hover:border-fg/30 hover:text-fg transition-colors"
+        >
           #{tag.name}
         </a>
       </li>

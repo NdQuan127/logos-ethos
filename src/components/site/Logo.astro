@@ -9,10 +9,11 @@ const { class: className = '' } = Astro.props;
 ---
 
 <a href="/" class:list={['flex items-center gap-3', className]} aria-label={`${site.title} — trang chủ`}>
-  <div class="w-6 h-6 bg-fg text-canvas flex items-center justify-center font-mono text-xs font-bold rounded-sm" aria-hidden="true">
+  <div
+    class="w-6 h-6 bg-fg text-canvas flex items-center justify-center font-mono text-xs font-bold rounded-sm"
+    aria-hidden="true"
+  >
     {site.shortName}
   </div>
-  <span class="font-sans font-bold tracking-tight text-fg uppercase text-sm">
-    {site.title}
-  </span>
+  <span class="font-sans font-bold tracking-tight text-fg uppercase text-sm">{site.title}</span>
 </a>

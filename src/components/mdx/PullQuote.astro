@@ -10,9 +10,5 @@ const { author } = Astro.props;
   <blockquote class="font-serif text-2xl md:text-3xl italic leading-snug text-fg">
     <slot />
   </blockquote>
-  {author && (
-    <figcaption class="mt-5 font-mono text-xs uppercase tracking-widest text-muted">
-      {author}
-    </figcaption>
-  )}
+  {author && <figcaption class="mt-5 font-mono text-xs uppercase tracking-widest text-muted">{author}</figcaption>}
 </figure>

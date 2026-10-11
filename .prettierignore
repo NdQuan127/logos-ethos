@@ -1,0 +1,6 @@
+dist
+.astro
+node_modules
+package-lock.json
+# MDX posts are prose; Prettier would rewrap and re-escape them.
+src/content/**/*.mdx

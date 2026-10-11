@@ -9,7 +9,9 @@ function setTheme(dark: boolean) {
   button?.setAttribute('aria-label', dark ? 'Bật chế độ sáng' : 'Bật chế độ tối');
   try {
     localStorage.setItem('theme', dark ? 'dark' : 'light');
-  } catch {}
+  } catch {
+    // Storage can be blocked; the choice then lasts for this page only.
+  }
 }
 
 export function initTheme() {

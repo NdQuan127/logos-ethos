@@ -16,12 +16,8 @@ const { post } = Astro.props;
       <p class="font-mono text-xs font-semibold tracking-wide mb-3" style={{ color: post.category.color }}>
         {post.category.name}
       </p>
-      <h2 class="font-serif text-4xl md:text-5xl text-fg mb-6 leading-tight">
-        {post.title}
-      </h2>
-      <p class="font-sans text-muted text-lg leading-relaxed mb-8 line-clamp-4">
-        {post.description}
-      </p>
+      <h2 class="font-serif text-4xl md:text-5xl text-fg mb-6 leading-tight">{post.title}</h2>
+      <p class="font-sans text-muted text-lg leading-relaxed mb-8 line-clamp-4">{post.description}</p>
       <a
         href={post.href}
         class="group flex items-center gap-3 text-fg font-mono text-sm uppercase tracking-wider hover:text-accent transition-colors w-fit"
@@ -31,6 +27,14 @@ const { post } = Astro.props;
         <ArrowRight size={16} class="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
       </a>
     </div>
-    <PostCover category={post.category} cover={post.cover} coverAlt={post.coverAlt} sizes="(min-width: 1024px) 40rem, 100vw" ratio="" glyph="text-[12rem]" class="min-h-[320px] lg:min-h-[400px]" />
+    <PostCover
+      category={post.category}
+      cover={post.cover}
+      coverAlt={post.coverAlt}
+      sizes="(min-width: 1024px) 40rem, 100vw"
+      ratio=""
+      glyph="text-[12rem]"
+      class="min-h-[320px] lg:min-h-[400px]"
+    />
   </div>
 </section>

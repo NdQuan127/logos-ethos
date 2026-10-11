@@ -31,9 +31,7 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
         aria-current={link.current ? 'page' : undefined}
         class:list={[
           'border-b-2 py-1 transition-colors hover:text-accent',
-          link.current
-            ? 'border-accent text-fg'
-            : 'border-transparent text-muted',
+          link.current ? 'border-accent text-fg' : 'border-transparent text-muted',
         ]}
       >
         {link.label}
@@ -51,8 +49,12 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
       aria-controls="mobile-menu"
     >
       <span class="relative block w-[18px] h-[18px]">
-        <span data-nav-menu-icon class="absolute inset-0 transition-all duration-300"><Menu size={18} /></span>
-        <span data-nav-close-icon class="absolute inset-0 transition-all duration-300 opacity-0 -rotate-90 scale-75"><X size={18} /></span>
+        <span data-nav-menu-icon class="absolute inset-0 transition-all duration-300">
+          <Menu size={18} />
+        </span>
+        <span data-nav-close-icon class="absolute inset-0 transition-all duration-300 opacity-0 -rotate-90 scale-75">
+          <X size={18} />
+        </span>
       </span>
     </button>
   </div>
@@ -67,7 +69,11 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
   aria-label="Menu điều hướng"
   aria-hidden="true"
 >
-  <div data-nav-backdrop class="absolute inset-0 bg-fg/30 backdrop-blur-sm transition-opacity duration-300 opacity-0" aria-hidden="true" />
+  <div
+    data-nav-backdrop
+    class="absolute inset-0 bg-fg/30 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+    aria-hidden="true"
+  />
   <div
     data-nav-panel
     class="absolute top-0 right-0 h-full w-72 bg-canvas border-l border-line p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] translate-x-full"

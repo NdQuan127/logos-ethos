@@ -14,8 +14,7 @@ const required = [
 
 const missing = required.filter((file) => !fs.existsSync(path.join(dist, file)));
 const sitemapExists =
-  fs.existsSync(path.join(dist, 'sitemap-index.xml')) ||
-  fs.existsSync(path.join(dist, 'sitemap.xml'));
+  fs.existsSync(path.join(dist, 'sitemap-index.xml')) || fs.existsSync(path.join(dist, 'sitemap.xml'));
 
 if (missing.length > 0 || !sitemapExists) {
   console.error('Missing static output:');

@@ -35,7 +35,11 @@ const topics = categories.slice(0, 3).map(({ item, count }, index) => ({
         </blockquote>
       </div>
       {topics.length > 0 && (
-        <nav class="lg:col-span-4 flex flex-col justify-end animate-fade-in" style="animation-delay: 400ms" aria-label="Khám phá theo chủ đề">
+        <nav
+          class="lg:col-span-4 flex flex-col justify-end animate-fade-in"
+          style="animation-delay: 400ms"
+          aria-label="Khám phá theo chủ đề"
+        >
           <p class="font-mono text-xs uppercase tracking-widest text-muted mb-4">Chủ đề</p>
           <div class="font-mono text-sm text-muted">
             {topics.map(({ Icon, name, count, description, href }) => (

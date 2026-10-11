@@ -57,7 +57,9 @@ function initTableOfContents() {
     },
     { rootMargin: '-20% 0px -65% 0px' },
   );
-  document.querySelectorAll<HTMLElement>('article h2[id], article h3[id]').forEach((heading) => observer.observe(heading));
+  document
+    .querySelectorAll<HTMLElement>('article h2[id], article h3[id]')
+    .forEach((heading) => observer.observe(heading));
 }
 
 function initShare() {
@@ -77,7 +79,9 @@ function initShare() {
       setTimeout(() => {
         if (label) label.textContent = 'Chia sẻ';
       }, 2000);
-    } catch {}
+    } catch {
+      // The reader cancelled the share sheet or clipboard access was denied.
+    }
   });
 }
 

@@ -12,22 +12,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
     <div class="relative z-10 flex flex-col items-center">
       <div class="relative mb-12">
-        <span class="font-serif text-[12rem] md:text-[18rem] leading-none text-fg opacity-[0.04] font-bold select-none">404</span>
+        <span class="font-serif text-[12rem] md:text-[18rem] leading-none text-fg opacity-[0.04] font-bold select-none">
+          404
+        </span>
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="w-px h-64 bg-gradient-to-b from-transparent via-accent/40 to-transparent rotate-45"></div>
           <div class="w-px h-64 bg-gradient-to-b from-transparent via-accent/40 to-transparent -rotate-45"></div>
         </div>
       </div>
-      <p class="font-mono text-xs text-accent uppercase tracking-[0.3em] mb-4 font-semibold">
-        Nghịch lý sự vắng mặt
-      </p>
+      <p class="font-mono text-xs text-accent uppercase tracking-[0.3em] mb-4 font-semibold">Nghịch lý sự vắng mặt</p>
       <h1 class="font-serif text-4xl md:text-5xl text-fg mb-6 leading-tight font-medium max-w-lg">
         Trang bạn tìm kiếm không có trong không gian này
       </h1>
       <p class="font-sans text-muted text-lg mb-12 max-w-md leading-relaxed">
         Có lẽ nó đã bị triệt tiêu bởi một mệnh đề Logic sai lầm, hoặc đơn giản là chưa bao giờ tồn tại.
       </p>
-      <a href="/" class="group px-8 py-3 bg-fg text-canvas font-mono text-xs uppercase tracking-[0.2em] rounded-sm hover:opacity-90 transition-opacity duration-300 flex items-center gap-3">
+      <a
+        href="/"
+        class="group px-8 py-3 bg-fg text-canvas font-mono text-xs uppercase tracking-[0.2em] rounded-sm hover:opacity-90 transition-opacity duration-300 flex items-center gap-3"
+      >
         <span>Về miền thực tại</span>
         <ArrowRight size={14} class="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
       </a>

@@ -37,22 +37,22 @@ src/content/
 
 ## Frontmatter
 
-| Trường | Bắt buộc | Ghi chú |
-|---|---|---|
-| `title` | ✓ | |
-| `description` | ✓ | 40–220 ký tự. Dùng cho thẻ bài viết, meta description, RSS. |
-| `date` | ✓ | `YYYY-MM-DD` |
-| `updated` | | Ngày sửa nội dung đáng kể. Hiện "Cập nhật …" và `dateModified` cho SEO. |
-| `category` | ✓ | Một `id` trong `taxonomy/categories.yaml`. |
-| `tags` | | Danh sách tự do, ví dụ `["Gödel", "tự tham chiếu"]`. URL tự sinh không dấu. |
-| `series` | | Một `id` trong `taxonomy/series.yaml`. Đi kèm `seriesOrder`. |
-| `seriesOrder` | khi có `series` | Số thứ tự trong loạt, bắt đầu từ 1. |
-| `draft` | | `true` để ẩn khỏi production. |
-| `featured` | | Ghim lên vị trí nổi bật ở trang chủ. Nếu không bài nào ghim, bài mới nhất được chọn. |
-| `cover` | | Đường dẫn tương đối, ví dụ `./cover.jpg`. Không có thì dùng ký hiệu của chủ đề. |
-| `coverAlt` | khi có `cover` | Mô tả nội dung ảnh cho người dùng trình đọc màn hình. |
-| `toc` | | `false` để ẩn mục lục (mặc định hiện). |
-| `sources` | | Tài liệu tham khảo: `title`, tuỳ chọn `author`, `url`. |
+| Trường        | Bắt buộc        | Ghi chú                                                                              |
+| ------------- | --------------- | ------------------------------------------------------------------------------------ |
+| `title`       | ✓               |                                                                                      |
+| `description` | ✓               | 40–220 ký tự. Dùng cho thẻ bài viết, meta description, RSS.                          |
+| `date`        | ✓               | `YYYY-MM-DD`                                                                         |
+| `updated`     |                 | Ngày sửa nội dung đáng kể. Hiện "Cập nhật …" và `dateModified` cho SEO.              |
+| `category`    | ✓               | Một `id` trong `taxonomy/categories.yaml`.                                           |
+| `tags`        |                 | Danh sách tự do, ví dụ `["Gödel", "tự tham chiếu"]`. URL tự sinh không dấu.          |
+| `series`      |                 | Một `id` trong `taxonomy/series.yaml`. Đi kèm `seriesOrder`.                         |
+| `seriesOrder` | khi có `series` | Số thứ tự trong loạt, bắt đầu từ 1.                                                  |
+| `draft`       |                 | `true` để ẩn khỏi production.                                                        |
+| `featured`    |                 | Ghim lên vị trí nổi bật ở trang chủ. Nếu không bài nào ghim, bài mới nhất được chọn. |
+| `cover`       |                 | Đường dẫn tương đối, ví dụ `./cover.jpg`. Không có thì dùng ký hiệu của chủ đề.      |
+| `coverAlt`    | khi có `cover`  | Mô tả nội dung ảnh cho người dùng trình đọc màn hình.                                |
+| `toc`         |                 | `false` để ẩn mục lục (mặc định hiện).                                               |
+| `sources`     |                 | Tài liệu tham khảo: `title`, tuỳ chọn `author`, `url`.                               |
 
 Giữ thứ tự trường như bảng trên để mọi bài trông giống nhau.
 
@@ -81,7 +81,7 @@ $$
 ```mdx
 Gödel công bố kết quả năm 1931.[^1]
 
-[^1]: Kurt Gödel, *Über formal unentscheidbare Sätze…*
+[^1]: Kurt Gödel, _Über formal unentscheidbare Sätze…_
 ```
 
 ### Ảnh
@@ -104,25 +104,23 @@ import hilbert from './hilbert.jpg';
 
 Dùng trực tiếp trong mọi bài, không cần `import`. Danh sách đăng ký tại `src/components/mdx/index.ts`.
 
-| Component | Dùng cho |
-|---|---|
+| Component                                                         | Dùng cho                                                              |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------- |
 | `<Theorem>`, `<Lemma>`, `<Proposition>`, `<Corollary>`, `<Axiom>` | Mệnh đề toán học. Nội dung in nghiêng theo quy ước. Tuỳ chọn `title`. |
-| `<Definition>`, `<Example>`, `<Remark>` | Định nghĩa, ví dụ, nhận xét. Tuỳ chọn `title`. |
-| `<Proof>` | Chứng minh, tự thêm ∎. Tuỳ chọn `label="Phác thảo chứng minh"`. |
-| `<Term original="Consistency">Tính nhất quán</Term>` | Thuật ngữ kèm tên gốc. Tuỳ chọn `lang` (mặc định `en`). |
-| `<Callout type="note \| warning \| idea" title="…">` | Hộp ghi chú. |
-| `<Sidenote label="…">` | Ghi chú bên lề trên màn hình rộng, thu gọn trên điện thoại. |
-| `<PullQuote author="…">` | Trích dẫn nổi bật. |
-| `<Figure>` | Ảnh có chú thích (xem trên). |
+| `<Definition>`, `<Example>`, `<Remark>`                           | Định nghĩa, ví dụ, nhận xét. Tuỳ chọn `title`.                        |
+| `<Proof>`                                                         | Chứng minh, tự thêm ∎. Tuỳ chọn `label="Phác thảo chứng minh"`.       |
+| `<Term original="Consistency">Tính nhất quán</Term>`              | Thuật ngữ kèm tên gốc. Tuỳ chọn `lang` (mặc định `en`).               |
+| `<Callout type="note \| warning \| idea" title="…">`              | Hộp ghi chú.                                                          |
+| `<Sidenote label="…">`                                            | Ghi chú bên lề trên màn hình rộng, thu gọn trên điện thoại.           |
+| `<PullQuote author="…">`                                          | Trích dẫn nổi bật.                                                    |
+| `<Figure>`                                                        | Ảnh có chú thích (xem trên).                                          |
 
 ```mdx
 <Theorem title="Bất toàn thứ nhất">
-Mọi hệ hình thức nhất quán, đủ mạnh đều chứa một mệnh đề $G$ không thể chứng minh cũng không thể bác bỏ.
+  Mọi hệ hình thức nhất quán, đủ mạnh đều chứa một mệnh đề $G$ không thể chứng minh cũng không thể bác bỏ.
 </Theorem>
 
-<Proof label="Phác thảo chứng minh">
-Xây dựng câu $G$ nói rằng "$G$ không chứng minh được"…
-</Proof>
+<Proof label="Phác thảo chứng minh">Xây dựng câu $G$ nói rằng "$G$ không chứng minh được"…</Proof>
 ```
 
 Thêm component mới: tạo file trong `src/components/mdx/`, đăng ký trong `index.ts`, thêm một dòng vào bảng trên.

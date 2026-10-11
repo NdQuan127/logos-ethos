@@ -17,7 +17,11 @@ const active = 'border-fg bg-fg text-canvas';
 <nav aria-label="Lọc bài viết theo chủ đề" class="mb-12">
   <ul class="flex flex-wrap gap-3">
     <li>
-      <a href={routes.blog} aria-current={activeSlug ? undefined : 'page'} class:list={[base, activeSlug ? idle : active]}>
+      <a
+        href={routes.blog}
+        aria-current={activeSlug ? undefined : 'page'}
+        class:list={[base, activeSlug ? idle : active]}
+      >
         Tất cả <span class="text-xs">{total}</span>
       </a>
     </li>

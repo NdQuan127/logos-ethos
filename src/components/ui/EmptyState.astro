@@ -11,6 +11,8 @@ const { title, description, class: className, ...attrs } = Astro.props;
 
 <div class:list={['text-center py-24', className]} {...attrs}>
   <p class="font-serif text-3xl text-muted italic mb-4">{title}</p>
-  {description && <p class:list={['font-sans text-muted text-sm', Astro.slots.has('default') && 'mb-8']}>{description}</p>}
+  {description && (
+    <p class:list={['font-sans text-muted text-sm', Astro.slots.has('default') && 'mb-8']}>{description}</p>
+  )}
   <slot />
 </div>

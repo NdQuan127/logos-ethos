@@ -49,7 +49,11 @@ for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
     continue;
   }
   const frontmatter = match[1];
-  const field = (name) => frontmatter.match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))?.[1].trim().replace(/^["']|["']$/g, '');
+  const field = (name) =>
+    frontmatter
+      .match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))?.[1]
+      .trim()
+      .replace(/^["']|["']$/g, '');
   const tags = (field('tags') ?? '[]')
     .replace(/^\[|\]$/g, '')
     .split(',')
@@ -77,7 +81,8 @@ for (const post of posts) {
   // Ignore fenced code so examples inside ``` blocks are not checked.
   const prose = body.replace(/```[\s\S]*?```/g, '');
 
-  if (/^# /m.test(prose)) errors.push(`${file}: không dùng tiêu đề cấp 1 (#) trong bài; tiêu đề bài đã là h1, hãy bắt đầu từ ##`);
+  if (/^# /m.test(prose))
+    errors.push(`${file}: không dùng tiêu đề cấp 1 (#) trong bài; tiêu đề bài đã là h1, hãy bắt đầu từ ##`);
 
   let previous = 1;
   for (const [, hashes, text] of prose.matchAll(/^(#{2,6})\s+(.+)$/gm)) {
@@ -88,10 +93,15 @@ for (const post of posts) {
   for (const [, href] of prose.matchAll(/\]\((\/blog\/[^)\s#]*)/g)) {
     const [, kind, id] = href.match(/^\/blog\/(?:(chu-de|tag|loat-bai)\/)?([^/]+)\/?$/) ?? [];
     const ok =
-      kind === 'chu-de' ? categoryIds.has(id)
-      : kind === 'loat-bai' ? seriesIds.has(id)
-      : kind === 'tag' ? true
-      : id ? slugs.has(id) : false;
+      kind === 'chu-de'
+        ? categoryIds.has(id)
+        : kind === 'loat-bai'
+          ? seriesIds.has(id)
+          : kind === 'tag'
+            ? true
+            : id
+              ? slugs.has(id)
+              : false;
     if (!ok) errors.push(`${file}: liên kết nội bộ không tồn tại: ${href}`);
     else if (!href.endsWith('/')) warnings.push(`${file}: liên kết nội bộ nên kết thúc bằng "/": ${href}`);
   }
@@ -100,13 +110,16 @@ for (const post of posts) {
     errors.push(`${file}: vẫn còn mô tả mẫu từ template`);
   }
 
-  if (post.category && !categoryIds.has(post.category)) errors.push(`${file}: chủ đề "${post.category}" không có trong taxonomy/categories.yaml`);
-  if (post.series && !seriesIds.has(post.series)) errors.push(`${file}: loạt bài "${post.series}" không có trong taxonomy/series.yaml`);
+  if (post.category && !categoryIds.has(post.category))
+    errors.push(`${file}: chủ đề "${post.category}" không có trong taxonomy/categories.yaml`);
+  if (post.series && !seriesIds.has(post.series))
+    errors.push(`${file}: loạt bài "${post.series}" không có trong taxonomy/series.yaml`);
 
   for (const tag of post.tags) {
     const key = slugify(tag);
     const seen = tagNames.get(key);
-    if (seen && seen.name !== tag) warnings.push(`${file}: thẻ "${tag}" trùng với "${seen.name}" (${seen.file}); hãy thống nhất một cách viết`);
+    if (seen && seen.name !== tag)
+      warnings.push(`${file}: thẻ "${tag}" trùng với "${seen.name}" (${seen.file}); hãy thống nhất một cách viết`);
     else if (!seen) tagNames.set(key, { name: tag, file });
   }
 

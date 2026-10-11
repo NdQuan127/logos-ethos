@@ -20,12 +20,25 @@ const action = 'min-h-11 px-3 flex items-center gap-2 hover:text-accent transiti
     </button>
     {site.features.bookmarks && (
       <>
-        <button type="button" data-bookmark-button data-bookmark-slug={post.slug} class={action} aria-label="Lưu bài viết" aria-pressed="false">
-          <span data-bookmark-off aria-hidden="true"><Bookmark size={16} /></span>
-          <span data-bookmark-on class="hidden" aria-hidden="true"><BookmarkCheck size={16} /></span>
+        <button
+          type="button"
+          data-bookmark-button
+          data-bookmark-slug={post.slug}
+          class={action}
+          aria-label="Lưu bài viết"
+          aria-pressed="false"
+        >
+          <span data-bookmark-off aria-hidden="true">
+            <Bookmark size={16} />
+          </span>
+          <span data-bookmark-on class="hidden" aria-hidden="true">
+            <BookmarkCheck size={16} />
+          </span>
           <span data-bookmark-label>Lưu</span>
         </button>
-        <a href={routes.saved} class="min-h-11 px-3 flex items-center hover:text-accent transition-colors">Xem bài đã lưu</a>
+        <a href={routes.saved} class="min-h-11 px-3 flex items-center hover:text-accent transition-colors">
+          Xem bài đã lưu
+        </a>
       </>
     )}
   </div>

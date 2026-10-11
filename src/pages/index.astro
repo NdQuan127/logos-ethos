@@ -27,14 +27,13 @@ const categories = summarizeCategories(allPosts);
       <AnimateOnScroll animation="fade-up">
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 pb-6 border-b border-line">
           <div>
-            <span class="font-mono text-xs text-muted uppercase tracking-widest block mb-2">
-              Mới cập nhật
-            </span>
-            <h2 class="font-serif text-3xl md:text-4xl text-fg">
-              Suy ngẫm &amp; Lý luận
-            </h2>
+            <span class="font-mono text-xs text-muted uppercase tracking-widest block mb-2">Mới cập nhật</span>
+            <h2 class="font-serif text-3xl md:text-4xl text-fg">Suy ngẫm &amp; Lý luận</h2>
           </div>
-          <a href={routes.blog} class="font-mono text-xs uppercase tracking-wider text-fg hover:text-accent min-h-11 mt-4 md:mt-0 transition-colors flex items-center gap-2">
+          <a
+            href={routes.blog}
+            class="font-mono text-xs uppercase tracking-wider text-fg hover:text-accent min-h-11 mt-4 md:mt-0 transition-colors flex items-center gap-2"
+          >
             Xem tất cả <ArrowRight size={14} aria-hidden="true" />
           </a>
         </div>
@@ -50,9 +49,7 @@ const categories = summarizeCategories(allPosts);
           ))}
         </div>
       ) : (
-        <p class="font-sans text-muted text-center py-12">
-          Chưa có bài viết nào. Hãy quay lại sớm!
-        </p>
+        <p class="font-sans text-muted text-center py-12">Chưa có bài viết nào. Hãy quay lại sớm!</p>
       )}
     </div>
   </section>

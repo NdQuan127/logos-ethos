@@ -12,8 +12,10 @@
     "new": "node scripts/new-post.mjs",
     "check": "astro check",
     "check:content": "node scripts/check-content.mjs",
-    "lint": "eslint astro.config.mjs eslint.config.mjs scripts",
-    "verify": "node scripts/verify-static-output.mjs"
+    "lint": "eslint .",
+    "verify": "node scripts/verify-static-output.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -33,9 +35,15 @@
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "eslint": "9.39.1",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.12.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.1",
     "tailwindcss": "^4.3.3",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.71.1"
   }
 }

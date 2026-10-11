@@ -159,9 +159,7 @@ function summarize<T extends { name?: string; title?: string }>(pairs: (readonly
     counts.set(key, { item: current?.item ?? item, count: (current?.count ?? 0) + 1 });
   }
   const label = (item: T) => item.name ?? item.title ?? '';
-  return [...counts.values()].sort(
-    (a, b) => b.count - a.count || label(a.item).localeCompare(label(b.item), 'vi'),
-  );
+  return [...counts.values()].sort((a, b) => b.count - a.count || label(a.item).localeCompare(label(b.item), 'vi'));
 }
 
 /** Posts of one series in reading order. */

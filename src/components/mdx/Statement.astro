@@ -28,7 +28,8 @@ const label = STATEMENT_LABELS[kind];
 
 <div class={`statement statement-${kind}`} role="group" aria-label={title ? `${label}: ${title}` : label}>
   <p class="statement-label">
-    <span>{label}</span>{title && <span class="statement-title"> ({title})</span>}.
+    <span>{label}</span>
+    {title && <span class="statement-title"> ({title})</span>}.
   </p>
   <div class="statement-body">
     <slot />

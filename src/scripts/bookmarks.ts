@@ -12,7 +12,9 @@ export function readBookmarks(): string[] {
 export function writeBookmarks(slugs: string[]) {
   try {
     localStorage.setItem(storageKey, JSON.stringify(slugs));
-  } catch {}
+  } catch {
+    // Storage can be blocked or full; bookmarks are best effort.
+  }
 }
 
 export function toggleBookmark(slug: string): boolean {

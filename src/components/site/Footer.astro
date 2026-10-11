@@ -11,23 +11,27 @@ const linkClass = 'font-sans text-sm text-fg hover:text-accent transition-colors
   <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
     <div class="md:col-span-1">
       <Logo class="mb-4" />
-      <p class="font-sans text-xs text-muted leading-relaxed max-w-xs">
-        {site.description}
-      </p>
+      <p class="font-sans text-xs text-muted leading-relaxed max-w-xs">{site.description}</p>
     </div>
     <div class="flex flex-col gap-3">
       <h3 class="font-mono text-xs uppercase tracking-widest text-muted mb-1">Khám phá</h3>
       {enabledLinks(site.footer.explore).map((link) => (
         <a href={link.href} class:list={[linkClass, 'flex items-center gap-1 group w-fit']}>
           {link.label}
-          <ArrowRight size={12} class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" aria-hidden="true" />
+          <ArrowRight
+            size={12}
+            class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+            aria-hidden="true"
+          />
         </a>
       ))}
     </div>
     <div class="flex flex-col gap-3">
       <h3 class="font-mono text-xs uppercase tracking-widest text-muted mb-1">Liên hệ</h3>
       {enabledLinks(site.footer.contact).map((link) => (
-        <a href={link.href} class={linkClass}>{link.label}</a>
+        <a href={link.href} class={linkClass}>
+          {link.label}
+        </a>
       ))}
     </div>
   </div>

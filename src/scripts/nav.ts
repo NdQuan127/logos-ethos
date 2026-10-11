@@ -37,23 +37,23 @@ export function initNav() {
     });
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) setTimeout(() => links[0]?.focus(), 50);
-}
-
-if (!toggle || !bindOnce(toggle, 'nav')) return;
-
-toggle.addEventListener('click', () => {
-  setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-});
-closeButton?.addEventListener('click', () => {
-  setOpen(false);
-  toggle?.focus();
-});
-backdrop?.addEventListener('click', () => setOpen(false));
-links.forEach((link) => link.addEventListener('click', () => setOpen(false)));
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-    setOpen(false);
-    toggle.focus();
   }
-});
+
+  if (!toggle || !bindOnce(toggle, 'nav')) return;
+
+  toggle.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  closeButton?.addEventListener('click', () => {
+    setOpen(false);
+    toggle?.focus();
+  });
+  backdrop?.addEventListener('click', () => setOpen(false));
+  links.forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
 }

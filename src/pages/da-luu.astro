@@ -36,7 +36,10 @@ const posts = await getPosts();
     title="Bạn chưa lưu bài nào."
     description="Nhấn “Lưu” ở cuối mỗi bài viết để đọc lại sau."
   >
-    <a href={routes.blog} class="inline-flex min-h-11 items-center border border-line px-6 font-mono text-sm uppercase tracking-wider text-fg hover:border-accent hover:text-accent transition-colors">
+    <a
+      href={routes.blog}
+      class="inline-flex min-h-11 items-center border border-line px-6 font-mono text-sm uppercase tracking-wider text-fg hover:border-accent hover:text-accent transition-colors"
+    >
       Xem tất cả bài viết
     </a>
   </EmptyState>

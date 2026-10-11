@@ -1,4 +1,4 @@
-@import "tailwindcss" source(none);
+@import 'tailwindcss' source(none);
 @source "../**/*.{astro,ts,mdx}";
 
 @theme {
@@ -8,34 +8,34 @@
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 
   /* Arena-inspired Palette */
-  --color-paper: #F9F7F1;
+  --color-paper: #f9f7f1;
   /* Weathered notebook page */
-  --color-ink: #1A1A1A;
+  --color-ink: #1a1a1a;
   /* Sharp ink */
-  --color-leather: #1C1B1A;
+  --color-leather: #1c1b1a;
   /* Worn leatherback textbook (Dark Mode BG) */
-  --color-sand: #E6E1D3;
+  --color-sand: #e6e1d3;
   /* Darker paper for borders */
-  --color-chalk: #EAE5D9;
+  --color-chalk: #eae5d9;
   /* Off-white for dark mode text */
 
   /* #6B6B6B: ~5.3:1 contrast ratio on paper (#F9F7F1) — passes WCAG AA */
-  --color-graphite: #6B6B6B;
+  --color-graphite: #6b6b6b;
 
   /* Scholastic Accents */
-  --color-academic-blue: #2B4C7E;
-  --color-academic-red: #A63D40;
-  --color-academic-yellow: #D9A441;
-  --color-academic-green: #4A7C59;
+  --color-academic-blue: #2b4c7e;
+  --color-academic-red: #a63d40;
+  --color-academic-yellow: #d9a441;
+  --color-academic-green: #4a7c59;
 
   /* ── Fluid Typography Scale (clamp: min → preferred → max) ── */
-  --text-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-small:   clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
   --text-article: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem);
 
   /* ── Animation Tokens ── */
-  --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-slow:   500ms;
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-slow: 500ms;
 }
 
 /* `dark:` follows the theme toggle (the .dark class on <html>), not the OS
@@ -62,47 +62,47 @@
     --border-color: var(--color-sand);
     --accent-primary: var(--color-academic-blue);
 
-    --surface-raised:  #F0EDE6;
+    --surface-raised: #f0ede6;
 
     /* Category colours — each pair passes 4.5:1 on paper and surface-raised */
-    --cat-blue:   #2B4C7E;
-    --cat-red:    #A63D40;
-    --cat-green:  #3D6B4B;
-    --cat-yellow: #7F5A0B;
+    --cat-blue: #2b4c7e;
+    --cat-red: #a63d40;
+    --cat-green: #3d6b4b;
+    --cat-yellow: #7f5a0b;
 
     /* ── QuoteSection theme tokens (light) ── */
-    --quote-section-bg:   var(--color-sand);
-    --quote-text-color:   var(--color-ink);
-    --quote-mark-color:   rgba(26, 26, 26, 0.08);
+    --quote-section-bg: var(--color-sand);
+    --quote-text-color: var(--color-ink);
+    --quote-mark-color: rgba(26, 26, 26, 0.08);
     --quote-author-color: var(--color-graphite);
-    --quote-rule-color:   rgba(26, 26, 26, 0.2);
+    --quote-rule-color: rgba(26, 26, 26, 0.2);
   }
 
   :root.dark {
     --background: var(--color-leather);
     --foreground: var(--color-chalk);
-    --muted: #B5B5B5;
+    --muted: #b5b5b5;
     /* Better contrast on leather background */
     --border-color: rgba(234, 229, 217, 0.1);
     --accent-primary: var(--color-academic-yellow);
 
-    --surface-raised:  #242320;
+    --surface-raised: #242320;
 
     /* Category colours — lightened for the leather background (≥ 7:1) */
-    --cat-blue:   #8FB0E3;
-    --cat-red:    #EE9A9D;
-    --cat-green:  #8FC9A2;
-    --cat-yellow: #E0B35A;
+    --cat-blue: #8fb0e3;
+    --cat-red: #ee9a9d;
+    --cat-green: #8fc9a2;
+    --cat-yellow: #e0b35a;
 
     /* Glow accents */
     --glow-primary: rgba(217, 164, 65, 0.12);
 
     /* ── QuoteSection theme tokens (dark) ── */
-    --quote-section-bg:   linear-gradient(135deg, var(--color-ink) 0%, #2B2B28 50%, var(--color-ink) 100%);
-    --quote-text-color:   var(--color-chalk);
-    --quote-mark-color:   rgba(255, 255, 255, 0.06);
+    --quote-section-bg: linear-gradient(135deg, var(--color-ink) 0%, #2b2b28 50%, var(--color-ink) 100%);
+    --quote-text-color: var(--color-chalk);
+    --quote-mark-color: rgba(255, 255, 255, 0.06);
     --quote-author-color: rgba(255, 255, 255, 0.45);
-    --quote-rule-color:   rgba(255, 255, 255, 0.18);
+    --quote-rule-color: rgba(255, 255, 255, 0.18);
   }
 
   body {
@@ -117,7 +117,9 @@
     -moz-osx-font-smoothing: grayscale;
     position: relative;
     min-height: 100vh;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition:
+      background-color 0.5s ease,
+      color 0.5s ease;
   }
 
   /* Be Vietnam Pro — give Vietnamese diacritics a hair more room to breathe
@@ -133,17 +135,13 @@
 
   /* ── Dark Mode Hero Glow ── */
   :root.dark body::after {
-    content: "";
+    content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 60vh;
-    background: radial-gradient(
-      ellipse at 50% 0%,
-      var(--glow-primary) 0%,
-      transparent 70%
-    );
+    background: radial-gradient(ellipse at 50% 0%, var(--glow-primary) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
   }
@@ -170,8 +168,12 @@
       transform var(--duration-slow) var(--ease-out);
   }
 
-  .js .animate-on-scroll.fade-up   { transform: translateY(28px); }
-  .js .animate-on-scroll.scale-up  { transform: scale(0.96); }
+  .js .animate-on-scroll.fade-up {
+    transform: translateY(28px);
+  }
+  .js .animate-on-scroll.scale-up {
+    transform: scale(0.96);
+  }
 
   .js .animate-on-scroll.is-visible {
     opacity: 1;
@@ -193,7 +195,6 @@
       transform: none;
       transition: none;
     }
-
   }
 }
 
@@ -238,10 +239,16 @@
     color: var(--foreground);
   }
 
-  .article-content ul { list-style: disc; }
-  .article-content ol { list-style: decimal; }
+  .article-content ul {
+    list-style: disc;
+  }
+  .article-content ol {
+    list-style: decimal;
+  }
 
-  .article-content li { margin-bottom: 0.5rem; }
+  .article-content li {
+    margin-bottom: 0.5rem;
+  }
 
   .article-content blockquote {
     margin: 2rem 0;
@@ -258,7 +265,9 @@
     text-decoration: none;
   }
 
-  .article-content a:hover { text-decoration: underline; }
+  .article-content a:hover {
+    text-decoration: underline;
+  }
 
   .article-content strong {
     font-weight: 700;
@@ -295,11 +304,15 @@
     font-weight: 700;
   }
 
-  .article-content .statement-title { font-weight: 400; }
+  .article-content .statement-title {
+    font-weight: 400;
+  }
 
   /* Classical convention: claims are set in italics, definitions and
      examples upright. */
-  .article-content :is(.statement-theorem, .statement-lemma, .statement-proposition, .statement-corollary, .statement-axiom) .statement-body {
+  .article-content
+    :is(.statement-theorem, .statement-lemma, .statement-proposition, .statement-corollary, .statement-axiom)
+    .statement-body {
     font-style: italic;
   }
 
@@ -308,7 +321,9 @@
   }
 
   .article-content .statement-body > :last-child,
-  .article-content .proof-body > :last-child { margin-bottom: 0; }
+  .article-content .proof-body > :last-child {
+    margin-bottom: 0;
+  }
 
   .article-content .proof {
     position: relative;
@@ -329,7 +344,9 @@
   }
 
   /* ── Figures ── */
-  .article-content .figure { margin: 2.5rem 0; }
+  .article-content .figure {
+    margin: 2.5rem 0;
+  }
 
   .article-content .figure img {
     width: 100%;
@@ -357,7 +374,9 @@
     font-weight: 700;
   }
 
-  .article-content .term-original { color: var(--muted); }
+  .article-content .term-original {
+    color: var(--muted);
+  }
 
   /* ── Footnotes ([^1] syntax) ── */
   .article-content sup a {
@@ -407,11 +426,17 @@
 
   /* Sidenotes: margin note on wide screens, inline collapsible below.
      Without JS the note stays open inline. */
-  .sidenote-toggle { display: none; }
-  .js .sidenote-toggle { display: inline-flex; }
+  .sidenote-toggle {
+    display: none;
+  }
+  .js .sidenote-toggle {
+    display: inline-flex;
+  }
 
   @media (max-width: 1279.98px) {
-    .js .sidenote[data-open="false"] .sidenote-body { display: none; }
+    .js .sidenote[data-open='false'] .sidenote-body {
+      display: none;
+    }
   }
 
   @media (min-width: 1280px) {
@@ -421,7 +446,9 @@
       width: 11rem;
       margin: 0.25rem -15rem 1rem 0;
     }
-    .js .sidenote-toggle { display: none; }
+    .js .sidenote-toggle {
+      display: none;
+    }
   }
 }
 

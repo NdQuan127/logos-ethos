@@ -69,13 +69,24 @@ const jsonLd = {
     import { initArticle } from '../scripts/article';
     initArticle();
   </script>
-  <div slot="before-nav" data-reading-progress class="reading-progress fixed left-0 top-0 h-1 w-full bg-accent z-[70]" aria-hidden="true"></div>
+  <div
+    slot="before-nav"
+    data-reading-progress
+    class="reading-progress fixed left-0 top-0 h-1 w-full bg-accent z-[70]"
+    aria-hidden="true"
+  ></div>
   <div class="max-w-6xl mx-auto px-6 py-12 md:py-20">
     <header class="mb-12 max-w-3xl mx-auto animate-fade-in-up">
       <nav aria-label="Vị trí hiện tại" class="mb-6">
         <ol class="flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
-          <li><a href={routes.blog} class="hover:text-accent transition-colors">Bài viết</a></li>
-          <li aria-hidden="true"><ChevronRight size={12} /></li>
+          <li>
+            <a href={routes.blog} class="hover:text-accent transition-colors">
+              Bài viết
+            </a>
+          </li>
+          <li aria-hidden="true">
+            <ChevronRight size={12} />
+          </li>
           <li>
             <a href={post.category.href} class="font-semibold hover:underline" style={{ color: post.category.color }}>
               {post.category.name}
@@ -88,21 +99,19 @@ const jsonLd = {
           Bản nháp — không xuất hiện khi build production
         </p>
       )}
-      <h1 class="font-serif text-4xl md:text-6xl text-fg mb-6 leading-tight font-medium">
-        {post.title}
-      </h1>
+      <h1 class="font-serif text-4xl md:text-6xl text-fg mb-6 leading-tight font-medium">{post.title}</h1>
       <div class="flex items-center gap-3 text-muted font-mono text-xs flex-wrap">
         <time datetime={post.isoDate}>{post.dateLabel}</time>
         {post.updatedLabel && (
           <>
             <span aria-hidden="true">·</span>
-            <span>Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time></span>
+            <span>
+              Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time>
+            </span>
           </>
         )}
         <span aria-hidden="true">·</span>
-        <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>
-          {post.readingTime} phút đọc
-        </span>
+        <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>{post.readingTime} phút đọc</span>
       </div>
     </header>
     <PostCover

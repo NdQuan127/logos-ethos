@@ -39,9 +39,23 @@ const pagerLink = 'inline-flex min-h-11 items-center px-4 border border-line hov
   )}
   {page.lastPage > 1 && (
     <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between font-sans text-sm">
-      {page.url.prev ? <a href={page.url.prev} rel="prev" class={pagerLink}>Trang trước</a> : <span />}
-      <span class="text-muted">Trang {page.currentPage} / {page.lastPage}</span>
-      {page.url.next ? <a href={page.url.next} rel="next" class={pagerLink}>Trang sau</a> : <span />}
+      {page.url.prev ? (
+        <a href={page.url.prev} rel="prev" class={pagerLink}>
+          Trang trước
+        </a>
+      ) : (
+        <span />
+      )}
+      <span class="text-muted">
+        Trang {page.currentPage} / {page.lastPage}
+      </span>
+      {page.url.next ? (
+        <a href={page.url.next} rel="next" class={pagerLink}>
+          Trang sau
+        </a>
+      ) : (
+        <span />
+      )}
     </nav>
   )}
 </ListingLayout>

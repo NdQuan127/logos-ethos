@@ -62,11 +62,10 @@ const socialImage = image ? new URL(image, site.url).toString() : undefined;
         try {
           const stored = localStorage.getItem('theme');
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.documentElement.classList.toggle(
-            'dark',
-            stored === 'dark' || (!stored && prefersDark),
-          );
-        } catch {}
+          document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && prefersDark));
+        } catch {
+          // Storage can be blocked; the page then starts in the light theme.
+        }
       })();
     </script>
     {site.features.rss && (
