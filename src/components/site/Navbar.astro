@@ -43,16 +43,16 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
     <ThemeButton />
     <button
       data-nav-toggle
-      class="md:hidden p-3 hover:bg-fg/5 rounded-full transition-colors"
+      class="group md:hidden p-3 hover:bg-fg/5 rounded-full transition-colors"
       aria-label="Mở menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
       <span class="relative block w-[18px] h-[18px]">
-        <span data-nav-menu-icon class="absolute inset-0 transition-all duration-300">
+        <span class="absolute inset-0 transition-all duration-300 group-aria-expanded:opacity-0 group-aria-expanded:rotate-90 group-aria-expanded:scale-75">
           <Menu size={18} />
         </span>
-        <span data-nav-close-icon class="absolute inset-0 transition-all duration-300 opacity-0 -rotate-90 scale-75">
+        <span class="absolute inset-0 transition-all duration-300 opacity-0 -rotate-90 scale-75 group-aria-expanded:opacity-100 group-aria-expanded:rotate-0 group-aria-expanded:scale-100">
           <X size={18} />
         </span>
       </span>
@@ -60,10 +60,12 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
   </div>
 </nav>
 
+{/* The drawer turns visible at once when it opens, so its first link can take focus, and stays visible
+     while it closes, so the panel can slide out. */}
 <div
   id="mobile-menu"
   data-nav-drawer
-  class="fixed inset-0 z-[60] md:hidden transition-all duration-300 invisible pointer-events-none"
+  class="group fixed inset-0 z-[60] md:hidden invisible pointer-events-none transition-[visibility] duration-300 data-open:visible data-open:pointer-events-auto data-open:transition-none"
   role="dialog"
   aria-modal="true"
   aria-label="Menu điều hướng"
@@ -71,13 +73,10 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
 >
   <div
     data-nav-backdrop
-    class="absolute inset-0 bg-fg/30 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+    class="absolute inset-0 bg-fg/30 backdrop-blur-sm transition-opacity duration-300 opacity-0 group-data-open:opacity-100"
     aria-hidden="true"
   />
-  <div
-    data-nav-panel
-    class="absolute top-0 right-0 h-full w-72 bg-canvas border-l border-line p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] translate-x-full"
-  >
+  <div class="absolute top-0 right-0 h-full w-72 bg-canvas border-l border-line p-8 flex flex-col gap-8 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] translate-x-full group-data-open:translate-x-0">
     <div class="flex justify-between items-center">
       <span class="font-mono text-xs uppercase tracking-widest text-muted">Menu</span>
       <button data-nav-close class="p-3 hover:bg-fg/5 rounded-full transition-colors" aria-label="Đóng menu">
@@ -92,7 +91,7 @@ const navLinks = enabledLinks(site.nav).map((link) => ({
           aria-current={link.current ? 'page' : undefined}
           style={`transition-delay: ${index * 60 + 80}ms`}
           class:list={[
-            'font-serif text-2xl transition-all duration-300 hover:text-accent focus:outline-none focus-visible:text-accent opacity-0 translate-x-4',
+            'font-serif text-2xl transition-[opacity,translate,color] duration-300 hover:text-accent focus:outline-none focus-visible:text-accent opacity-0 translate-x-4 group-data-open:opacity-100 group-data-open:translate-x-0',
             link.current ? 'text-accent' : 'text-fg',
           ]}
         >
