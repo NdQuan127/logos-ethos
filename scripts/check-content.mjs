@@ -2,6 +2,8 @@
 // Errors fail the command; warnings are printed only.
 import fs from 'node:fs';
 import path from 'node:path';
+import { parse } from 'yaml';
+import { slugify } from '../src/lib/slug.ts';
 
 const BLOG_DIR = 'src/content/blog';
 const STALE_DRAFT_DAYS = 90;
@@ -9,20 +11,10 @@ const STALE_DRAFT_DAYS = 90;
 const errors = [];
 const warnings = [];
 
-const slugify = (value) =>
-  value
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[đĐ]/g, 'd')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+const readIds = (file) => new Set((parse(fs.readFileSync(file, 'utf8')) ?? []).map((item) => item.id));
 
-const readIds = (file) =>
-  [...fs.readFileSync(file, 'utf8').matchAll(/^- id: ([a-z0-9-]+)$/gm)].map((match) => match[1]);
-
-const categoryIds = new Set(readIds('src/content/taxonomy/categories.yaml'));
-const seriesIds = new Set(readIds('src/content/taxonomy/series.yaml'));
+const categoryIds = readIds('src/content/taxonomy/categories.yaml');
+const seriesIds = readIds('src/content/taxonomy/series.yaml');
 
 const posts = [];
 for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
@@ -43,33 +35,29 @@ for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
     continue;
   }
   const source = fs.readFileSync(file, 'utf8');
-  const match = source.match(/^---\n([\s\S]*?)\n---\n?/);
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   if (!match) {
     errors.push(`${file}: thiếu frontmatter`);
     continue;
   }
-  const frontmatter = match[1];
-  const field = (name) =>
-    frontmatter
-      .match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))?.[1]
-      .trim()
-      .replace(/^["']|["']$/g, '');
-  const tags = (field('tags') ?? '[]')
-    .replace(/^\[|\]$/g, '')
-    .split(',')
-    .map((tag) => tag.trim().replace(/^["']|["']$/g, ''))
-    .filter(Boolean);
+  let data;
+  try {
+    data = parse(match[1]) ?? {};
+  } catch (error) {
+    errors.push(`${file}: frontmatter không phải YAML hợp lệ: ${error.message.split('\n')[0]}`);
+    continue;
+  }
 
   posts.push({
     slug: entry.name,
     file,
     body: source.slice(match[0].length),
-    description: field('description'),
-    draft: field('draft') === 'true',
-    date: field('date'),
-    category: field('category')?.split(/\s+#/)[0],
-    series: field('series'),
-    tags,
+    description: data.description,
+    draft: data.draft === true,
+    date: data.date,
+    category: data.category,
+    series: data.series,
+    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
   });
 }
 
@@ -106,7 +94,7 @@ for (const post of posts) {
     else if (!href.endsWith('/')) warnings.push(`${file}: liên kết nội bộ nên kết thúc bằng "/": ${href}`);
   }
 
-  if (!post.draft && post.description?.startsWith('Một đến hai câu tóm tắt')) {
+  if (!post.draft && String(post.description ?? '').startsWith('Một đến hai câu tóm tắt')) {
     errors.push(`${file}: vẫn còn mô tả mẫu từ template`);
   }
 
@@ -124,7 +112,7 @@ for (const post of posts) {
   }
 
   if (post.draft && post.date) {
-    const age = (Date.now() - new Date(post.date).getTime()) / 86_400_000;
+    const age = (Date.now() - new Date(String(post.date)).getTime()) / 86_400_000;
     if (age > STALE_DRAFT_DAYS) warnings.push(`${file}: bản nháp đã ${Math.floor(age)} ngày`);
   }
 }

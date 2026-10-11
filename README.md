@@ -54,16 +54,23 @@ npm run dev
 
 Mở `http://localhost:4321` để xem trang web.
 
-### Build production
+### Kiểm tra và build
 
 ```bash
-npm run check
-npm run check:content
-npm run lint
-npm run build
-npm run verify
-npm run preview
+npm run ci        # chạy toàn bộ các bước dưới đây theo thứ tự
 ```
+
+| Lệnh                    | Kiểm tra gì                                              |
+| ----------------------- | -------------------------------------------------------- |
+| `npm run format:check`  | Định dạng code (Prettier); `npm run format` để tự sửa    |
+| `npm run lint`          | ESLint cho JS, TypeScript và Astro                       |
+| `npm run check`         | Kiểu TypeScript và schema nội dung (`astro check`)       |
+| `npm test`              | Unit test cho `src/lib` (Vitest)                         |
+| `npm run check:content` | Quy ước bài viết: thư mục, frontmatter, link nội bộ, thẻ |
+| `npm run build`         | Build site tĩnh vào `dist/`                              |
+| `npm run verify`        | Mọi link, anchor và ảnh nội bộ trong `dist/` đều tồn tại |
+
+`npm run preview` mở bản build để xem thử.
 
 ## Cấu trúc dự án
 

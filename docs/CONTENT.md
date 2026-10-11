@@ -16,7 +16,10 @@ Trước khi đẩy lên:
 ```bash
 npm run check:content   # cấu trúc thư mục, liên kết nội bộ, thẻ trùng, tiêu đề
 npm run build           # kiểm tra schema frontmatter
+npm run verify          # mọi link, anchor (#...) và ảnh trong bản build đều tồn tại
 ```
+
+Hoặc chạy `npm run ci` để làm mọi bước kiểm tra một lượt.
 
 ## Cấu trúc thư mục
 
