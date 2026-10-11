@@ -88,7 +88,7 @@ src/
 │   └── ArticleLayout.astro# trang bài viết
 ├── components/
 │   ├── site/              # Navbar, Footer, Logo, ThemeButton
-│   ├── ui/                # PageHeader, EmptyState, AnimateOnScroll
+│   ├── ui/                # PageHeader, EmptyState, Pagination, AnimateOnScroll
 │   ├── blocks/            # khối trang chủ: Hero, Featured, Quote
 │   ├── post/              # thẻ bài, lưới bài, mục lục, loạt bài, thẻ…
 │   └── mdx/               # component dùng trong bài (đăng ký ở index.ts)

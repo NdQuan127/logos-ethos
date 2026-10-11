@@ -5,19 +5,14 @@ import { z } from 'astro/zod';
 /** ASCII kebab-case, used for every id that ends up in a URL. */
 const slugId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Chỉ dùng chữ thường không dấu, số và dấu gạch ngang');
 
-/**
- * Category colour token. Maps to the `--cat-<name>` custom properties in
- * global.css, which carry light- and dark-mode values that pass WCAG AA.
- */
-export const CATEGORY_COLORS = ['blue', 'red', 'green', 'yellow'] as const;
-
 const categories = defineCollection({
   loader: file('src/content/taxonomy/categories.yaml'),
   schema: z.object({
     id: slugId,
     name: z.string(),
     description: z.string(),
-    color: z.enum(CATEGORY_COLORS),
+    /** Maps to the `--cat-<name>` custom properties in global.css (light and dark, WCAG AA). */
+    color: z.enum(['blue', 'red', 'green', 'yellow']),
     /** Glyph shown on typographic covers when a post has no cover image. */
     symbol: z.string().max(2),
   }),

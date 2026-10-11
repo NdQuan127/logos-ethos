@@ -1,39 +1,29 @@
-# ─── Dependencies ────────────────────────────────────────────────────────────
+# Dependencies
 node_modules/
 
-# ─── Local agent tooling ─────────────────────────────────────────────────────
-.agents/
-.claude/
-# ─── Build output ────────────────────────────────────────────────────────────
+# Build output
 .astro/
 dist/
-
-# ─── TypeScript ──────────────────────────────────────────────────────────────
+coverage/
 *.tsbuildinfo
 
-# ─── Testing ─────────────────────────────────────────────────────────────────
-coverage/
+# Local agent tooling
+.agents/
+.claude/
+skills-lock.json
 
-# ─── Environment variables ───────────────────────────────────────────────────
+# Environment
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
-# ─── IDE / Editor ────────────────────────────────────────────────────────────
+# Editors and OS
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# ─── OS ──────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# ─── Logs ────────────────────────────────────────────────────────────────────
+# Logs
 *.log
-npm-debug.log*
-
-# ─── Misc ────────────────────────────────────────────────────────────────────
-.vercel/

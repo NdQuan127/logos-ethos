@@ -4,7 +4,7 @@
  */
 import { routes } from '../lib/routes';
 
-export interface NavLink {
+interface NavLink {
   href: string;
   label: string;
   /** Path prefix that marks the link as current, e.g. '/blog'. Omit for anchors. */
@@ -18,7 +18,6 @@ const email = 'contact@logos-ethos.web.app';
 const features = {
   /** "Lưu" button on articles and the /da-luu/ page. */
   bookmarks: true,
-  rss: true,
 };
 
 export const site = {
@@ -28,7 +27,6 @@ export const site = {
   url: import.meta.env.SITE_URL ?? 'https://logos-ethos.netlify.app',
   locale: 'vi_VN',
   lang: 'vi',
-  keywords: 'toán học, triết học, logic, Plato, Gödel, Pascal, tư duy, khoa học',
   email,
 
   /** Posts per page on /blog/. */

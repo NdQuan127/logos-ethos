@@ -40,8 +40,6 @@ const socialImage = image ? new URL(image, site.url).toString() : undefined;
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={site.keywords} />
-    <meta name="author" content={site.title} />
     <meta name="theme-color" content="#F9F7F1" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1C1B1A" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonicalUrl} />
@@ -68,9 +66,7 @@ const socialImage = image ? new URL(image, site.url).toString() : undefined;
         }
       })();
     </script>
-    {site.features.rss && (
-      <link rel="alternate" type="application/rss+xml" title={site.title} href={new URL(routes.rss, site.url)} />
-    )}
+    <link rel="alternate" type="application/rss+xml" title={site.title} href={new URL(routes.rss, site.url)} />
     <slot name="head" />
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>

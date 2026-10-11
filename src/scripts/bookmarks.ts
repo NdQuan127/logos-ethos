@@ -9,7 +9,7 @@ export function readBookmarks(): string[] {
   }
 }
 
-export function writeBookmarks(slugs: string[]) {
+function writeBookmarks(slugs: string[]) {
   try {
     localStorage.setItem(storageKey, JSON.stringify(slugs));
   } catch {
