@@ -4,14 +4,16 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import FeaturedSection from '../components/blocks/FeaturedSection.astro';
 import HeroSection from '../components/blocks/HeroSection.astro';
 import QuoteSection from '../components/blocks/QuoteSection.astro';
-import ArticleCard from '../components/post/ArticleCard.astro';
+import PostGrid from '../components/post/PostGrid.astro';
 import AnimateOnScroll from '../components/ui/AnimateOnScroll.astro';
 import { getPosts, pickFeatured, summarizeCategories } from '../lib/content';
 import { routes } from '../lib/routes';
 
 const allPosts = await getPosts();
 const featuredPost = pickFeatured(allPosts);
-const recentPosts = allPosts.filter((post) => post !== featuredPost);
+/** Enough to fill two rows of the grid; the rest are one click away on /blog/. */
+const RECENT_COUNT = 6;
+const recentPosts = allPosts.filter((post) => post !== featuredPost).slice(0, RECENT_COUNT);
 const categories = summarizeCategories(allPosts);
 ---
 
@@ -39,15 +41,7 @@ const categories = summarizeCategories(allPosts);
         </div>
       </AnimateOnScroll>
       {recentPosts.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" role="list" aria-label="Danh sách bài viết">
-          {recentPosts.map((post, index) => (
-            <div role="listitem">
-              <AnimateOnScroll animation="fade-up" delay={index * 100}>
-                <ArticleCard post={post} />
-              </AnimateOnScroll>
-            </div>
-          ))}
-        </div>
+        <PostGrid posts={recentPosts} animate aria-label="Danh sách bài viết" />
       ) : (
         <p class="font-sans text-muted text-center py-12">Chưa có bài viết nào. Hãy quay lại sớm!</p>
       )}
