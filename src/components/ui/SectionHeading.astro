@@ -1,0 +1,25 @@
+---
+/**
+ * Centred eyebrow and h2 that open a slab. The slot is the heading text;
+ * wrap one word in <em class="wavy"> for the lilac underline.
+ */
+interface Props {
+  eyebrow: string;
+  /** id for the h2, so the section can point aria-labelledby at it. */
+  id?: string;
+}
+
+const { eyebrow, id } = Astro.props;
+---
+
+<div class="mb-11 text-center">
+  <p class="eyebrow">{eyebrow}</p>
+  {Astro.slots.has('default') && (
+    <h2
+      id={id}
+      class="mt-3.5 font-display text-[clamp(2rem,1.4rem+2vw,3.25rem)] leading-[1.05] font-normal tracking-[-0.02em] text-balance"
+    >
+      <slot />
+    </h2>
+  )}
+</div>

@@ -1,23 +1,12 @@
 ---
-interface Props {
-  label?: string;
-}
-
-const { label = 'Ghi chú bên lề' } = Astro.props;
+/**
+ * A lettered note (a, b, c) written inline, right after the word it explains:
+ * `nhất quán<Sidenote>…</Sidenote>`. On wide screens the note sits in the
+ * right margin beside its line; below that, tapping the letter opens it.
+ * The markup stays on one line: whitespace would show as a space before the letter.
+ */
 const id = `sidenote-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
-<aside class="sidenote my-6 font-sans text-sm text-[var(--muted)] leading-relaxed" data-open="false">
-  <button
-    type="button"
-    data-sidenote-toggle
-    class="sidenote-toggle min-h-11 items-center font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] border border-[var(--border-color)] px-3 mb-3"
-    aria-expanded="false"
-    aria-controls={id}
-  >
-    {label}
-  </button>
-  <div id={id} class="sidenote-body border-l border-[var(--border-color)] pl-4">
-    <slot />
-  </div>
-</aside>
+<!-- prettier-ignore -->
+<span class="sidenote" data-open="false"><button type="button" data-sidenote-toggle class="sidenote-ref" aria-label="Ghi chú" aria-expanded="false" aria-controls={id}></button><span id={id} class="sidenote-body" role="note"><slot /></span></span>

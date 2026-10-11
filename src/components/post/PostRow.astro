@@ -1,0 +1,42 @@
+---
+/**
+ * One post in a list: category chip, title, description, series position,
+ * and date with reading time at the right (below on phones).
+ */
+import type { PostView } from '../../lib/content';
+
+interface Props {
+  post: PostView;
+}
+
+const { post } = Astro.props;
+---
+
+<a
+  href={post.href}
+  class="group grid gap-x-8 gap-y-2 px-1 py-[1.4rem] transition-colors duration-[160ms] active:bg-surface sm:grid-cols-[minmax(0,1fr)_auto]"
+  style={{ '--tab': post.category.tab }}
+>
+  <span class="block min-w-0">
+    <span class="cat-chip mb-2.5">{post.category.name}</span>
+    <span class="block font-display text-2xl leading-[1.2] font-medium tracking-[-0.01em] text-balance break-words transition-colors duration-[160ms] group-hover:text-accent">
+      {post.title}
+    </span>
+    <span class="mt-1.5 block max-w-xl text-[0.9375rem] leading-[1.55] text-muted">{post.description}</span>
+    {post.series && (
+      <span class="mt-2 block text-[0.8125rem] leading-[1.4] text-muted">
+        Thuộc chuyên đề <em class="font-display text-[1.0625rem] text-fg">{post.series.title}</em>
+        {` · phần ${post.series.order}/${post.series.total}`}
+      </span>
+    )}
+  </span>
+  <span class="text-[0.8125rem] leading-[1.6] whitespace-nowrap text-muted tabular-nums sm:pt-[1.85rem] sm:text-right">
+    <time datetime={post.isoDate}>{post.dateLabel}</time>
+    <span class="sm:hidden" aria-hidden="true">
+      {' '}
+      ·{' '}
+    </span>
+    <br class="max-sm:hidden" />
+    {post.readingTime} phút đọc
+  </span>
+</a>

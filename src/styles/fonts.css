@@ -1,43 +1,23 @@
 /*
- * fonts.css — Self-hosted font imports via fontsource.
- *
- * We bundle font files directly from node_modules instead of fetching them
- * from Google Fonts at compile time. This eliminates the network dependency
- * during `next dev` / `next build` that caused repeated timeouts and added
- * ~25 s to cold-start compilation.
- *
- * All font files are served from the same origin as the app — faster TTFB,
- * no cross-origin handshake, and the build works offline/behind a firewall.
+ * Self-hosted fonts from fontsource, bundled from node_modules so builds never
+ * depend on a font CDN. The family stacks live in global.css (@theme).
  */
 
-/* ─── Crimson Pro (serif) ──────────────────────────────────────────────────── */
-/* Only the weights actually used in the codebase: 300 (light), 400, 700 (bold) */
-@import '@fontsource/crimson-pro/300.css';
-@import '@fontsource/crimson-pro/300-italic.css';
-@import '@fontsource/crimson-pro/400.css';
-@import '@fontsource/crimson-pro/400-italic.css';
-@import '@fontsource/crimson-pro/700.css';
-@import '@fontsource/crimson-pro/700-italic.css';
+/* ─── EB Garamond (display: headings, titles, covers) ──────────────────────── */
+@import '@fontsource/eb-garamond/400.css';
+@import '@fontsource/eb-garamond/400-italic.css';
+@import '@fontsource/eb-garamond/500.css';
+@import '@fontsource/eb-garamond/500-italic.css';
 
-/* ─── Be Vietnam Pro (sans) ────────────────────────────────────────────────── */
-/* Weights: 400 (body), 600 (semi-bold labels), 700 (bold headings) */
+/* ─── Literata (article body) ──────────────────────────────────────────────── */
+/* Variable weight plus the optical-size axis, so small text gets sturdier strokes. */
+@import '@fontsource-variable/literata/opsz.css';
+@import '@fontsource-variable/literata/opsz-italic.css';
+
+/* ─── Be Vietnam Pro (UI) ──────────────────────────────────────────────────── */
 @import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/500.css';
 @import '@fontsource/be-vietnam-pro/600.css';
-@import '@fontsource/be-vietnam-pro/700.css';
 
-/* ─── IBM Plex Mono (mono) ─────────────────────────────────────────────────── */
-/* Weights: 400 (default mono), 600 (bold labels) */
+/* ─── IBM Plex Mono (code blocks only) ─────────────────────────────────────── */
 @import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/600.css';
-
-/*
- * Map fontsource font-family names to the CSS custom properties used
- * throughout the codebase via Tailwind's --font-serif / --font-sans / --font-mono.
- *
- * These variables keep typography usage stable across Astro components.
- */
-:root {
-    --font-serif: 'Crimson Pro', Georgia, serif;
-    --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
-    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
-}

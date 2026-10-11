@@ -1,34 +1,39 @@
-import { readBookmarks, toggleBookmark } from './bookmarks';
+import { bindOnce } from './bind';
 
-const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
-const article = document.querySelector<HTMLElement>('article');
+function initReadingProgress() {
+  const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
+  const article = document.querySelector<HTMLElement>('article');
+  if (!progress || !article || !bindOnce(progress, 'progress')) return;
 
-function updateProgress() {
-  if (!progress || !article) return;
-  const rect = article.getBoundingClientRect();
-  const total = rect.height - window.innerHeight;
-  const current = Math.min(Math.max(-rect.top, 0), total);
-  const pct = total > 0 ? (current / total) * 100 : 0;
-  progress.style.transform = `scaleX(${pct / 100})`;
+  const update = () => {
+    const rect = article.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const current = Math.min(Math.max(-rect.top, 0), total);
+    progress.style.transform = `scaleX(${total > 0 ? current / total : 0})`;
+  };
+
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking || !progress.isConnected) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+  update();
 }
 
-let ticking = false;
-window.addEventListener(
-  'scroll',
-  () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      updateProgress();
-      ticking = false;
-    });
-  },
-  { passive: true },
-);
-updateProgress();
+function initTableOfContents() {
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')).filter((link) =>
+    bindOnce(link, 'toc'),
+  );
+  if (tocLinks.length === 0) return;
 
-const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
-if (tocLinks.length > 0) {
   const byId = new Map<string, HTMLAnchorElement[]>();
   tocLinks.forEach((link) => {
     const id = decodeURIComponent(link.hash.slice(1));
@@ -40,75 +45,56 @@ if (tocLinks.length > 0) {
         const links = byId.get(entry.target.id);
         if (!entry.isIntersecting || !links) return;
         tocLinks.forEach((item) => {
-          item.classList.remove('text-[var(--accent-primary)]');
           item.removeAttribute('aria-current');
         });
         links.forEach((link) => {
-          link.classList.add('text-[var(--accent-primary)]');
           link.setAttribute('aria-current', 'location');
         });
       });
     },
     { rootMargin: '-20% 0px -65% 0px' },
   );
-  document.querySelectorAll<HTMLElement>('article h2[id], article h3[id]').forEach((heading) => observer.observe(heading));
+  document.querySelectorAll<HTMLElement>('article h2[id]').forEach((heading) => observer.observe(heading));
 }
 
-document.querySelector<HTMLButtonElement>('[data-share-button]')?.addEventListener('click', async (event) => {
-  const button = event.currentTarget as HTMLButtonElement;
-  const label = button.querySelector('[data-share-label]');
-  const title = button.dataset.shareTitle ?? document.title;
-  try {
-    if (navigator.share) {
-      await navigator.share({ title, url: location.href });
-      return;
-    }
-    await navigator.clipboard.writeText(location.href);
-    if (label) label.textContent = 'Đã sao chép!';
-    setTimeout(() => {
-      if (label) label.textContent = 'Chia sẻ';
-    }, 2000);
-  } catch {}
-});
+function initShare() {
+  const button = document.querySelector<HTMLButtonElement>('[data-share-button]');
+  if (!button || !bindOnce(button, 'share')) return;
 
-const bookmarkButton = document.querySelector<HTMLButtonElement>('[data-bookmark-button]');
-
-function renderBookmark() {
-  if (!bookmarkButton) return;
-  const slug = bookmarkButton.dataset.bookmarkSlug;
-  const saved = !!slug && readBookmarks().includes(slug);
-  bookmarkButton.setAttribute('aria-pressed', String(saved));
-  bookmarkButton.querySelector('[data-bookmark-label]')?.replaceChildren(saved ? 'Đã lưu' : 'Lưu');
-  bookmarkButton.querySelector('[data-bookmark-off]')?.classList.toggle('hidden', saved);
-  bookmarkButton.querySelector('[data-bookmark-on]')?.classList.toggle('hidden', !saved);
-}
-
-bookmarkButton?.addEventListener('click', () => {
-  const slug = bookmarkButton.dataset.bookmarkSlug;
-  if (!slug) return;
-  toggleBookmark(slug);
-  renderBookmark();
-});
-renderBookmark();
-
-document.querySelectorAll<HTMLButtonElement>('[data-code-copy]').forEach((button) => {
   button.addEventListener('click', async () => {
-    const code = button.closest('figure')?.querySelector('[data-code-text]')?.textContent ?? '';
+    const label = button.querySelector('[data-share-label]');
+    const title = button.dataset.shareTitle ?? document.title;
     try {
-      await navigator.clipboard.writeText(code);
-      button.textContent = 'Đã sao chép';
+      if (navigator.share) {
+        await navigator.share({ title, url: location.href });
+        return;
+      }
+      await navigator.clipboard.writeText(location.href);
+      if (label) label.textContent = 'Đã sao chép!';
       setTimeout(() => {
-        button.textContent = 'Sao chép';
+        if (label) label.textContent = 'Chia sẻ';
       }, 2000);
-    } catch {}
+    } catch {
+      // The reader cancelled the share sheet or clipboard access was denied.
+    }
   });
-});
+}
 
-document.querySelectorAll<HTMLButtonElement>('[data-sidenote-toggle]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const note = button.closest<HTMLElement>('.sidenote');
-    const open = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', String(!open));
-    note?.setAttribute('data-open', String(!open));
+function initSidenotes() {
+  document.querySelectorAll<HTMLButtonElement>('[data-sidenote-toggle]').forEach((button) => {
+    if (!bindOnce(button, 'sidenote')) return;
+    button.addEventListener('click', () => {
+      const note = button.closest<HTMLElement>('.sidenote');
+      const open = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!open));
+      note?.setAttribute('data-open', String(!open));
+    });
   });
-});
+}
+
+export function initArticle() {
+  initReadingProgress();
+  initTableOfContents();
+  initShare();
+  initSidenotes();
+}

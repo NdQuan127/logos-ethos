@@ -1,0 +1,23 @@
+---
+/**
+ * A defined term with its original-language name:
+ * <Term original="Consistency">Tính nhất quán</Term>
+ */
+interface Props {
+  original?: string;
+  /** BCP 47 language of `original`. */
+  lang?: string;
+}
+
+const { original, lang = 'en' } = Astro.props;
+---
+
+<dfn class="term">
+  <slot />
+</dfn>
+{original && (
+  <span class="term-original">
+    {' '}
+    (<i lang={lang}>{original}</i>)
+  </span>
+)}

@@ -1,0 +1,63 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import PostCover from '../../../components/post/PostCover.astro';
+import SectionHeading from '../../../components/ui/SectionHeading.astro';
+import { getActiveSeries, getPosts, getSeriesPosts } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return getActiveSeries(posts).map((series) => ({
+    params: { series: series.id },
+    props: { series, posts: getSeriesPosts(posts, series.id) },
+  }));
+}
+
+const { series, posts } = Astro.props;
+// getActiveSeries only yields series with at least one post.
+const first = posts[0]!;
+---
+
+<SiteLayout title={`Chuyên đề: ${series.title}`} description={series.description} canonicalPath={series.href}>
+  <section class="wrap grid items-center gap-10 py-12 md:grid-cols-2 md:gap-14 md:py-16">
+    <PostCover category={first.category} seed={series.id} symbol={series.symbol} class="aspect-[5/4]" />
+    <div>
+      <p class="eyebrow">Chuyên đề · {posts.length} bài</p>
+      <h1 class="mt-4 font-display text-[clamp(2.75rem,2rem+2.6vw,4.25rem)] leading-none font-normal tracking-[-0.025em] text-balance">
+        {series.title}
+      </h1>
+      <p class="mt-5 max-w-[30rem] text-[1.0625rem] leading-[1.6] text-muted">{series.description}</p>
+      <a href={first.href} class="btn mt-8">
+        Bắt đầu từ phần 1
+      </a>
+    </div>
+  </section>
+
+  <section class="slab slab-lilac" aria-labelledby="parts-heading">
+    <div class="wrap">
+      <SectionHeading eyebrow="Thứ tự đọc" id="parts-heading">
+        Theo <em class="wavy">mạch ý</em>, không theo ngày đăng.
+      </SectionHeading>
+      <ol class="mx-auto max-w-[46rem] divide-y divide-line">
+        {posts.map((post, index) => (
+          <li>
+            <a
+              href={post.href}
+              class="group grid grid-cols-[3rem_minmax(0,1fr)] items-baseline gap-4 py-5 sm:grid-cols-[3.5rem_minmax(0,1fr)_auto]"
+            >
+              <span class="font-display text-4xl leading-none text-muted italic" aria-hidden="true">
+                {index + 1}
+              </span>
+              <span>
+                <span class="block font-display text-2xl leading-[1.2] transition-colors duration-[160ms] group-hover:text-accent">
+                  {post.title}
+                </span>
+                <span class="mt-1.5 block text-[0.9rem] leading-[1.5] text-muted">{post.description}</span>
+              </span>
+              <span class="text-[0.8125rem] text-muted max-sm:hidden">{post.readingTime} phút</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</SiteLayout>

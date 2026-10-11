@@ -1,0 +1,19 @@
+---
+interface Props {
+  quote: string;
+  author: string;
+}
+
+const { quote, author } = Astro.props;
+---
+
+<section class="slab slab-sage" aria-label="Trích dẫn">
+  <figure class="wrap max-w-[52rem] text-center">
+    <blockquote>
+      <p class="font-display text-[clamp(2rem,1.4rem+2vw,3.25rem)] leading-[1.1] text-balance text-fg italic">
+        {quote}
+      </p>
+    </blockquote>
+    <figcaption class="eyebrow mt-6">{author}</figcaption>
+  </figure>
+</section>

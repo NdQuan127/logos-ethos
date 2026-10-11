@@ -1,0 +1,25 @@
+---
+import type { TagView } from '../../lib/content';
+
+interface Props {
+  tags: TagView[];
+  class?: string;
+}
+
+const { tags, class: className } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <ul class:list={['flex flex-wrap gap-2 text-[0.8125rem]', className]} aria-label="Thẻ">
+    {tags.map((tag) => (
+      <li>
+        <a
+          href={tag.href}
+          class="inline-flex min-h-9 items-center rounded-lg border border-line px-3 text-muted transition-[background-color,color,scale] duration-[160ms] hover:bg-surface hover:text-fg active:scale-[0.97] motion-reduce:active:scale-100"
+        >
+          #{tag.name}
+        </a>
+      </li>
+    ))}
+  </ul>
+)}

@@ -1,36 +1,27 @@
 ---
-import { ArrowRight } from 'lucide-astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { routes } from '../lib/routes';
 ---
 
 <BaseLayout title="Nghịch lý 404" description="Sự hiện diện của thứ gì đó không tồn tại." canonicalPath="/404/">
-  <div class="min-h-screen flex flex-col items-center justify-center px-6 font-serif text-center relative overflow-hidden bg-[var(--background)]">
-    <div class="absolute inset-0 z-0 opacity-[0.03] select-none pointer-events-none" aria-hidden="true">
-      <span class="absolute top-[20%] left-[10%] text-9xl">∄</span>
-      <span class="absolute bottom-[20%] right-[10%] text-9xl">∅</span>
-      <span class="absolute top-[40%] right-[15%] text-7xl">∞</span>
-    </div>
-    <div class="relative z-10 flex flex-col items-center">
-      <div class="relative mb-12">
-        <span class="font-serif text-[12rem] md:text-[18rem] leading-none text-[var(--foreground)] opacity-[0.04] font-bold select-none">404</span>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-px h-64 bg-gradient-to-b from-transparent via-[var(--accent-primary)]/40 to-transparent rotate-45"></div>
-          <div class="w-px h-64 bg-gradient-to-b from-transparent via-[var(--accent-primary)]/40 to-transparent -rotate-45"></div>
-        </div>
-      </div>
-      <p class="font-mono text-xs text-[var(--accent-primary)] uppercase tracking-[0.3em] mb-4 font-semibold">
-        Nghịch lý sự vắng mặt
-      </p>
-      <h1 class="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6 leading-tight font-medium max-w-lg">
-        Trang bạn tìm kiếm không có trong không gian này
-      </h1>
-      <p class="font-sans text-[var(--muted)] text-lg mb-12 max-w-md leading-relaxed">
-        Có lẽ nó đã bị triệt tiêu bởi một mệnh đề Logic sai lầm, hoặc đơn giản là chưa bao giờ tồn tại.
-      </p>
-      <a href="/" class="group px-8 py-3 bg-[var(--foreground)] text-[var(--background)] font-mono text-xs uppercase tracking-[0.2em] rounded-sm hover:opacity-90 transition-opacity duration-300 flex items-center gap-3">
-        <span>Về miền thực tại</span>
-        <ArrowRight size={14} class="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+  <main class="flex min-h-svh flex-col items-center justify-center px-6 text-center">
+    <p class="font-display text-[clamp(6rem,4rem+10vw,12rem)] leading-none text-accent-soft italic" aria-hidden="true">
+      ∄
+    </p>
+    <p class="eyebrow mt-6">Lỗi 404 · Nghịch lý sự vắng mặt</p>
+    <h1 class="mt-4 max-w-lg font-display text-[clamp(2.25rem,1.8rem+2vw,3.25rem)] leading-[1.05] font-normal text-balance">
+      Trang bạn tìm <em class="italic">không có ở đây.</em>
+    </h1>
+    <p class="mt-5 max-w-md text-lg leading-relaxed text-muted">
+      Có lẽ nó đã bị triệt tiêu bởi một mệnh đề sai, hoặc đơn giản là chưa bao giờ tồn tại.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href={routes.home} class="btn">
+        Về trang chủ
+      </a>
+      <a href={routes.blog} class="btn btn-ghost">
+        Mọi bài viết
       </a>
     </div>
-  </div>
+  </main>
 </BaseLayout>

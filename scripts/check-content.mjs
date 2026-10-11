@@ -1,0 +1,136 @@
+// Content checks the collection schema cannot express. Run with `npm run check:content`.
+// Errors fail the command; warnings are printed only.
+import fs from 'node:fs';
+import path from 'node:path';
+import { parse } from 'yaml';
+import { slugify } from '../src/lib/slug.ts';
+
+const BLOG_DIR = 'src/content/blog';
+const STALE_DRAFT_DAYS = 90;
+const MAX_TAGS = 8;
+
+const errors = [];
+const warnings = [];
+
+const readIds = (file) => new Set((parse(fs.readFileSync(file, 'utf8')) ?? []).map((item) => item.id));
+
+const categoryIds = readIds('src/content/taxonomy/categories.yaml');
+const seriesIds = readIds('src/content/taxonomy/series.yaml');
+
+const posts = [];
+for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
+  if (entry.name.startsWith('_')) continue;
+  const where = path.join(BLOG_DIR, entry.name);
+  if (!entry.isDirectory()) {
+    if (/\.mdx?$/.test(entry.name)) {
+      errors.push(`${where}: mỗi bài phải nằm trong thư mục riêng (${entry.name.replace(/\.mdx?$/, '')}/index.mdx)`);
+    }
+    continue;
+  }
+  if (entry.name !== slugify(entry.name)) {
+    errors.push(`${where}: tên thư mục là URL, chỉ dùng chữ thường không dấu và "-" (gợi ý: ${slugify(entry.name)})`);
+  }
+  const file = path.join(where, 'index.mdx');
+  if (!fs.existsSync(file)) {
+    errors.push(`${where}: thiếu index.mdx`);
+    continue;
+  }
+  const source = fs.readFileSync(file, 'utf8');
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!match) {
+    errors.push(`${file}: thiếu frontmatter`);
+    continue;
+  }
+  let data;
+  try {
+    data = parse(match[1]) ?? {};
+  } catch (error) {
+    errors.push(`${file}: frontmatter không phải YAML hợp lệ: ${error.message.split('\n')[0]}`);
+    continue;
+  }
+
+  posts.push({
+    slug: entry.name,
+    file,
+    body: source.slice(match[0].length),
+    title: data.title,
+    description: data.description,
+    draft: data.draft === true,
+    date: data.date,
+    category: data.category,
+    series: data.series,
+    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+  });
+}
+
+const slugs = new Set(posts.map((post) => post.slug));
+const tagNames = new Map();
+
+for (const post of posts) {
+  const { file, body } = post;
+  // Ignore fenced code so examples inside ``` blocks are not checked.
+  const prose = body.replace(/```[\s\S]*?```/g, '');
+
+  if (/^# /m.test(prose))
+    errors.push(`${file}: không dùng tiêu đề cấp 1 (#) trong bài; tiêu đề bài đã là h1, hãy bắt đầu từ ##`);
+
+  let previous = 1;
+  for (const [, hashes, text] of prose.matchAll(/^(#{2,6})\s+(.+)$/gm)) {
+    if (hashes.length > previous + 1) warnings.push(`${file}: "${text}" nhảy từ h${previous} xuống h${hashes.length}`);
+    previous = hashes.length;
+  }
+
+  for (const [, href] of prose.matchAll(/\]\((\/blog\/[^)\s#]*)/g)) {
+    const [, kind, id] = href.match(/^\/blog\/(?:(chu-de|tag|loat-bai)\/)?([^/]+)\/?$/) ?? [];
+    const ok =
+      kind === 'chu-de'
+        ? categoryIds.has(id)
+        : kind === 'loat-bai'
+          ? seriesIds.has(id)
+          : kind === 'tag'
+            ? true
+            : id
+              ? slugs.has(id)
+              : false;
+    if (!ok) errors.push(`${file}: liên kết nội bộ không tồn tại: ${href}`);
+    else if (!href.endsWith('/')) warnings.push(`${file}: liên kết nội bộ nên kết thúc bằng "/": ${href}`);
+  }
+
+  if (!post.draft && String(post.description ?? '').startsWith('Một đến hai câu tóm tắt')) {
+    errors.push(`${file}: vẫn còn mô tả mẫu từ template`);
+  }
+
+  if (post.category && !categoryIds.has(post.category))
+    errors.push(`${file}: lĩnh vực "${post.category}" không có trong taxonomy/categories.yaml`);
+  if (post.series && !seriesIds.has(post.series))
+    errors.push(`${file}: chuyên đề "${post.series}" không có trong taxonomy/series.yaml`);
+
+  // Titles also land in <title>, RSS and share cards, where Markdown shows as raw symbols.
+  if (/\*[^*]+\*|`[^`]+`/.test(String(post.title ?? '')))
+    warnings.push(`${file}: tiêu đề có cú pháp Markdown (*…* hoặc \`…\`); tiêu đề hiển thị nguyên ký tự, hãy bỏ đi`);
+
+  if (post.tags.length > MAX_TAGS)
+    warnings.push(`${file}: ${post.tags.length} thẻ là nhiều; nên giữ tối đa ${MAX_TAGS} thẻ chính`);
+
+  for (const tag of post.tags) {
+    const key = slugify(tag);
+    if (!key) {
+      errors.push(`${file}: thẻ "${tag}" không có chữ hay số Latin nào để làm URL; hãy viết thành chữ (vd. "vô cực")`);
+      continue;
+    }
+    const seen = tagNames.get(key);
+    if (seen && seen.name !== tag)
+      warnings.push(`${file}: thẻ "${tag}" trùng với "${seen.name}" (${seen.file}); hãy thống nhất một cách viết`);
+    else if (!seen) tagNames.set(key, { name: tag, file });
+  }
+
+  if (post.draft && post.date) {
+    const age = (Date.now() - new Date(String(post.date)).getTime()) / 86_400_000;
+    if (age > STALE_DRAFT_DAYS) warnings.push(`${file}: bản nháp đã ${Math.floor(age)} ngày`);
+  }
+}
+
+for (const warning of warnings) console.warn(`⚠ ${warning}`);
+for (const error of errors) console.error(`✖ ${error}`);
+console.log(`${posts.length} bài · ${errors.length} lỗi · ${warnings.length} cảnh báo`);
+if (errors.length > 0) process.exit(1);

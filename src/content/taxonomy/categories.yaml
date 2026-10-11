@@ -1,0 +1,29 @@
+# Lĩnh vực của bài viết. Mỗi bài chọn đúng một lĩnh vực qua trường `category: <id>`.
+# id: chữ thường không dấu, dùng làm URL /blog/chu-de/<id>/
+# tone: blue | green | violet | red. Chọn màu chữ (--cat-*) và giấy của nhãn, ảnh bìa (--tab-*)
+#   trong src/styles/global.css, và hình vẽ trên ảnh bìa tự sinh.
+# symbol: ký tự lớn trên ảnh bìa tự sinh
+
+- id: toan-hoc
+  name: Toán học
+  description: Logic, cấu trúc, chứng minh
+  tone: blue
+  symbol: ∑
+
+- id: ai-hoc-may
+  name: AI & Học máy
+  description: Mô hình, dữ liệu, tối ưu
+  tone: green
+  symbol: ∇
+
+- id: triet-hoc
+  name: Triết học
+  description: Nhận thức, đạo đức, hữu thể
+  tone: violet
+  symbol: Φ
+
+- id: chinh-tri
+  name: Diễn ngôn & Chính trị
+  description: Quyền lực, lập luận, công luận
+  tone: red
+  symbol: §

@@ -1,0 +1,30 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../../layouts/ListingLayout.astro';
+import PostList from '../../../../components/post/PostList.astro';
+import { site } from '../../../../config/site';
+import { getPosts, summarizeTags } from '../../../../lib/content';
+import { formatCount } from '../../../../lib/format';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getPosts();
+  return summarizeTags(posts).flatMap(({ item }) =>
+    paginate(
+      posts.filter((post) => post.tags.some((tag) => tag.slug === item.slug)),
+      { pageSize: site.pageSize, params: { tag: item.slug }, props: { tag: item } },
+    ),
+  );
+}) satisfies GetStaticPaths;
+
+const { page, tag } = Astro.props;
+---
+
+<ListingLayout
+  title={`Thẻ: ${tag.name}`}
+  description={`Các bài viết gắn thẻ ${tag.name} trên Logos & Ethos.`}
+  page={page}
+  header={{ eyebrow: 'Thẻ', title: `#${tag.name}`, description: `${formatCount(page.total)} bài` }}
+  sectionLabel={`Bài viết gắn thẻ ${tag.name}`}
+>
+  <PostList posts={page.data} />
+</ListingLayout>

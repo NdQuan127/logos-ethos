@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../../layouts/ListingLayout.astro';
+import CategoryFilter from '../../../../components/post/CategoryFilter.astro';
+import PostList from '../../../../components/post/PostList.astro';
+import { site } from '../../../../config/site';
+import { getPosts, summarizeCategories } from '../../../../lib/content';
+import { formatCount } from '../../../../lib/format';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getPosts();
+  const categories = summarizeCategories(posts);
+  return categories.flatMap(({ item }) =>
+    paginate(
+      posts.filter((post) => post.category.id === item.id),
+      {
+        pageSize: site.pageSize,
+        params: { category: item.id },
+        props: { category: item, categories, total: posts.length },
+      },
+    ),
+  );
+}) satisfies GetStaticPaths;
+
+const { page, category, categories, total } = Astro.props;
+---
+
+<ListingLayout
+  title={`Lĩnh vực: ${category.name}`}
+  description={`Các bài viết thuộc lĩnh vực ${category.name} của Logos & Ethos.`}
+  page={page}
+  header={{
+    eyebrow: 'Lĩnh vực',
+    title: category.name,
+    description: `${category.description} · ${formatCount(page.total)} bài`,
+  }}
+  sectionLabel={`Bài viết thuộc lĩnh vực ${category.name}`}
+>
+  <CategoryFilter categories={categories} total={total} activeSlug={category.id} class="mb-6" />
+  <PostList posts={page.data} />
+</ListingLayout>

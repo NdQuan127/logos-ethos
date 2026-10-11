@@ -6,13 +6,9 @@ interface Props {
 const { author } = Astro.props;
 ---
 
-<figure class="my-12 border-y border-[var(--border-color)] py-8 text-center">
-  <blockquote class="font-serif text-2xl md:text-3xl italic leading-snug text-[var(--foreground)]">
+<figure class="pull-quote">
+  <blockquote>
     <slot />
   </blockquote>
-  {author && (
-    <figcaption class="mt-5 font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
-      {author}
-    </figcaption>
-  )}
+  {author && <figcaption>{author}</figcaption>}
 </figure>

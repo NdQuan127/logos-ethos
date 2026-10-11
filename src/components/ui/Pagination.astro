@@ -1,0 +1,32 @@
+---
+import type { Page } from 'astro';
+import { withTrailingSlash } from '../../lib/routes';
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+---
+
+{page.lastPage > 1 && (
+  <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between gap-4 text-sm">
+    {page.url.prev ? (
+      <a href={withTrailingSlash(page.url.prev)} rel="prev" class="btn btn-ghost btn-sm">
+        ← Trang trước
+      </a>
+    ) : (
+      <span />
+    )}
+    <span class="text-muted tabular-nums">
+      Trang {page.currentPage} / {page.lastPage}
+    </span>
+    {page.url.next ? (
+      <a href={withTrailingSlash(page.url.next)} rel="next" class="btn btn-ghost btn-sm">
+        Trang sau →
+      </a>
+    ) : (
+      <span />
+    )}
+  </nav>
+)}

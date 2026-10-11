@@ -1,0 +1,9 @@
+# Chuyên đề nhiều kỳ. Bài thuộc chuyên đề khai báo `series: <id>` và `seriesOrder: <số thứ tự>`.
+# id: chữ thường không dấu, dùng làm URL /blog/loat-bai/<id>/
+# symbol (tuỳ chọn): ký tự lớn trên bìa; mặc định là ký hiệu lĩnh vực của bài đầu tiên
+#
+# - id: nhap-mon-logic
+#   title: Nhập môn logic
+#   description: Từ mệnh đề đến định lý bất toàn, từng bước một.
+#   symbol: ⊢
+[]

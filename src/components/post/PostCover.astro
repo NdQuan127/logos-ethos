@@ -1,0 +1,53 @@
+---
+/**
+ * A cover slot: the post's image in duotone (ink-green over the category's
+ * tab paper), or a generated cover when there is no image.
+ * The parent sets the aspect ratio through `class`.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import CoverArt from './CoverArt.astro';
+import type { CategoryView } from '../../lib/content';
+
+interface Props {
+  category: CategoryView;
+  cover?: ImageMetadata;
+  coverAlt?: string;
+  /** Seed for the generated cover, e.g. the post slug or series id. */
+  seed: string;
+  /** Glyph for the generated cover; defaults to the category symbol. */
+  symbol?: string;
+  class?: string;
+  /** `sizes` attribute for the responsive cover image */
+  sizes?: string;
+  /** Load eagerly when the cover is above the fold */
+  eager?: boolean;
+}
+
+const {
+  category,
+  cover,
+  coverAlt = '',
+  seed,
+  symbol = category.symbol,
+  class: className,
+  sizes = '(min-width: 1024px) 32rem, 100vw',
+  eager = false,
+} = Astro.props;
+---
+
+{cover ? (
+  <div class:list={['cover cover-photo', className]} style={{ '--cover-paper': category.tab }}>
+    <Image
+      src={cover}
+      alt={coverAlt}
+      widths={[480, 800, 1200, 1600]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+    />
+    <span class="cover-tint" aria-hidden="true" />
+    <span class="cover-paper" aria-hidden="true" />
+  </div>
+) : (
+  <CoverArt tone={category.tone} seed={seed} glyph={symbol} class={className} />
+)}

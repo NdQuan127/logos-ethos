@@ -1,51 +1,51 @@
 ---
-import 'katex/dist/katex.min.css';
+/**
+ * The HTML document: <head> metadata, theme bootstrap and global scripts.
+ * Pages normally use SiteLayout (or a layout built on it) instead.
+ */
 import '../styles/fonts.css';
 import '../styles/global.css';
-import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../lib/constants';
+import { site } from '../config/site';
+import { routes } from '../lib/routes';
 
-interface Props {
+export interface Props {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  /** Social preview image, absolute or root-relative. */
   image?: string;
   type?: 'website' | 'article';
   jsonLd?: unknown;
 }
 
 const {
-  title = SITE_TITLE,
-  description = SITE_DESCRIPTION,
+  title = site.title,
+  description = site.description,
   canonicalPath = '/',
   image,
   type = 'website',
   jsonLd,
 } = Astro.props;
 
-const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
-const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
-const socialImage = image ? new URL(image, SITE_URL).toString() : undefined;
+const pageTitle = title === site.title ? site.title : `${title} | ${site.title}`;
+const canonicalUrl = new URL(canonicalPath, site.url).toString();
+const socialImage = image ? new URL(image, site.url).toString() : undefined;
 ---
 
 <!doctype html>
-<html lang="vi">
+<html lang={site.lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta
-      name="keywords"
-      content="toán học, triết học, logic, Plato, Gödel, Pascal, tư duy, khoa học"
-    />
-    <meta name="author" content={SITE_TITLE} />
-    <meta name="theme-color" content="#F9F7F1" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1C1B1A" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fdfbec" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#10120f" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:type" content={type} />
-    <meta property="og:locale" content="vi_VN" />
-    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
@@ -60,21 +60,21 @@ const socialImage = image ? new URL(image, SITE_URL).toString() : undefined;
         try {
           const stored = localStorage.getItem('theme');
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.documentElement.classList.toggle(
-            'dark',
-            stored === 'dark' || (!stored && prefersDark),
-          );
-        } catch {}
+          document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && prefersDark));
+        } catch {
+          // Storage can be blocked; the page then starts in the light theme.
+        }
       })();
     </script>
+    <link rel="alternate" type="application/rss+xml" title={site.title} href={new URL(routes.rss, site.url)} />
+    <slot name="head" />
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
-  <body class="antialiased selection:bg-[var(--color-academic-yellow)]/30">
+  <body>
     <slot />
     <script>
-      import '../scripts/theme.ts';
-      import '../scripts/nav.ts';
-      import '../scripts/animate-on-scroll.ts';
+      import { initSite } from '../scripts/site';
+      initSite();
     </script>
   </body>
 </html>

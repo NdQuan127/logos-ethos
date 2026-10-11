@@ -1,0 +1,37 @@
+---
+/**
+ * Shared shell for theorem-like blocks. Use the named wrappers in MDX
+ * (<Theorem>, <Definition>, …) rather than this component directly.
+ */
+const STATEMENT_LABELS = {
+  theorem: 'Định lý',
+  lemma: 'Bổ đề',
+  proposition: 'Mệnh đề',
+  corollary: 'Hệ quả',
+  definition: 'Định nghĩa',
+  axiom: 'Tiên đề',
+  example: 'Ví dụ',
+  remark: 'Nhận xét',
+} as const;
+
+type StatementKind = keyof typeof STATEMENT_LABELS;
+
+interface Props {
+  kind: StatementKind;
+  /** Optional name, e.g. "Bất toàn thứ nhất" or "Gödel, 1931". */
+  title?: string;
+}
+
+const { kind, title } = Astro.props;
+const label = STATEMENT_LABELS[kind];
+---
+
+<div class={`statement statement-${kind}`} role="group" aria-label={title ? `${label}: ${title}` : label}>
+  <p class="statement-label">
+    <span>{label}</span>
+    {title && <span class="statement-title"> ({title})</span>}.
+  </p>
+  <div class="statement-body">
+    <slot />
+  </div>
+</div>

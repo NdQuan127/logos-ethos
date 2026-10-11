@@ -12,11 +12,9 @@ const labels = {
 };
 ---
 
-<aside class={`my-8 border-l-2 border-[var(--accent-primary)] bg-[var(--accent-primary)]/5 px-5 py-4 font-sans callout-${type}`}>
-  <p class="font-mono text-xs uppercase tracking-widest text-[var(--accent-primary)] mb-2">
-    {title ?? labels[type]}
-  </p>
-  <div class="text-[var(--foreground)] leading-relaxed">
+<aside class={`my-8 rounded-xl bg-surface px-5 py-4 font-sans text-base callout-${type}`}>
+  <p class="mb-2 text-[0.8125rem] font-medium text-accent">{title ?? labels[type]}</p>
+  <div class="leading-relaxed text-fg">
     <slot />
   </div>
 </aside>

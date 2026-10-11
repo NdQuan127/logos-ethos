@@ -11,8 +11,28 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache images
-[[headers]]
-  for = "/images/*"
-  [headers.values]
-    Cache-Control = "public, max-age=86400, s-maxage=604800"
+# The seven fine-grained categories became four domains; keep old links working.
+[[redirects]]
+  from   = "/blog/chu-de/logic-hoc/*"
+  to     = "/blog/chu-de/toan-hoc/"
+  status = 301
+
+[[redirects]]
+  from   = "/blog/chu-de/nghich-ly/*"
+  to     = "/blog/chu-de/toan-hoc/"
+  status = 301
+
+[[redirects]]
+  from   = "/blog/chu-de/nhan-thuc-luan/*"
+  to     = "/blog/chu-de/triet-hoc/"
+  status = 301
+
+[[redirects]]
+  from   = "/blog/chu-de/dao-duc-luan/*"
+  to     = "/blog/chu-de/triet-hoc/"
+  status = 301
+
+[[redirects]]
+  from   = "/blog/chu-de/phuong-phap-luan/*"
+  to     = "/blog/chu-de/triet-hoc/"
+  status = 301

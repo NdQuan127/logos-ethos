@@ -1,0 +1,113 @@
+---
+import { Menu, X } from '@lucide/astro';
+import Logo from './Logo.astro';
+import ThemeButton from './ThemeButton.astro';
+import { site } from '../../config/site';
+import { routes } from '../../lib/routes';
+
+const pathname = Astro.url.pathname;
+const navLinks = site.nav.map((link) => ({
+  ...link,
+  current: !!link.match && pathname.startsWith(`${link.match}/`),
+}));
+---
+
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-[10px] focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:text-canvas"
+>
+  Chuyển đến nội dung chính
+</a>
+
+<div class="px-4 sm:px-6">
+  <nav
+    class="mx-auto mt-4 flex max-w-[60rem] items-center gap-5 rounded-2xl border border-line bg-canvas py-2 pr-2 pl-4 sm:mt-5 sm:pl-5"
+    aria-label="Điều hướng chính"
+  >
+    <Logo />
+    <div class="ml-auto hidden gap-6 text-[0.9375rem] md:flex">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          aria-current={link.current ? 'page' : undefined}
+          class:list={[
+            'py-2 transition-colors duration-[160ms] hover:text-fg',
+            link.current ? 'text-fg underline decoration-lilac-deep decoration-2 underline-offset-8' : 'text-muted',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+    <div class="flex items-center gap-1 max-md:ml-auto">
+      <ThemeButton />
+      <a href={routes.rss} class="btn btn-sm max-[380px]:hidden">
+        Theo dõi
+      </a>
+      <button
+        data-nav-toggle
+        class="group grid size-11 place-items-center rounded-[10px] text-fg transition-[background-color,color,scale] duration-[160ms] hover:bg-surface active:scale-[0.97] motion-reduce:active:scale-100 md:hidden"
+        aria-label="Mở menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="relative block size-[18px]">
+          <span class="absolute inset-0 transition-[opacity,rotate,scale] duration-200 ease-out group-aria-expanded:scale-75 group-aria-expanded:rotate-90 group-aria-expanded:opacity-0">
+            <Menu size={18} />
+          </span>
+          <span class="absolute inset-0 scale-75 -rotate-90 opacity-0 transition-[opacity,rotate,scale] duration-200 ease-out group-aria-expanded:scale-100 group-aria-expanded:rotate-0 group-aria-expanded:opacity-100">
+            <X size={18} />
+          </span>
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+{/* The drawer turns visible at once when it opens, so its first link can take focus, and stays visible
+     while it closes, so the panel can slide out. */}
+<div
+  id="mobile-menu"
+  data-nav-drawer
+  class="group pointer-events-none invisible fixed inset-0 z-[60] transition-[visibility] duration-[280ms] data-open:pointer-events-auto data-open:visible data-open:transition-none md:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu điều hướng"
+  aria-hidden="true"
+>
+  <div
+    data-nav-backdrop
+    class="absolute inset-0 bg-ink/30 opacity-0 transition-opacity duration-[280ms] ease-out group-data-open:opacity-100 motion-reduce:transition-none"
+    aria-hidden="true"
+  ></div>
+  <div class="absolute top-0 right-0 flex h-full w-72 translate-x-full flex-col gap-8 rounded-l-[28px] border-l border-line bg-paper-kraft p-8 transition-transform duration-[280ms] ease-out group-data-open:translate-x-0 motion-reduce:transition-none">
+    <div class="flex items-center justify-between">
+      <span class="eyebrow">Menu</span>
+      <button
+        data-nav-close
+        class="grid size-11 place-items-center rounded-[10px] transition-[background-color,color,scale] duration-[160ms] hover:bg-surface active:scale-[0.97] motion-reduce:active:scale-100"
+        aria-label="Đóng menu"
+      >
+        <X size={18} aria-hidden="true" />
+      </button>
+    </div>
+    <nav class="flex flex-col gap-5" aria-label="Menu điều hướng di động">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          data-nav-link
+          aria-current={link.current ? 'page' : undefined}
+          class:list={[
+            'font-display text-[1.75rem] leading-tight transition-colors duration-[160ms] hover:text-accent focus-visible:text-accent',
+            link.current ? 'text-accent italic' : 'text-fg',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <a href={routes.rss} data-nav-link class="btn mt-4 self-start">
+        Theo dõi qua RSS
+      </a>
+    </nav>
+  </div>
+</div>

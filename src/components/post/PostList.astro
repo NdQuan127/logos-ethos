@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import PostRow from './PostRow.astro';
+import type { PostView } from '../../lib/content';
+
+interface Props extends HTMLAttributes<'ul'> {
+  posts: PostView[];
+  /** Render an <ol> when order matters. */
+  ordered?: boolean;
+}
+
+const { posts, ordered = false, class: className, ...attrs } = Astro.props;
+const List = ordered ? 'ol' : 'ul';
+---
+
+<List class:list={['divide-y divide-line', className]} {...attrs}>
+  {posts.map((post) => (
+    <li>
+      <PostRow post={post} />
+    </li>
+  ))}
+</List>

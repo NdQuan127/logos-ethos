@@ -1,0 +1,29 @@
+---
+/**
+ * Every regular page: navigation, a single <main id="main-content"> and the footer.
+ */
+import BaseLayout, { type Props as BaseProps } from './BaseLayout.astro';
+import Footer from '../components/site/Footer.astro';
+import Navbar from '../components/site/Navbar.astro';
+
+interface Props extends BaseProps {
+  /** Extra classes for the page shell. */
+  class?: string;
+  /** Extra classes for <main>. */
+  mainClass?: string;
+}
+
+const { class: className, mainClass, ...baseProps } = Astro.props;
+---
+
+<BaseLayout {...baseProps}>
+  <slot name="head" slot="head" />
+  <div class:list={['flex min-h-svh flex-col', className]}>
+    <slot name="before-nav" />
+    <Navbar />
+    <main id="main-content" class:list={['flex-grow', mainClass]}>
+      <slot />
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>

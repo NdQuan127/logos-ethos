@@ -1,0 +1,26 @@
+---
+import { ArrowLeft, Share2 } from '@lucide/astro';
+import type { PostView } from '../../lib/content';
+import { routes } from '../../lib/routes';
+
+interface Props {
+  post: PostView;
+}
+
+const { post } = Astro.props;
+const action =
+  'flex min-h-11 items-center gap-2 rounded-[10px] px-3 transition-[background-color,color,scale] duration-[160ms] hover:bg-surface hover:text-fg active:scale-[0.97] motion-reduce:active:scale-100';
+---
+
+<div class="mt-12 flex flex-wrap items-center justify-between gap-y-4 border-t border-line pt-8 text-sm text-muted">
+  <div class="flex flex-wrap gap-1">
+    <button type="button" data-share-button data-share-title={post.title} class={action} aria-label="Chia sẻ bài viết">
+      <Share2 size={16} aria-hidden="true" />
+      <span data-share-label>Chia sẻ</span>
+    </button>
+  </div>
+  <a href={routes.blog} class={action}>
+    <ArrowLeft size={14} aria-hidden="true" />
+    <span>Tất cả bài viết</span>
+  </a>
+</div>

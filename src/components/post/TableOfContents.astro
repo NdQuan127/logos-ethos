@@ -1,0 +1,54 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** `sidebar`: sticky column on wide screens. `inline`: collapsible box above the article. */
+  variant: 'sidebar' | 'inline';
+}
+
+const { headings, variant } = Astro.props;
+const sidebar = variant === 'sidebar';
+const Outer = sidebar ? 'aside' : 'details';
+const Label = sidebar ? 'p' : 'summary';
+---
+
+<Outer
+  class={
+    sidebar
+      ? 'hidden text-[0.8125rem] leading-[1.45] article:sticky article:top-8 article:block article:max-h-[calc(100vh-4rem)] article:self-start article:overflow-y-auto'
+      : 'toc-inline mb-10 rounded-xl bg-surface text-sm article:hidden'
+  }
+>
+  <Label
+    class={
+      sidebar
+        ? 'text-[0.8125rem] font-medium text-muted'
+        : 'flex min-h-11 cursor-pointer items-center px-4 font-medium text-muted'
+    }
+  >
+    Trong bài
+  </Label>
+  <nav
+    aria-label={sidebar ? 'Mục lục bài viết' : 'Mục lục bài viết (thu gọn)'}
+    class={sidebar ? undefined : 'px-4 pb-4'}
+  >
+    <ol class={sidebar ? 'mt-3 border-l border-line' : 'space-y-2'}>
+      {headings.map((heading) => (
+        <li>
+          <a
+            href={`#${heading.slug}`}
+            data-toc-link
+            class:list={[
+              'block text-muted transition-colors duration-[160ms] hover:text-fg',
+              sidebar &&
+                '-ml-px border-l-2 border-transparent py-1.5 pl-3.5 aria-[current=location]:border-accent aria-[current=location]:text-fg',
+            ]}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</Outer>

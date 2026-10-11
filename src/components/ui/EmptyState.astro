@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  title: string;
+  description?: string;
+}
+
+const { title, description, class: className, ...attrs } = Astro.props;
+---
+
+<div class:list={['py-24 text-center', className]} {...attrs}>
+  <p class="mb-4 font-display text-3xl text-muted italic">{title}</p>
+  {description && <p class:list={['text-sm text-muted', Astro.slots.has('default') && 'mb-8']}>{description}</p>}
+  <slot />
+</div>

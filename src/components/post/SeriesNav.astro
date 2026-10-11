@@ -1,0 +1,65 @@
+---
+import type { PostView, SeriesView } from '../../lib/content';
+
+interface Props {
+  series: SeriesView;
+  /** Every post of the series, in reading order. */
+  posts: PostView[];
+  current: PostView;
+}
+
+const { series, posts, current } = Astro.props;
+const index = posts.findIndex((post) => post.slug === current.slug);
+const prev = index > 0 ? posts[index - 1] : undefined;
+const next = index < posts.length - 1 ? posts[index + 1] : undefined;
+const link = 'transition-colors duration-[160ms] hover:text-accent';
+---
+
+<nav
+  class="mt-16 rounded-[28px] bg-paper-lilac px-6 py-7 text-[0.9375rem] leading-[1.5] sm:px-8"
+  aria-label={`Chuyên đề: ${series.title}`}
+>
+  <p class="eyebrow flex items-baseline justify-between">
+    <span>Chuyên đề</span>
+    <span class="tabular-nums">
+      {index + 1}/{posts.length}
+    </span>
+  </p>
+  <a href={series.href} class:list={['mt-2 block font-display text-[1.75rem] leading-[1.1] italic', link]}>
+    {series.title}
+  </a>
+  <ol class="mt-4">
+    {posts.map((post, i) => (
+      <li class="grid grid-cols-[2rem_1fr] border-t border-line py-2 text-muted">
+        <span class="font-display text-[1.0625rem] italic" aria-hidden="true">
+          {i + 1}
+        </span>
+        {post.slug === current.slug ? (
+          <span aria-current="page" class="font-semibold text-fg">
+            {post.title}
+          </span>
+        ) : (
+          <a href={post.href} class={link}>
+            {post.title}
+          </a>
+        )}
+      </li>
+    ))}
+  </ol>
+  {(prev || next) && (
+    <div class="mt-3 flex justify-between gap-4 border-t border-line pt-3">
+      {prev ? (
+        <a href={prev.href} rel="prev" class:list={['flex min-h-11 items-center', link]}>
+          ← Phần trước
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a href={next.href} rel="next" class:list={['flex min-h-11 items-center', link]}>
+          Phần tiếp →
+        </a>
+      )}
+    </div>
+  )}
+</nav>

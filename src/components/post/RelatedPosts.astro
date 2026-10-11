@@ -1,0 +1,19 @@
+---
+import PostList from './PostList.astro';
+import type { PostView } from '../../lib/content';
+
+interface Props {
+  posts: PostView[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="mt-20 border-t border-line pt-10" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="eyebrow mb-2">
+      Có thể bạn cũng quan tâm
+    </h2>
+    <PostList posts={posts} />
+  </section>
+)}
