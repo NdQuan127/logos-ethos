@@ -1,0 +1,25 @@
+#!/bin/sh
+# Runs before every `git push`. Enabled by `npm install` (the prepare script).
+# Skip it for one push with `git push --no-verify`.
+
+zero=0000000000000000000000000000000000000000
+status=0
+pushing=0
+
+# A commit being pushed must not contain a file that .gitignore lists.
+# `git add -f` can slip one past the ignore rules and it then stays in history.
+while read -r _ local_sha _ _; do
+  [ "$local_sha" = "$zero" ] && continue
+  pushing=1
+  tracked=$(git ls-tree -r -z --name-only "$local_sha" | git check-ignore --no-index -z --stdin | tr '\0' '\n')
+  if [ -n "$tracked" ]; then
+    echo "pre-push: $(git rev-parse --short "$local_sha") tracks files that .gitignore lists:" >&2
+    echo "$tracked" | sed 's/^/  /' >&2
+    echo "Run 'git rm -r --cached <path>' and amend or add a commit." >&2
+    status=1
+  fi
+done
+[ "$status" -eq 0 ] || exit 1
+
+# Deleting a branch pushes no commits, so there is nothing to check.
+[ "$pushing" -eq 0 ] || npm run ci
