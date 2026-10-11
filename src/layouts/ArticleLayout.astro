@@ -5,7 +5,6 @@
  */
 // Linked per page instead of bundled, so posts without math skip it.
 import katexHref from 'katex/dist/katex.min.css?url';
-import { ChevronRight } from '@lucide/astro';
 import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import SiteLayout from './SiteLayout.astro';
@@ -19,7 +18,6 @@ import TableOfContents from '../components/post/TableOfContents.astro';
 import TagList from '../components/post/TagList.astro';
 import { site } from '../config/site';
 import { getPosts, getRelatedPosts, getSeriesPosts, type PostView } from '../lib/content';
-import { routes } from '../lib/routes';
 
 interface Props {
   post: PostView;
@@ -30,9 +28,12 @@ const posts = await getPosts();
 const { Content, headings, remarkPluginFrontmatter } = await render(post.entry);
 const relatedPosts = getRelatedPosts(posts, post);
 const seriesPosts = post.series ? getSeriesPosts(posts, post.series.id) : [];
+const seriesIndex = seriesPosts.findIndex((part) => part.slug === post.slug);
+const MAX_SERIES_DASHES = 8;
+// Sections only: a list of every ### grows longer than the screen.
 // `footnote-label` is the visually hidden heading of the footnotes section.
 const tocHeadings = post.toc
-  ? headings.filter((heading) => (heading.depth === 2 || heading.depth === 3) && heading.slug !== 'footnote-label')
+  ? headings.filter((heading) => heading.depth === 2 && heading.slug !== 'footnote-label')
   : [];
 const socialImage = post.cover
   ? (await getImage({ src: post.cover, width: 1200, height: 630, fit: 'cover', format: 'jpeg' })).src
@@ -64,7 +65,6 @@ const jsonLd = {
   image={socialImage}
   type="article"
   jsonLd={jsonLd}
-  mainClass="w-full relative z-10"
 >
   <script>
     import { initArticle } from '../scripts/article';
@@ -74,71 +74,80 @@ const jsonLd = {
   <div
     slot="before-nav"
     data-reading-progress
-    class="reading-progress fixed left-0 top-0 h-1 w-full bg-accent z-[70]"
+    class="reading-progress fixed top-0 left-0 z-[70] h-1 w-full bg-lilac-deep"
     aria-hidden="true"
   ></div>
-  <div class="max-w-6xl mx-auto px-6 py-12 md:py-20">
-    <header class="mb-12 max-w-3xl mx-auto animate-fade-in-up">
-      <nav aria-label="Vị trí hiện tại" class="mb-6">
-        <ol class="flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
-          <li>
-            <a href={routes.blog} class="hover:text-accent transition-colors">
-              Bài viết
-            </a>
-          </li>
-          <li aria-hidden="true">
-            <ChevronRight size={12} />
-          </li>
-          <li>
-            <a href={post.category.href} class="font-semibold hover:underline" style={{ color: post.category.color }}>
-              {post.category.name}
-            </a>
-          </li>
-        </ol>
-      </nav>
+  <div class="wrap pb-24">
+    <header class="mx-auto max-w-[40rem] pt-10 pb-10 sm:pt-16">
+      <a href={post.category.href} class="cat-chip px-[0.6rem] py-[0.4rem]" style={{ '--tab': post.category.tab }}>
+        {post.category.name}
+      </a>
       {post.draft && (
-        <p class="mb-4 inline-block border border-accent px-2 py-1 font-mono text-xs uppercase tracking-widest text-accent">
+        <p class="mt-4 w-fit rounded-md border border-dashed border-muted px-2 py-1 text-xs text-muted">
           Bản nháp — không xuất hiện khi build production
         </p>
       )}
-      <h1 class="font-serif text-4xl md:text-6xl text-fg mb-6 leading-tight font-medium">{post.title}</h1>
-      <div class="flex items-center gap-3 text-muted font-mono text-xs flex-wrap">
+      <h1 class="mt-5 font-display text-[clamp(2.5rem,1.8rem+2.6vw,3.75rem)] leading-[1.02] font-normal tracking-[-0.025em] text-balance break-words">
+        {post.title}
+      </h1>
+      <p class="mt-4 font-display text-[1.375rem] leading-[1.45] text-muted italic">{post.description}</p>
+      <p class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted">
         <time datetime={post.isoDate}>{post.dateLabel}</time>
         {post.updatedLabel && (
-          <>
-            <span aria-hidden="true">·</span>
-            <span>
-              Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time>
-            </span>
-          </>
+          <span>
+            Cập nhật <time datetime={post.updatedIsoDate}>{post.updatedLabel}</time>
+          </span>
         )}
-        <span aria-hidden="true">·</span>
         <span aria-label={`Thời gian đọc ước tính: ${post.readingTime} phút`}>{post.readingTime} phút đọc</span>
-      </div>
+      </p>
+      {post.series && (
+        <a
+          href={post.series.href}
+          class="mt-6 flex items-center gap-4 rounded-xl bg-surface px-4 py-3.5 text-sm text-muted transition-colors duration-[160ms] hover:text-fg"
+        >
+          <span class="min-w-0">
+            Phần {seriesIndex + 1} trong{' '}
+            <em class="font-display text-[1.0625rem] font-medium text-fg">{post.series.title}</em>
+          </span>
+          {/* One dash per part fits a short series; a long one gets a count instead. */}
+          {seriesPosts.length <= MAX_SERIES_DASHES ? (
+            <span class="ml-auto flex shrink-0 gap-[3px]" aria-hidden="true">
+              {seriesPosts.map((_, index) => (
+                <i class:list={['h-1 w-4 rounded-sm', index <= seriesIndex ? 'bg-accent-soft' : 'bg-line']} />
+              ))}
+            </span>
+          ) : (
+            <span class="ml-auto shrink-0 tabular-nums" aria-hidden="true">
+              {seriesIndex + 1}/{seriesPosts.length}
+            </span>
+          )}
+        </a>
+      )}
     </header>
-    <PostCover
-      category={post.category}
-      cover={post.cover}
-      coverAlt={post.coverAlt}
-      ratio="aspect-[21/9]"
-      glyph="text-[9rem]"
-      sizes="(min-width: 768px) 48rem, 100vw"
-      eager
-      class="max-w-3xl mx-auto mb-12 border border-line"
-    />
-    <div class="xl:grid xl:grid-cols-[12rem_minmax(0,38rem)_12rem] xl:gap-12 xl:justify-center">
+    {(post.cover || post.artCover) && (
+      <PostCover
+        category={post.category}
+        cover={post.cover}
+        coverAlt={post.coverAlt}
+        seed={post.slug}
+        sizes="(min-width: 960px) 56rem, 100vw"
+        eager
+        class="mx-auto mb-11 aspect-[3/2] max-w-[56rem] sm:aspect-[21/9]"
+      />
+    )}
+    <div class="border-t border-line pt-10 article:grid article:grid-cols-[11rem_minmax(0,38rem)_12rem] article:justify-center article:gap-10">
       {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} variant="sidebar" />}
-      <div class="max-w-[38rem] mx-auto w-full xl:max-w-none xl:col-start-2 xl:row-start-1">
-        {post.series && <SeriesNav series={post.series} posts={seriesPosts} current={post} />}
+      <div class="mx-auto w-full max-w-[38rem] article:col-start-2 article:row-start-1 article:max-w-none">
         {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} variant="inline" />}
-        <article class="article-content">
+        <article class="article-content" style={{ '--cat': post.category.color }}>
           <Content components={mdxComponents} />
         </article>
+        {post.series && <SeriesNav series={post.series} posts={seriesPosts} current={post} />}
         <SourceList sources={post.sources} />
         <TagList tags={post.tags} class="mt-10" />
       </div>
     </div>
-    <div class="max-w-3xl mx-auto">
+    <div class="mx-auto max-w-[40rem]">
       <RelatedPosts posts={relatedPosts} />
       <ArticleActions post={post} />
     </div>

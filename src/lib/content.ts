@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import type { Tone } from './cover-art';
 import { formatDate, isoDate, readingTime } from './format';
 import { routes } from './routes';
 import { slugify } from './slug';
@@ -8,8 +9,11 @@ export interface CategoryView {
   id: string;
   name: string;
   description: string;
+  tone: Tone;
   /** CSS colour (theme-aware custom property) safe for text on every surface. */
   color: string;
+  /** Pale paper behind the category chip and its covers; always carries ink text. */
+  tab: string;
   symbol: string;
   href: string;
 }
@@ -24,6 +28,8 @@ export interface SeriesView {
   id: string;
   title: string;
   description: string;
+  /** Cover glyph; when unset, covers use the first post's category symbol. */
+  symbol?: string;
   href: string;
 }
 
@@ -40,11 +46,14 @@ export interface PostView {
   updatedIsoDate?: string;
   category: CategoryView;
   tags: TagView[];
-  series?: SeriesView & { order: number };
+  /** `order` is the 1-based position among published parts; `total` is their number. */
+  series?: SeriesView & { order: number; total: number };
   featured: boolean;
   draft: boolean;
   cover?: ImageMetadata;
   coverAlt?: string;
+  /** Show a generated cover on the article when there is no `cover` image. */
+  artCover: boolean;
   toc: boolean;
   sources: CollectionEntry<'blog'>['data']['sources'];
   readingTime: number;
@@ -62,7 +71,9 @@ function toCategoryView(entry: CollectionEntry<'categories'>): CategoryView {
     id,
     name: data.name,
     description: data.description,
-    color: `var(--cat-${data.color})`,
+    tone: data.tone,
+    color: `var(--cat-${data.tone})`,
+    tab: `var(--tab-${data.tone})`,
     symbol: data.symbol,
     href: routes.category(id),
   };
@@ -73,6 +84,7 @@ function toSeriesView(entry: CollectionEntry<'series'>): SeriesView {
     id: entry.id,
     title: entry.data.title,
     description: entry.data.description,
+    symbol: entry.data.symbol,
     href: routes.series(entry.id),
   };
 }
@@ -93,6 +105,14 @@ async function loadPosts(): Promise<PostView[]> {
   ]);
   const categories = new Map(categoryEntries.map((entry) => [entry.id, toCategoryView(entry)]));
   const series = new Map(seriesEntries.map((entry) => [entry.id, toSeriesView(entry)]));
+  // A part's number is its position among the parts loaded here, so an unpublished
+  // draft leaves no gap ("phần 3/2") between the parts readers can see.
+  const seriesParts = new Map<string, CollectionEntry<'blog'>[]>();
+  for (const entry of entries) {
+    if (entry.data.series)
+      seriesParts.set(entry.data.series.id, [...(seriesParts.get(entry.data.series.id) ?? []), entry]);
+  }
+  for (const parts of seriesParts.values()) parts.sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
 
   return entries
     .map((entry): PostView => {
@@ -115,11 +135,16 @@ async function loadPosts(): Promise<PostView[]> {
         updatedIsoDate: data.updated && isoDate(data.updated),
         category,
         tags: data.tags.map(toTagView),
-        series: postSeries && { ...postSeries, order: data.seriesOrder ?? 0 },
+        series: postSeries && {
+          ...postSeries,
+          order: (seriesParts.get(postSeries.id)?.indexOf(entry) ?? 0) + 1,
+          total: seriesParts.get(postSeries.id)?.length ?? 1,
+        },
         featured: data.featured,
         draft: data.draft,
         cover: data.cover,
         coverAlt: data.coverAlt,
+        artCover: data.artCover,
         toc: data.toc,
         sources: data.sources,
         readingTime: readingTime(entry.body ?? ''),

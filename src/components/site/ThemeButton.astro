@@ -1,16 +1,27 @@
 ---
 import { Moon, Sun } from '@lucide/astro';
+
+/* The icons swap the same way as the menu toggle's (Navbar.astro), driven by the .dark class.
+   With reduced motion they only cross-fade. */
+const icon = 'absolute inset-0 transition-[opacity,rotate,scale] duration-200 ease-out';
 ---
 
 <button
   data-theme-toggle
-  class="p-3 sm:p-2 rounded-full hover:bg-fg/5 transition-colors text-fg"
+  class="grid size-11 place-items-center rounded-[10px] text-muted transition-[background-color,color,scale] duration-[160ms] hover:bg-surface hover:text-fg active:scale-[0.97] motion-reduce:active:scale-100"
   aria-label="Đổi giao diện sáng tối"
 >
-  <span data-theme-sun class="block transition-transform duration-500 ease-in-out" aria-hidden="true">
-    <Sun size={20} />
-  </span>
-  <span data-theme-moon class="hidden transition-transform duration-500 ease-in-out" aria-hidden="true">
-    <Moon size={20} />
+  <span class="relative block size-[18px]" aria-hidden="true">
+    <span class:list={[icon, 'dark:opacity-0 motion-safe:dark:scale-75 motion-safe:dark:rotate-90']}>
+      <Sun size={18} />
+    </span>
+    <span
+      class:list={[
+        icon,
+        'opacity-0 motion-safe:scale-75 motion-safe:-rotate-90 dark:scale-100 dark:rotate-0 dark:opacity-100',
+      ]}
+    >
+      <Moon size={18} />
+    </span>
   </span>
 </button>

@@ -15,7 +15,9 @@ const category = (id: string): CategoryView => ({
   id,
   name: id,
   description: '',
+  tone: 'blue',
   color: 'var(--cat-blue)',
+  tab: 'var(--tab-blue)',
   symbol: '∀',
   href: `/blog/chu-de/${id}/`,
 });
@@ -34,6 +36,7 @@ function post(slug: string, options: Partial<PostView> & { day?: number; tagName
     tags: tagNames.map(toTagView),
     featured: false,
     draft: false,
+    artCover: false,
     toc: true,
     sources: [],
     readingTime: 1,
@@ -42,7 +45,7 @@ function post(slug: string, options: Partial<PostView> & { day?: number; tagName
   };
 }
 
-const series = (order: number) => ({ id: 'bat-toan', title: '', description: '', href: '', order });
+const series = (order: number) => ({ id: 'bat-toan', title: '', description: '', href: '', order, total: 2 });
 
 describe('getRelatedPosts', () => {
   it('ranks same series, then category, then shared tags, and skips the current post', () => {

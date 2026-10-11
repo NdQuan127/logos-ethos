@@ -4,6 +4,7 @@ import QuoteSection from '../components/blocks/QuoteSection.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
 import { site } from '../config/site';
 import { getPosts, summarizeCategories } from '../lib/content';
+import { formatCount } from '../lib/format';
 import { routes } from '../lib/routes';
 
 const categories = summarizeCategories(await getPosts());
@@ -35,74 +36,74 @@ const pillars = [
 ---
 
 <SiteLayout
-  title="Về chúng tôi"
-  description="Logos & Ethos — về những giới hạn của sự hiểu biết, nơi toán học và triết học cùng đặt câu hỏi cho lý trí."
+  title="Giới thiệu"
+  description="Logos & Ethos — ghi chép chậm về toán học, học máy, triết học và chính trị."
   canonicalPath={routes.about}
 >
-  <PageHeader eyebrow="Về chúng tôi" dot title="Câu hỏi đi trước" titleAccent="những câu trả lời" size="lg" />
-  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-label="Sứ mệnh">
-    <div class="max-w-4xl mx-auto">
-      <p class="font-mono text-xs text-accent uppercase tracking-widest mb-6">Sứ mệnh</p>
-      <p class="font-serif text-2xl md:text-3xl text-fg leading-relaxed mb-6">
+  <PageHeader eyebrow="Giới thiệu" title="Câu hỏi đi trước" titleAccent="những câu trả lời" />
+  <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-label="Sứ mệnh">
+    <div class="mx-auto max-w-[52rem]">
+      <p class="eyebrow mb-5">Sứ mệnh</p>
+      <p class="mb-6 font-display text-2xl leading-snug text-fg md:text-3xl">
         Lý trí có những đường biên mà chính nó không thể nhìn thấy. Toán học và triết học là hai cách tiếp cận khác nhau
         để sờ vào những đường biên đó.
       </p>
-      <p class="font-sans text-muted text-lg leading-loose">
+      <p class="text-lg leading-relaxed text-muted">
         Logos & Ethos là nơi dành cho những ai thấy rằng một định lý toán học có thể gây rúng động ngang một câu hỏi
         triết học, và rằng câu hỏi quan trọng hơn câu trả lời.
       </p>
     </div>
   </section>
-  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-label="Hai trụ cột">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-line">
+  <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-label="Hai trụ cột">
+    <div class="mx-auto grid max-w-[60rem] grid-cols-1 gap-6 md:grid-cols-2">
       {pillars.map((pillar) => (
-        <div class="p-8 md:p-12">
-          <div class="font-serif text-7xl text-accent opacity-20 mb-4 leading-none" aria-hidden="true">
+        <div class="rounded-[20px] bg-surface p-8 md:p-10">
+          <div class="mb-4 font-display text-6xl leading-none text-accent-soft italic" aria-hidden="true">
             {pillar.symbol}
           </div>
-          <p class="font-mono text-sm uppercase tracking-widest text-accent mb-2">{pillar.latin}</p>
-          <h2 class="font-serif text-3xl text-fg mb-6 font-medium">{pillar.meaning}</h2>
-          <p class="font-sans text-muted text-base leading-loose">{pillar.description}</p>
+          <p class="eyebrow mb-2">{pillar.latin}</p>
+          <h2 class="mb-5 font-display text-3xl font-medium text-fg">{pillar.meaning}</h2>
+          <p class="leading-relaxed text-muted">{pillar.description}</p>
         </div>
       ))}
     </div>
   </section>
-  <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-labelledby="author-heading">
-    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-[10rem_minmax(0,1fr)] gap-10 items-start">
+  <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-labelledby="author-heading">
+    <div class="mx-auto grid max-w-[52rem] grid-cols-1 items-start gap-10 md:grid-cols-[10rem_minmax(0,1fr)]">
       <div
-        class="flex h-40 w-40 items-center justify-center border border-line bg-surface font-serif text-4xl italic text-accent"
+        class="flex h-40 w-40 items-center justify-center rounded-[20px] bg-paper-lilac font-display text-4xl text-fg italic"
         aria-hidden="true"
       >
         {author.initials}
       </div>
       <div>
-        <p class="font-mono text-xs text-accent uppercase tracking-widest mb-4">Người viết</p>
-        <h2 id="author-heading" class="font-serif text-3xl text-fg mb-6 font-medium">
+        <p class="eyebrow mb-4">Người viết</p>
+        <h2 id="author-heading" class="mb-5 font-display text-3xl font-medium text-fg">
           {author.name}
         </h2>
         {author.bio.map((paragraph) => (
-          <p class="font-serif text-fg text-xl leading-relaxed mb-4">{paragraph}</p>
+          <p class="mb-4 font-serif text-lg leading-relaxed text-fg">{paragraph}</p>
         ))}
       </div>
     </div>
   </section>
   {categories.length > 0 && (
-    <section class="w-full py-20 px-6 md:px-12 border-b border-line" aria-labelledby="topics-heading">
-      <div class="max-w-4xl mx-auto">
-        <p class="font-mono text-xs text-muted uppercase tracking-widest mb-4">Đang viết về</p>
-        <h2 id="topics-heading" class="font-serif text-3xl text-fg mb-8 font-medium">
-          Các chủ đề
+    <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-labelledby="topics-heading">
+      <div class="mx-auto max-w-[52rem]">
+        <p class="eyebrow mb-4">Đang viết về</p>
+        <h2 id="topics-heading" class="mb-6 font-display text-3xl font-medium text-fg">
+          Các lĩnh vực
         </h2>
         <ul>
           {categories.map(({ item, count }) => (
             <li class="border-b border-line">
               <a
                 href={item.href}
-                class="group flex min-h-11 items-center justify-between gap-4 py-4 text-fg hover:text-accent transition-colors"
+                class="group flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-4 text-fg transition-colors duration-[160ms] hover:text-accent"
               >
-                <span class="font-serif text-xl">{item.name}</span>
-                <span class="font-sans text-sm text-muted">
-                  {item.description} · {count} bài
+                <span class="font-display text-2xl">{item.name}</span>
+                <span class="text-sm text-muted">
+                  {item.description} · {formatCount(count)} bài
                 </span>
               </a>
             </li>
@@ -111,16 +112,13 @@ const pillars = [
       </div>
     </section>
   )}
-  <section id="contact" class="w-full py-20 px-6 md:px-12" aria-label="Liên hệ">
-    <div class="max-w-4xl mx-auto text-center">
-      <p class="font-mono text-xs text-muted uppercase tracking-widest mb-6">Liên hệ</p>
-      <p class="font-serif text-2xl text-fg mb-8 leading-relaxed">
+  <section id="contact" class="w-full px-5 py-20 sm:px-8" aria-label="Liên hệ">
+    <div class="mx-auto max-w-[52rem] text-center">
+      <p class="eyebrow mb-5">Liên hệ</p>
+      <p class="mb-8 font-display text-3xl leading-snug text-fg">
         Có ý tưởng, câu hỏi, hay chỉ muốn nói về Gödel lúc nửa đêm?
       </p>
-      <a
-        href={`mailto:${site.email}`}
-        class="inline-flex min-h-11 items-center gap-2 font-mono text-sm uppercase tracking-wider text-fg border border-line px-6 py-3 hover:border-accent hover:text-accent transition-colors"
-      >
+      <a href={`mailto:${site.email}`} class="btn">
         Gửi thư cho chúng tôi
       </a>
     </div>

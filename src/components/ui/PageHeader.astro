@@ -1,54 +1,37 @@
 ---
 /**
  * Top-of-page header shared by listing and static pages:
- * eyebrow label, h1 with an optional italic accent, and a lead paragraph.
+ * eyebrow label, h1 with an optional italic part, and a lead paragraph.
  */
 interface Props {
   eyebrow: string;
-  /** Eyebrow colour; defaults to the accent colour. */
-  eyebrowColor?: string;
-  /** Show a dot before the eyebrow. */
-  dot?: boolean;
   title: string;
-  /** Second part of the title, set in light italic. */
+  /** Second part of the title, set in italic. */
   titleAccent?: string;
   /** Lead paragraph. */
   description?: string;
-  /** `lg` is the roomier variant used on the about page. */
-  size?: 'md' | 'lg';
+  align?: 'left' | 'center';
 }
 
-const { eyebrow, eyebrowColor, dot = false, title, titleAccent, description, size = 'md' } = Astro.props;
+const { eyebrow, title, titleAccent, description, align = 'left' } = Astro.props;
 ---
 
-<header class:list={['w-full px-6 md:px-12 border-b border-line', size === 'lg' ? 'py-24 md:py-32' : 'py-20 md:py-28']}>
-  <div class="max-w-7xl mx-auto relative z-10">
-    <p
-      class:list={[
-        'flex items-center gap-2 mb-6 font-mono text-xs uppercase tracking-widest animate-fade-in',
-        !eyebrowColor && 'text-accent',
-      ]}
-      style={eyebrowColor ? { color: eyebrowColor } : undefined}
-    >
-      {dot && <span class="w-2 h-2 bg-current rounded-full" aria-hidden="true"></span>}
-      <span>{eyebrow}</span>
-    </p>
-    <h1
-      class:list={[
-        'font-serif text-5xl md:text-7xl text-fg font-medium leading-tight animate-fade-in-up',
-        size === 'lg' && 'tracking-tight max-w-4xl',
-      ]}
-    >
-      {title}
-      {titleAccent && (
-        <>
-          {' '}
-          <span class:list={['italic font-light text-muted', size === 'lg' && 'block']}>{titleAccent}</span>
-        </>
-      )}
-    </h1>
-    {description && (
-      <p class="font-sans text-muted text-lg mt-6 max-w-xl leading-relaxed animate-fade-in-up">{description}</p>
+<header
+  class:list={['mx-auto w-full max-w-[52rem] px-5 pt-16 pb-10 sm:px-8 md:pt-24', align === 'center' && 'text-center']}
+>
+  <p class="eyebrow">{eyebrow}</p>
+  <h1 class="mt-4 font-display text-[clamp(2.75rem,2rem+2.6vw,4.25rem)] leading-none font-normal tracking-[-0.025em] text-balance">
+    {title}
+    {titleAccent && (
+      <>
+        {' '}
+        <em class="italic">{titleAccent}</em>
+      </>
     )}
-  </div>
+  </h1>
+  {description && (
+    <p class:list={['mt-5 max-w-xl text-[1.0625rem] leading-[1.6] text-muted', align === 'center' && 'mx-auto']}>
+      {description}
+    </p>
+  )}
 </header>

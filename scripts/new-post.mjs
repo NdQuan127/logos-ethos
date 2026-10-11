@@ -1,4 +1,4 @@
-// Usage: npm run new -- "Tiêu đề bài viết" [--category logic-hoc]
+// Usage: npm run new -- "Tiêu đề bài viết" [--category toan-hoc]
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
@@ -12,11 +12,11 @@ const title = args.join(' ').trim();
 const categoryIds = parse(fs.readFileSync('src/content/taxonomy/categories.yaml', 'utf8')).map((item) => item.id);
 
 if (!title) {
-  console.error('Thiếu tiêu đề. Ví dụ: npm run new -- "Nghịch lý Russell" --category nghich-ly');
+  console.error('Thiếu tiêu đề. Ví dụ: npm run new -- "Nghịch lý Russell" --category toan-hoc');
   process.exit(1);
 }
 if (category && !categoryIds.includes(category)) {
-  console.error(`Chủ đề "${category}" không tồn tại. Chọn một trong: ${categoryIds.join(', ')}`);
+  console.error(`Lĩnh vực "${category}" không tồn tại. Chọn một trong: ${categoryIds.join(', ')}`);
   process.exit(1);
 }
 

@@ -3,22 +3,21 @@
  * depend on a font CDN. The family stacks live in global.css (@theme).
  */
 
-/* ─── Crimson Pro (serif) ──────────────────────────────────────────────────── */
-/* Only the weights actually used in the codebase: 300 (light), 400, 700 (bold) */
-@import '@fontsource/crimson-pro/300.css';
-@import '@fontsource/crimson-pro/300-italic.css';
-@import '@fontsource/crimson-pro/400.css';
-@import '@fontsource/crimson-pro/400-italic.css';
-@import '@fontsource/crimson-pro/700.css';
-@import '@fontsource/crimson-pro/700-italic.css';
+/* ─── EB Garamond (display: headings, titles, covers) ──────────────────────── */
+@import '@fontsource/eb-garamond/400.css';
+@import '@fontsource/eb-garamond/400-italic.css';
+@import '@fontsource/eb-garamond/500.css';
+@import '@fontsource/eb-garamond/500-italic.css';
 
-/* ─── Be Vietnam Pro (sans) ────────────────────────────────────────────────── */
-/* Weights: 400 (body), 600 (semi-bold labels), 700 (bold headings) */
+/* ─── Literata (article body) ──────────────────────────────────────────────── */
+/* Variable weight plus the optical-size axis, so small text gets sturdier strokes. */
+@import '@fontsource-variable/literata/opsz.css';
+@import '@fontsource-variable/literata/opsz-italic.css';
+
+/* ─── Be Vietnam Pro (UI) ──────────────────────────────────────────────────── */
 @import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/500.css';
 @import '@fontsource/be-vietnam-pro/600.css';
-@import '@fontsource/be-vietnam-pro/700.css';
 
-/* ─── IBM Plex Mono (mono) ─────────────────────────────────────────────────── */
-/* Weights: 400 (default mono), 600 (bold labels) */
+/* ─── IBM Plex Mono (code blocks only) ─────────────────────────────────────── */
 @import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/600.css';

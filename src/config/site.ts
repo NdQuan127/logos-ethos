@@ -1,6 +1,6 @@
 /**
- * Site-wide settings. Navigation, footer links and feature switches live here,
- * so adding a menu item or turning a feature off is a one-line change.
+ * Site-wide settings. Navigation and footer links live here,
+ * so adding a menu item is a one-line change.
  */
 import { routes } from '../lib/routes';
 
@@ -9,21 +9,14 @@ interface NavLink {
   label: string;
   /** Path prefix that marks the link as current, e.g. '/blog'. Omit for anchors. */
   match?: string;
-  /** Hide the link when this feature is switched off. */
-  feature?: keyof typeof features;
 }
 
 const email = 'contact@logos-ethos.web.app';
 
-const features = {
-  /** "Lưu" button on articles and the /da-luu/ page. */
-  bookmarks: true,
-};
-
 export const site = {
   title: 'Logos & Ethos',
   shortName: 'L',
-  description: 'Về những giới hạn của sự hiểu biết — nơi toán học và triết học cùng đặt câu hỏi cho lý trí.',
+  description: 'Ghi chép chậm về toán học, học máy, triết học và chính trị.',
   /** The `site` option from astro.config.mjs, which reads SITE_URL. */
   url: import.meta.env.SITE,
   locale: 'vi_VN',
@@ -33,21 +26,15 @@ export const site = {
   /** Posts per page on /blog/. */
   pageSize: 12,
 
-  features,
-
   nav: [
-    { href: '/#tuyen-tap', label: 'Tuyển tập' },
     { href: routes.blog, label: 'Bài viết', match: '/blog' },
-    { href: routes.saved, label: 'Đã lưu', match: '/da-luu', feature: 'bookmarks' },
-    { href: routes.about, label: 'Về chúng tôi', match: '/about' },
+    { href: routes.about, label: 'Giới thiệu', match: '/about' },
   ] satisfies NavLink[],
 
   footer: {
     explore: [
-      { href: '/#tuyen-tap', label: 'Tuyển tập' },
       { href: routes.blog, label: 'Tất cả bài viết' },
-      { href: routes.saved, label: 'Bài đã lưu', feature: 'bookmarks' },
-      { href: routes.about, label: 'Về chúng tôi' },
+      { href: routes.about, label: 'Giới thiệu' },
     ] satisfies NavLink[],
     contact: [
       { href: `${routes.about}#contact`, label: 'Liên hệ' },
@@ -55,8 +42,3 @@ export const site = {
     ] satisfies NavLink[],
   },
 };
-
-/** Links whose feature is enabled. */
-export function enabledLinks(links: readonly NavLink[]): NavLink[] {
-  return links.filter((link) => !link.feature || site.features[link.feature]);
-}

@@ -1,28 +1,33 @@
 ---
 import type { CategoryView, Summary } from '../../lib/content';
+import { formatCount } from '../../lib/format';
 import { routes } from '../../lib/routes';
 
 interface Props {
   categories: Summary<CategoryView>[];
   total: number;
   activeSlug?: string;
+  /** Centre the tabs (home page); listing pages align them left. */
+  center?: boolean;
+  class?: string;
 }
 
-const { categories, total, activeSlug } = Astro.props;
-const base = 'inline-flex min-h-11 items-center gap-2 border px-4 font-sans text-sm transition-colors';
-const idle = 'border-line text-muted hover:border-fg/30 hover:text-fg';
+const { categories, total, activeSlug, center = false, class: className } = Astro.props;
+const base =
+  'inline-flex min-h-11 items-center gap-2 rounded-[10px] border px-[0.95rem] text-sm leading-tight font-medium transition-[background-color,color,border-color,scale] duration-[160ms] active:scale-[0.97] motion-reduce:active:scale-100';
+const idle = 'border-line text-muted hover:bg-surface hover:text-fg';
 const active = 'border-fg bg-fg text-canvas';
 ---
 
-<nav aria-label="Lọc bài viết theo chủ đề" class="mb-12">
-  <ul class="flex flex-wrap gap-3">
+<nav aria-label="Lọc bài viết theo lĩnh vực" class={className}>
+  <ul class:list={['flex flex-wrap gap-1.5', center && 'justify-center']}>
     <li>
       <a
         href={routes.blog}
-        aria-current={activeSlug ? undefined : 'page'}
+        aria-current={!activeSlug && Astro.url.pathname.startsWith(routes.blog) ? 'page' : undefined}
         class:list={[base, activeSlug ? idle : active]}
       >
-        Tất cả <span class="text-xs">{total}</span>
+        Tất cả · {formatCount(total)}
       </a>
     </li>
     {categories.map(({ item, count }) => (
@@ -32,7 +37,14 @@ const active = 'border-fg bg-fg text-canvas';
           aria-current={activeSlug === item.id ? 'page' : undefined}
           class:list={[base, activeSlug === item.id ? active : idle]}
         >
-          {item.name} <span class="text-xs">{count}</span>
+          <i
+            class="size-2.5 shrink-0 rounded-[3px] shadow-[inset_0_0_0_1px_rgb(0_0_0/0.12)]"
+            style={{ background: item.tab }}
+            aria-hidden="true"
+          />
+          <span>
+            {item.name} <span class="whitespace-nowrap">· {formatCount(count)}</span>
+          </span>
         </a>
       </li>
     ))}

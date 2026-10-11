@@ -1,6 +1,5 @@
 ---
-import { ArrowLeft, Bookmark, BookmarkCheck, Share2 } from '@lucide/astro';
-import { site } from '../../config/site';
+import { ArrowLeft, Share2 } from '@lucide/astro';
 import type { PostView } from '../../lib/content';
 import { routes } from '../../lib/routes';
 
@@ -9,41 +8,19 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const action = 'min-h-11 px-3 flex items-center gap-2 hover:text-accent transition-colors';
+const action =
+  'flex min-h-11 items-center gap-2 rounded-[10px] px-3 transition-[background-color,color,scale] duration-[160ms] hover:bg-surface hover:text-fg active:scale-[0.97] motion-reduce:active:scale-100';
 ---
 
-<div class="mt-12 pt-8 border-t border-line flex flex-wrap gap-y-4 justify-between items-center text-muted font-sans text-sm font-medium">
-  <div class="flex gap-2">
+<div class="mt-12 flex flex-wrap items-center justify-between gap-y-4 border-t border-line pt-8 text-sm text-muted">
+  <div class="flex flex-wrap gap-1">
     <button type="button" data-share-button data-share-title={post.title} class={action} aria-label="Chia sẻ bài viết">
       <Share2 size={16} aria-hidden="true" />
       <span data-share-label>Chia sẻ</span>
     </button>
-    {site.features.bookmarks && (
-      <>
-        <button
-          type="button"
-          data-bookmark-button
-          data-bookmark-slug={post.slug}
-          class={action}
-          aria-label="Lưu bài viết"
-          aria-pressed="false"
-        >
-          <span data-bookmark-off aria-hidden="true">
-            <Bookmark size={16} />
-          </span>
-          <span data-bookmark-on class="hidden" aria-hidden="true">
-            <BookmarkCheck size={16} />
-          </span>
-          <span data-bookmark-label>Lưu</span>
-        </button>
-        <a href={routes.saved} class="min-h-11 px-3 flex items-center hover:text-accent transition-colors">
-          Xem bài đã lưu
-        </a>
-      </>
-    )}
   </div>
-  <a href={routes.blog} class="min-h-11 px-3 hover:text-accent transition-colors flex items-center gap-2 group">
-    <ArrowLeft size={14} class="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+  <a href={routes.blog} class={action}>
+    <ArrowLeft size={14} aria-hidden="true" />
     <span>Tất cả bài viết</span>
   </a>
 </div>

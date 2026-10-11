@@ -2,10 +2,11 @@
 import type { GetStaticPaths } from 'astro';
 import ListingLayout from '../../layouts/ListingLayout.astro';
 import CategoryFilter from '../../components/post/CategoryFilter.astro';
-import PostGrid from '../../components/post/PostGrid.astro';
+import PostList from '../../components/post/PostList.astro';
 import EmptyState from '../../components/ui/EmptyState.astro';
 import { site } from '../../config/site';
 import { getPosts, summarizeCategories } from '../../lib/content';
+import { formatCount } from '../../lib/format';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPosts();
@@ -14,24 +15,24 @@ export const getStaticPaths = (async ({ paginate }) => {
 }) satisfies GetStaticPaths;
 
 const { page, categories, total } = Astro.props;
+const domains = new Intl.ListFormat('vi').format(categories.map(({ item }) => item.name));
 ---
 
 <ListingLayout
   title="Tất cả bài viết"
-  description="Khám phá toàn bộ bộ sưu tập bài viết về Toán học và Triết học của Logos & Ethos."
+  description="Mọi bài viết của Logos & Ethos về toán học, học máy, triết học và chính trị."
   page={page}
   header={{
-    eyebrow: 'Tuyển tập',
-    dot: true,
+    eyebrow: 'Mọi bài viết',
     title: 'Tất cả',
     titleAccent: 'bài viết',
-    description: `${total} bài viết về Toán học, Triết học và những giao thoa của tư duy con người.`,
+    description: total > 0 ? `${formatCount(total)} bài về ${domains}.` : undefined,
   }}
   sectionLabel="Danh sách bài viết"
 >
-  <CategoryFilter categories={categories} total={total} />
+  <CategoryFilter categories={categories} total={total} class="mb-6" />
   {page.data.length > 0 ? (
-    <PostGrid posts={page.data} />
+    <PostList posts={page.data} />
   ) : (
     <EmptyState title="Chưa có bài viết nào." description="Hãy quay lại sớm — chúng tôi đang viết!" />
   )}

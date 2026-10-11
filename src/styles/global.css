@@ -3,29 +3,43 @@
 
 @theme {
   /* Font stacks — the font files are imported in fonts.css */
-  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-display: 'EB Garamond', Garamond, Georgia, serif;
+  --font-serif: 'Literata Variable', Georgia, serif;
   --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 
-  /* Colours, used as text-fg, bg-canvas, border-line, text-accent, text-muted, bg-surface.
+  /* Wide enough for the article's three columns: contents, text, margin notes. */
+  --breakpoint-article: 68.75rem;
+
+  /* Colours, used as text-fg, bg-canvas, border-line, text-accent, bg-paper-sage…
      These are the light values; :root.dark below overrides them, so components
-     never name a raw colour and a new palette only touches this file. */
-  --color-canvas: #f9f7f1; /* paper */
-  --color-fg: #1a1a1a; /* ink */
-  --color-muted: #6b6b6b; /* 5.3:1 on canvas, WCAG AA */
-  --color-line: #e6e1d3;
-  --color-accent: #2b4c7e;
-  --color-surface: #f0ede6;
-  --color-highlight: #d9a441; /* text selection */
+     never name a raw colour and a new palette only touches this file.
+     Every text colour here passes WCAG AA (4.5:1) on canvas, surface and the papers. */
+  --color-canvas: #fdfbec; /* cream stationery */
+  --color-surface: #f2efd9;
+  --color-fg: #1a1a17;
+  --color-muted: #5c5b52;
+  --color-line: #e2dfc8;
+  --color-accent: #0b4a3c; /* green text */
+  --color-accent-soft: #2f7a5f; /* green rules and cover fills, not for small text */
+  --color-paper-sage: #e9eedb; /* featured slab */
+  --color-paper-lilac: #efe7fa; /* series slab and card */
+  --color-paper-kraft: #f2ead5; /* footer */
+  --color-lilac: #e7d5fc; /* things you press */
+  --color-lilac-hover: #ddc6fb;
+  --color-lilac-deep: #9b6fda; /* wavy underlines, reading progress */
+  --color-highlight: #efe2fd; /* selection, <mark> */
+  /* Same in both themes: text on lilac buttons and category tabs, and the ink on
+     covers, which keep their light paper in dark mode. */
+  --color-ink: #1a1a17;
+  --color-cover-tint: #0b4a3c;
 
   /* ── Fluid Typography Scale (clamp: min → preferred → max) ── */
-  --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
   --text-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
-  --text-article: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem);
+  --text-article: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
 
-  /* ── Animation Tokens ── */
-  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-slow: 500ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* `dark:` follows the theme toggle (the .dark class on <html>), not the OS
@@ -34,160 +48,311 @@
 
 @layer base {
   :root {
-    /* Category colours — each passes 4.5:1 on canvas and surface */
-    --cat-blue: #2b4c7e;
-    --cat-red: #a63d40;
-    --cat-green: #3d6b4b;
-    --cat-yellow: #7f5a0b;
+    color-scheme: light;
+    /* Category ("lĩnh vực") colours: --cat-* is text, --tab-* the pale paper of its
+       chip and cover. Tabs stay light in dark mode and always carry ink text. */
+    --cat-blue: #2d4ea6;
+    --cat-green: #1b5a43;
+    --cat-violet: #6b3aa0;
+    --cat-red: #a3402a;
+    --tab-blue: #dbe5fb;
+    --tab-green: #d5ebd8;
+    --tab-violet: #e9d9fb;
+    --tab-red: #fbdfcf;
   }
 
   :root.dark {
-    --color-canvas: #1c1b1a; /* leather */
-    --color-fg: #eae5d9; /* chalk */
-    --color-muted: #b5b5b5;
-    --color-line: rgba(234, 229, 217, 0.1);
-    --color-accent: #d9a441;
-    --color-surface: #242320;
+    color-scheme: dark;
+    --color-canvas: #10120f;
+    --color-surface: #1b1e19;
+    --color-fg: #efedde;
+    --color-muted: #a6a797;
+    --color-line: #2b2f27;
+    --color-accent: #9ad8bc;
+    --color-accent-soft: #6fc19e;
+    --color-paper-sage: #181e17;
+    --color-paper-lilac: #1d1a24;
+    --color-paper-kraft: #1b1915;
+    --color-lilac: #d9c2fa;
+    --color-lilac-hover: #cdb0f8;
+    --color-lilac-deep: #c6a6f5;
+    --color-highlight: #3a2e4d;
 
-    /* Category colours — lightened for the dark canvas (≥ 7:1) */
-    --cat-blue: #8fb0e3;
-    --cat-red: #ee9a9d;
-    --cat-green: #8fc9a2;
-    --cat-yellow: #e0b35a;
+    --cat-blue: #a9bdff;
+    --cat-green: #9ad8bc;
+    --cat-violet: #d4b6f7;
+    --cat-red: #ffa58c;
   }
 
   body {
     background-color: var(--color-canvas);
     color: var(--color-fg);
-    font-family: var(--font-serif), serif;
-    /* Crimson Pro has a small x-height; a slightly larger base size keeps body text readable. */
+    font-family: var(--font-sans);
     font-size: var(--text-body);
-    line-height: 1.75;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    min-height: 100vh;
-    /* The one place the theme change is animated; elements with their own background follow --duration-slow too. */
-    transition:
-      background-color var(--duration-slow) ease,
-      color var(--duration-slow) ease;
+    text-rendering: optimizeLegibility;
+    min-height: 100svh;
   }
 
-  /* Be Vietnam Pro — give Vietnamese diacritics a hair more room to breathe
-     when used as sans-serif UI text (labels, buttons, captions) */
-  .font-sans {
-    letter-spacing: 0.01em;
+  ::selection {
+    background: var(--color-highlight);
+    color: var(--color-fg);
   }
 
-  /* Restore tight tracking on ALL-CAPS mono labels (already very wide) */
-  .font-mono {
-    letter-spacing: 0.05em;
-  }
-
-  /* Warm glow at the top of the page in dark mode */
-  :root.dark body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60vh;
-    background: radial-gradient(ellipse at 50% 0%, rgba(217, 164, 65, 0.12) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-}
-
-@layer utilities {
-  /* Hero section fade-in animations — CSS only (no motion library needed) */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-    opacity: 0;
-  }
-
-  /* ── Scroll-triggered Animation Classes ── */
-  /* Base state: hidden. AnimateOnScroll component adds 'is-visible' via IntersectionObserver */
-  .js .animate-on-scroll {
-    opacity: 0;
-    transition:
-      opacity var(--duration-slow) var(--ease-out),
-      transform var(--duration-slow) var(--ease-out);
-  }
-
-  .js .animate-on-scroll.fade-up {
-    transform: translateY(28px);
-  }
-  .js .animate-on-scroll.scale-up {
-    transform: scale(0.96);
-  }
-
-  .js .animate-on-scroll.is-visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Respect prefers-reduced-motion for ALL animations */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-in-up,
-    .animate-fade-in {
-      animation: none;
-      opacity: 1;
-    }
-
-    .js .animate-on-scroll,
-    .js .animate-on-scroll.fade-up,
-    .js .animate-on-scroll.scale-up {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
+  :focus-visible {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
 @layer components {
-  .article-content h2 {
-    scroll-margin-top: 6rem;
-    margin-top: 3.5rem;
-    margin-bottom: 1.25rem;
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  /* Page-width column shared by the nav, slabs and footer. */
+  .wrap {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /* ── Buttons: lilac fill for the main action, ghost for the rest ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 1.1rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 10px;
+    background: var(--color-lilac);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      transform 140ms var(--ease-out),
+      background-color 160ms ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn-sm {
+    min-height: 2.5rem;
+    padding: 0.6rem 0.95rem;
+    font-size: 0.875rem;
+  }
+  .btn-ghost {
+    background: transparent;
     color: var(--color-fg);
+    border-color: var(--color-fg);
+  }
+  :root.dark .btn:not(.btn-ghost) {
+    border-color: transparent;
+  }
+  @media (hover: hover) {
+    .btn:hover {
+      background: var(--color-lilac-hover);
+    }
+    .btn-ghost:hover {
+      background: var(--color-surface);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn:active {
+      transform: none;
+    }
+  }
+
+  /* Small uppercase label above headings. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Category chip: pale tab paper, ink text. Set --tab inline. */
+  .cat-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.55rem;
+    border-radius: 6px;
+    background: var(--tab);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  /* Italic word in a section heading, underlined with a lilac wave. */
+  .wavy {
+    font-style: italic;
+    text-decoration: underline wavy var(--color-lilac-deep);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  /* ── Slabs: full-width sections stacked like cards ──
+     Each slab rounds its top and overlaps the one before by the radius, so the
+     extra bottom padding keeps the previous slab's content clear of the overlap. */
+  .slab {
+    --slab-radius: 40px;
+    position: relative;
+    border-radius: var(--slab-radius) var(--slab-radius) 0 0;
+    padding: 4.5rem 0 calc(4.5rem + var(--slab-radius));
+    box-shadow:
+      0 -1px 0 color-mix(in oklab, var(--color-fg) 9%, transparent),
+      0 -18px 40px -30px color-mix(in oklab, var(--color-fg) 30%, transparent);
+  }
+  .slab + .slab,
+  main:has(> .slab:last-child) + .slab {
+    margin-top: calc(-1 * var(--slab-radius));
+  }
+  @media (max-width: 639.98px) {
+    .slab {
+      --slab-radius: 28px;
+    }
+  }
+  .slab-sage {
+    background: var(--color-paper-sage);
+  }
+  .slab-lilac {
+    background: var(--color-paper-lilac);
+  }
+  .slab-canvas {
+    background: var(--color-canvas);
+  }
+  .slab-kraft {
+    background: var(--color-paper-kraft);
+  }
+
+  /* ── Covers: generated art (CoverArt) or a duotone photo (PostCover) ── */
+  .cover {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    container-type: size;
+    border-radius: 14px;
+    background: var(--cover-paper);
+  }
+  .cover > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .cover-glyph {
+    position: absolute;
+    left: 6%;
+    bottom: -0.08em;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 70cqh;
+    line-height: 1;
+    color: var(--color-ink);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    user-select: none;
+  }
+  .cover-glyph-wide {
+    font-size: 44cqh;
+  }
+  .cover-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.2) brightness(1.06);
+  }
+  .cover-photo .cover-tint,
+  .cover-photo .cover-paper {
+    position: absolute;
+    inset: 0;
+  }
+  .cover-photo .cover-tint {
+    background: var(--color-cover-tint);
+    mix-blend-mode: screen;
+  }
+  .cover-photo .cover-paper {
+    background: var(--cover-paper);
+    mix-blend-mode: multiply;
+  }
+
+  /* ── Article prose ── */
+  .article-content {
+    font-family: var(--font-serif);
+    font-size: var(--text-article);
+    line-height: 1.72;
+    color: var(--color-fg);
+    hanging-punctuation: first;
+    /* Long URLs and compound words wrap instead of widening the page. */
+    overflow-wrap: break-word;
+  }
+
+  /* The first heading lines up with the table of contents beside it. */
+  .article-content > :first-child {
+    margin-top: 0;
+  }
+
+  /* Drop cap when the article opens with a paragraph, in the category colour. */
+  .article-content > p:first-child::first-letter {
+    float: left;
+    margin: 0.08em 0.08em 0 0;
+    font-size: 3.6em;
+    line-height: 0.85;
+    color: var(--cat, var(--color-accent));
+  }
+
+  .article-content h2 {
+    scroll-margin-top: 2rem;
+    margin-top: 2.4em;
+    margin-bottom: 0.6em;
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
   .article-content h3 {
-    scroll-margin-top: 6rem;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    font-family: var(--font-serif);
-    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    scroll-margin-top: 2rem;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
     font-weight: 500;
-    line-height: 1.3;
-    color: var(--color-fg);
+    line-height: 1.25;
+    text-wrap: balance;
   }
 
   .article-content p {
-    margin-bottom: 1.5rem;
-    font-family: var(--font-serif);
-    font-size: var(--text-article);
-    line-height: 1.75;
-    color: var(--color-fg);
+    margin-bottom: 1.15em;
+    text-wrap: pretty;
+  }
+
+  /* Keep inline math on one line instead of breaking at relation symbols. */
+  .article-content p .katex {
+    white-space: nowrap;
   }
 
   .article-content ul,
   .article-content ol {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.15em;
     padding-left: 1.5rem;
-    font-family: var(--font-serif);
-    font-size: var(--text-article);
-    line-height: 1.75;
-    color: var(--color-fg);
   }
 
   .article-content ul {
@@ -198,39 +363,44 @@
   }
 
   .article-content li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4em;
   }
 
   .article-content blockquote {
-    margin: 2rem 0;
-    border-left: 2px solid var(--color-accent);
-    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-    padding: 0.5rem 0 0.5rem 1.5rem;
-    font-family: var(--font-serif);
+    margin: 2em 0;
+    border-left: 3px solid var(--color-accent-soft);
+    padding: 0.1em 0 0.1em 1.1em;
+    font-family: var(--font-display);
+    font-size: 1.15em;
     font-style: italic;
-    color: var(--color-fg);
   }
 
   .article-content a {
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-
-  .article-content a:hover {
-    text-decoration: underline;
+    color: var(--color-fg);
+    text-decoration: underline wavy var(--color-lilac-deep);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.22em;
   }
 
   .article-content strong {
     font-weight: 700;
-    color: var(--color-fg);
+  }
+
+  .article-content mark {
+    color: inherit;
+    background: var(--color-highlight);
+    padding: 0 0.12em;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   .article-content pre {
-    margin: 2rem 0;
+    margin: 2em 0;
     overflow-x: auto;
-    border: 1px solid var(--color-line);
+    border-radius: 10px;
     background: var(--color-surface);
-    padding: 1rem;
+    padding: 1rem 1.25rem;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.7;
@@ -238,20 +408,63 @@
 
   .article-content code {
     font-family: var(--font-mono);
-    font-size: 0.9em;
+    font-size: 0.875em;
+  }
+
+  .article-content :not(pre) > code {
+    border-radius: 4px;
+    background: var(--color-surface);
+    padding: 0.1em 0.3em;
+  }
+
+  /* ── Pull quote (components/mdx/PullQuote.astro) ── */
+  .article-content .pull-quote {
+    position: relative;
+    margin: 2.5em 0;
+    padding-left: 1.1em;
+  }
+
+  .article-content .pull-quote::before {
+    content: '“';
+    position: absolute;
+    top: -0.2em;
+    left: -0.3em;
+    font-family: var(--font-display);
+    font-size: 3.3rem;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .article-content .pull-quote blockquote {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-size: 1.375rem;
+    line-height: 1.45;
+  }
+
+  .article-content .pull-quote figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    color: var(--color-muted);
   }
 
   /* ── Theorem-like blocks (components/mdx/Statement.astro) ── */
   .article-content .statement {
-    margin: 2rem 0;
-    border-left: 2px solid var(--color-accent);
-    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin: 2em 0;
+    border-left: 3px solid var(--color-accent-soft);
+    padding: 0.1em 0 0.1em 1.1em;
+  }
+
+  /* The label runs into the first line, as in a printed book:
+     "Định lý (Gödel, 1931). Nếu S nhất quán…" */
+  .article-content :is(.statement-label, .proof-label) {
+    float: left;
+    margin: 0 0.35em 0 0;
   }
 
   .article-content .statement-label {
-    margin-bottom: 0.5rem;
-    font-family: var(--font-serif);
-    font-size: var(--text-article);
     font-weight: 700;
   }
 
@@ -278,12 +491,11 @@
 
   .article-content .proof {
     position: relative;
-    margin: -0.5rem 0 2rem;
+    margin: -0.5rem 0 2em;
     padding-bottom: 0.25rem;
   }
 
   .article-content .proof-label {
-    margin-bottom: 0.5rem;
     font-style: italic;
   }
 
@@ -296,26 +508,25 @@
 
   /* ── Figures ── */
   .article-content .figure {
-    margin: 2.5rem 0;
+    margin: 2.5em 0;
   }
 
   .article-content .figure img {
     width: 100%;
     height: auto;
-    border: 1px solid var(--color-line);
+    border-radius: 10px;
   }
 
   .article-content .figure figcaption {
     margin-top: 0.75rem;
     font-family: var(--font-sans);
     font-size: var(--text-small);
-    line-height: 1.6;
+    line-height: 1.55;
     color: var(--color-muted);
   }
 
   .article-content .figure-credit {
     display: block;
-    font-family: var(--font-mono);
     font-size: 0.75rem;
   }
 
@@ -331,9 +542,12 @@
 
   /* ── Footnotes ([^1] syntax) ── */
   .article-content sup a {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 0.75em;
+    font-weight: 600;
     padding: 0 0.1em;
+    color: var(--color-accent);
+    text-decoration: none;
   }
 
   .article-content .footnotes {
@@ -347,25 +561,140 @@
 
   .article-content .footnotes h2 {
     margin-top: 0;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+
+  .article-content .footnotes li::marker {
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .article-content .footnotes a[data-footnote-backref] {
+    text-decoration: none;
     color: var(--color-muted);
   }
 
   .article-content .footnotes :is(p, li) {
     font-family: var(--font-sans);
     font-size: var(--text-small);
-    color: var(--color-muted);
+    line-height: 1.55;
   }
 
-  /* KaTeX display math can be wider than the measure on phones. */
-  .article-content .katex-display {
+  /* After a jump to a footnote, or back to its reference, the target glows
+     briefly so the eye finds it among its neighbours. The reference lands a
+     third down the screen, so the sentence that leads up to it stays in view. */
+  .article-content .footnotes li {
+    scroll-margin-top: 2rem;
+  }
+  .article-content a[data-footnote-ref] {
+    scroll-margin-top: 33vh;
+  }
+  .article-content :is(.footnotes li, a[data-footnote-ref]):target {
+    position: relative;
+    isolation: isolate;
+  }
+  .article-content :is(.footnotes li, a[data-footnote-ref]):target::before {
+    content: '';
+    position: absolute;
+    inset: -0.25rem -0.5rem;
+    z-index: -1;
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--color-lilac) 55%, transparent);
+    opacity: 0;
+    animation: target-glow 1200ms ease;
+  }
+  .article-content a[data-footnote-ref]:target::before {
+    inset: -0.1em -0.2em;
+    border-radius: 4px;
+  }
+  :root.dark .article-content :is(.footnotes li, a[data-footnote-ref]):target::before {
+    background: color-mix(in oklab, var(--color-lilac-deep) 28%, transparent);
+  }
+  @keyframes target-glow {
+    0%,
+    25% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .article-content :is(.footnotes li, a[data-footnote-ref]):target::before {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
+  /* Display math and tables can be wider than the measure. They scroll on
+     their own, and a shadow at the edge shows there is more to see. */
+  .article-content :is(.katex-display, table) {
     overflow-x: auto;
+    background:
+      linear-gradient(to right, var(--color-canvas) 30%, transparent) left / 2rem 100% no-repeat local,
+      linear-gradient(to left, var(--color-canvas) 30%, transparent) right / 2rem 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--color-fg) 16%, transparent), transparent) left /
+        0.75rem 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--color-fg) 16%, transparent), transparent)
+        right / 0.75rem 100% no-repeat scroll;
+  }
+  .article-content .katex-display {
     overflow-y: hidden;
     padding: 0.25rem 0;
+  }
+
+  .article-content table {
+    display: block;
+    max-width: 100%;
+    margin: 2em 0;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+  .article-content :is(th, td) {
+    min-width: 7rem;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .article-content :is(th, td):first-child {
+    min-width: 0;
+    padding-left: 0;
+  }
+  .article-content th {
+    border-bottom-color: var(--color-fg);
+    font-weight: 600;
+  }
+
+  /* The collapsed table of contents (TableOfContents.astro) opens by growing
+     rather than snapping. Browsers without ::details-content just snap. */
+  .toc-inline {
+    interpolate-size: allow-keywords;
+  }
+  .toc-inline::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      block-size 220ms var(--ease-out),
+      opacity 220ms var(--ease-out),
+      content-visibility 220ms allow-discrete;
+  }
+  .toc-inline[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toc-inline::details-content {
+      transition:
+        opacity 220ms var(--ease-out),
+        content-visibility 220ms allow-discrete;
+    }
   }
 
   /* Reading progress — scaled on the compositor instead of animating width */
@@ -375,52 +704,97 @@
     will-change: transform;
   }
 
-  /* Sidenotes: margin note on wide screens, inline collapsible below.
-     Without JS the note stays open inline. */
-  .sidenote-toggle {
-    display: none;
-  }
-  .js .sidenote-toggle {
-    display: inline-flex;
+  /* Sidenotes (components/mdx/Sidenote.astro): a letter in the text and the
+     note in the right margin on wide screens. Below that the letter opens the
+     note under its line. Without JS the note stays open. Letters keep them
+     apart from the numbered footnotes. */
+  .article-content {
+    counter-reset: sidenote;
   }
 
-  @media (max-width: 1279.98px) {
+  .sidenote-ref {
+    position: relative;
+    counter-increment: sidenote;
+    cursor: pointer;
+    padding: 0 0 0 0.1em;
+    vertical-align: super;
+    font: 600 0.7em/1 var(--font-sans);
+    font-style: normal;
+    color: var(--color-accent);
+  }
+  .sidenote-ref::before {
+    content: counter(sidenote, lower-alpha);
+  }
+  /* The letter is a few pixels wide; give fingers a 44px target. */
+  .sidenote-ref::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    translate: -50% -50%;
+  }
+
+  .sidenote-body {
+    display: block;
+    margin: 0.5rem 0 0.75rem;
+    border-left: 1px solid var(--color-line);
+    padding-left: 0.9rem;
+    font: 400 0.8125rem/1.55 var(--font-sans);
+    font-style: normal;
+    color: var(--color-muted);
+  }
+  .sidenote-body::before {
+    content: counter(sidenote, lower-alpha);
+    margin-right: 0.4rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  /* The note fades in under its line instead of popping in; closing reverses it. */
+  @media (max-width: 68.74rem) {
+    .js .sidenote-body {
+      transition:
+        opacity 180ms var(--ease-out),
+        translate 180ms var(--ease-out),
+        display 180ms allow-discrete;
+    }
     .js .sidenote[data-open='false'] .sidenote-body {
       display: none;
+      opacity: 0;
+      translate: 0 -0.25rem;
+    }
+    @starting-style {
+      .js .sidenote[data-open='true'] .sidenote-body {
+        opacity: 0;
+        translate: 0 -0.25rem;
+      }
+    }
+  }
+  @media (max-width: 68.74rem) and (prefers-reduced-motion: reduce) {
+    .js .sidenote-body,
+    .js .sidenote[data-open='false'] .sidenote-body {
+      translate: none;
+    }
+    @starting-style {
+      .js .sidenote[data-open='true'] .sidenote-body {
+        translate: none;
+      }
     }
   }
 
-  @media (min-width: 1280px) {
-    .sidenote {
+  @media (min-width: 68.75rem) {
+    .sidenote-ref {
+      cursor: default;
+      pointer-events: none;
+    }
+    .sidenote-body {
       float: right;
       clear: right;
-      width: 11rem;
-      margin: 0.25rem -15rem 1rem 0;
+      width: 12rem;
+      margin: 0.3rem -14.5rem 0 0;
+      border: 0;
+      padding: 0;
     }
-    .js .sidenote-toggle {
-      display: none;
-    }
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
   }
 }

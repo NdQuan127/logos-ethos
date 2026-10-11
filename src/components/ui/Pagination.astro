@@ -7,24 +7,23 @@ interface Props {
 }
 
 const { page } = Astro.props;
-const link = 'inline-flex min-h-11 items-center px-4 border border-line hover:border-fg/30';
 ---
 
 {page.lastPage > 1 && (
-  <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between font-sans text-sm">
+  <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between gap-4 text-sm">
     {page.url.prev ? (
-      <a href={withTrailingSlash(page.url.prev)} rel="prev" class={link}>
-        Trang trước
+      <a href={withTrailingSlash(page.url.prev)} rel="prev" class="btn btn-ghost btn-sm">
+        ← Trang trước
       </a>
     ) : (
       <span />
     )}
-    <span class="text-muted">
+    <span class="text-muted tabular-nums">
       Trang {page.currentPage} / {page.lastPage}
     </span>
     {page.url.next ? (
-      <a href={withTrailingSlash(page.url.next)} rel="next" class={link}>
-        Trang sau
+      <a href={withTrailingSlash(page.url.next)} rel="next" class="btn btn-ghost btn-sm">
+        Trang sau →
       </a>
     ) : (
       <span />

@@ -1,53 +1,139 @@
 ---
-import { ArrowRight } from '@lucide/astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import FeaturedSection from '../components/blocks/FeaturedSection.astro';
-import HeroSection from '../components/blocks/HeroSection.astro';
-import QuoteSection from '../components/blocks/QuoteSection.astro';
-import PostGrid from '../components/post/PostGrid.astro';
-import AnimateOnScroll from '../components/ui/AnimateOnScroll.astro';
-import { getPosts, pickFeatured, summarizeCategories } from '../lib/content';
+import CategoryFilter from '../components/post/CategoryFilter.astro';
+import PostCover from '../components/post/PostCover.astro';
+import PostList from '../components/post/PostList.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import { getActiveSeries, getPosts, getSeriesPosts, pickFeatured, summarizeCategories } from '../lib/content';
+import { formatCount } from '../lib/format';
 import { routes } from '../lib/routes';
 
-const allPosts = await getPosts();
-const featuredPost = pickFeatured(allPosts);
-/** Enough to fill two rows of the grid; the rest are one click away on /blog/. */
-const RECENT_COUNT = 6;
-const recentPosts = allPosts.filter((post) => post !== featuredPost).slice(0, RECENT_COUNT);
-const categories = summarizeCategories(allPosts);
+const posts = await getPosts();
+const featured = pickFeatured(posts);
+/** Ten rows keep the page short; the rest are one click away on /blog/. */
+const LIST_COUNT = 10;
+const rest = posts.filter((post) => post !== featured);
+const categories = summarizeCategories(posts);
+const shelf = getActiveSeries(posts).map((series) => {
+  const parts = getSeriesPosts(posts, series.id);
+  const [first] = parts;
+  return {
+    series,
+    first,
+    count: parts.length,
+    domains: [...new Set(parts.map((post) => post.category.name))].join(' × '),
+  };
+});
 ---
 
-<SiteLayout class="overflow-hidden">
-  <HeroSection categories={categories} />
-  {featuredPost && (
-    <AnimateOnScroll animation="fade-up" threshold={0.05}>
-      <FeaturedSection post={featuredPost} />
-    </AnimateOnScroll>
-  )}
-  <section id="tuyen-tap" class="w-full py-24 px-6 md:px-12" aria-label="Bài viết mới">
-    <div class="max-w-7xl mx-auto">
-      <AnimateOnScroll animation="fade-up">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 pb-6 border-b border-line">
-          <div>
-            <span class="font-mono text-xs text-muted uppercase tracking-widest block mb-2">Mới cập nhật</span>
-            <h2 class="font-serif text-3xl md:text-4xl text-fg">Suy ngẫm &amp; Lý luận</h2>
-          </div>
-          <a
-            href={routes.blog}
-            class="font-mono text-xs uppercase tracking-wider text-fg hover:text-accent min-h-11 mt-4 md:mt-0 transition-colors flex items-center gap-2"
-          >
-            Xem tất cả <ArrowRight size={14} aria-hidden="true" />
-          </a>
-        </div>
-      </AnimateOnScroll>
-      {recentPosts.length > 0 ? (
-        <PostGrid posts={recentPosts} animate aria-label="Danh sách bài viết" />
-      ) : (
-        <p class="font-sans text-muted text-center py-12">Chưa có bài viết nào. Hãy quay lại sớm!</p>
+<SiteLayout>
+  <section class="wrap pt-14 pb-20 text-center sm:pt-[5.5rem] sm:pb-28" aria-labelledby="hero-heading">
+    <p class="eyebrow">Logos &amp; Ethos · Sổ tay</p>
+    <h1
+      id="hero-heading"
+      class="mt-5 font-display text-[clamp(3rem,2rem+4vw,5.25rem)] leading-none font-normal tracking-[-0.025em] text-balance"
+    >
+      Nghĩ cho chậm,
+      <br />
+      <em class="italic">viết cho kỹ.</em>
+    </h1>
+    <p class="mx-auto mt-6 max-w-[30rem] text-lg leading-[1.55] text-balance">
+      Ghi chép về toán học, học máy, triết học và chính trị. Mỗi bài cố trả lời một câu hỏi, và chứng minh khi cần.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      {featured && (
+        <a href={featured.href} class="btn">
+          Đọc bài mới nhất
+        </a>
       )}
+      <a href={routes.blog} class="btn btn-ghost">
+        Mọi bài viết
+      </a>
     </div>
+    <p class="mt-5 text-[0.8125rem] text-muted">
+      {formatCount(posts.length)} bài{shelf.length > 0 && ` · ${shelf.length} chuyên đề`}
+    </p>
   </section>
-  <AnimateOnScroll animation="scale-up" threshold={0.2}>
-    <QuoteSection quote="Toán học là âm nhạc của lý trí." author="James Joseph Sylvester" />
-  </AnimateOnScroll>
+
+  {featured && (
+    <section class="slab slab-sage" aria-label={featured.featured ? 'Bài nổi bật' : 'Bài mới nhất'}>
+      <div class="wrap">
+        <a
+          href={featured.href}
+          class="group grid items-center gap-8 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-12"
+        >
+          <PostCover
+            category={featured.category}
+            cover={featured.cover}
+            coverAlt={featured.coverAlt}
+            seed={featured.slug}
+            sizes="(min-width: 768px) 38rem, 100vw"
+            class="aspect-[4/3]"
+          />
+          <div>
+            <p class="eyebrow">
+              {featured.featured ? 'Nổi bật' : 'Mới nhất'} · {featured.category.name}
+            </p>
+            <h2 class="mt-4 font-display text-[clamp(2rem,1.4rem+1.8vw,3rem)] leading-[1.05] font-normal tracking-[-0.02em] text-balance">
+              {featured.title}
+            </h2>
+            <p class="mt-4 max-w-md text-[1.0625rem] leading-[1.6] text-muted">{featured.description}</p>
+            <p class="mt-7 flex flex-wrap items-center gap-4 text-sm text-muted">
+              <span class="btn btn-sm">Đọc bài</span>
+              <span>
+                <time datetime={featured.isoDate}>{featured.dateLabel}</time> · {featured.readingTime} phút đọc
+              </span>
+            </p>
+          </div>
+        </a>
+      </div>
+    </section>
+  )}
+
+  {shelf.length >= 2 && (
+    <section class="slab slab-lilac" aria-labelledby="series-heading">
+      <div class="wrap">
+        <SectionHeading eyebrow="Chuyên đề" id="series-heading">
+          Đọc theo <em class="wavy">mạch</em>, không theo ngày.
+        </SectionHeading>
+        <ul class="-mr-[clamp(1.25rem,4vw,3rem)] flex snap-x snap-mandatory gap-6 overflow-x-auto pr-5 pb-6 [scrollbar-width:none] min-[900px]:mr-0 min-[900px]:grid min-[900px]:grid-cols-[repeat(auto-fit,minmax(0,15rem))] min-[900px]:justify-center min-[900px]:gap-5 min-[900px]:overflow-visible min-[900px]:p-0">
+          {shelf.map(({ series, first, count, domains }) => (
+            <li class="flex-[0_0_58%] snap-start min-[900px]:flex-auto">
+              <a
+                href={series.href}
+                class="block h-full rounded-[20px] border border-line bg-canvas p-2.5 transition-[border-color] duration-200 hover:border-muted"
+              >
+                <PostCover category={first.category} seed={series.id} symbol={series.symbol} class="aspect-[4/5]" />
+                <span class="mx-1.5 mt-3.5 block font-display text-[1.375rem] leading-[1.1] font-medium text-balance">
+                  {series.title}
+                </span>
+                <span class="mx-1.5 mt-1.5 mb-1 block text-[0.8125rem] leading-[1.4] text-muted">
+                  {formatCount(count)} bài · {domains}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="slab slab-canvas" aria-labelledby="list-heading">
+      <div class="wrap">
+        <SectionHeading eyebrow="Mọi bài viết" id="list-heading">
+          Mới nhất <em class="wavy">trước</em>.
+        </SectionHeading>
+        <CategoryFilter categories={categories} total={posts.length} center class="mb-8" />
+        <PostList posts={rest.slice(0, LIST_COUNT)} class="mx-auto max-w-[52rem]" />
+        {rest.length > LIST_COUNT && (
+          <div class="mt-8 flex justify-center">
+            <a href={routes.blog} class="btn btn-ghost">
+              Xem tất cả {formatCount(posts.length)} bài
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
 </SiteLayout>

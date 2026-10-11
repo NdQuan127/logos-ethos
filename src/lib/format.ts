@@ -3,6 +3,13 @@ export function formatDate(date: Date): string {
   return `${date.getUTCDate()} Tháng ${date.getUTCMonth() + 1}, ${date.getUTCFullYear()}`;
 }
 
+const counts = new Intl.NumberFormat('vi');
+
+/** "1.284": Vietnamese groups thousands with a dot. */
+export function formatCount(count: number): string {
+  return counts.format(count);
+}
+
 export function isoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }

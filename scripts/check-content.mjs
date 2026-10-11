@@ -7,6 +7,7 @@ import { slugify } from '../src/lib/slug.ts';
 
 const BLOG_DIR = 'src/content/blog';
 const STALE_DRAFT_DAYS = 90;
+const MAX_TAGS = 8;
 
 const errors = [];
 const warnings = [];
@@ -52,6 +53,7 @@ for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
     slug: entry.name,
     file,
     body: source.slice(match[0].length),
+    title: data.title,
     description: data.description,
     draft: data.draft === true,
     date: data.date,
@@ -99,12 +101,23 @@ for (const post of posts) {
   }
 
   if (post.category && !categoryIds.has(post.category))
-    errors.push(`${file}: chủ đề "${post.category}" không có trong taxonomy/categories.yaml`);
+    errors.push(`${file}: lĩnh vực "${post.category}" không có trong taxonomy/categories.yaml`);
   if (post.series && !seriesIds.has(post.series))
-    errors.push(`${file}: loạt bài "${post.series}" không có trong taxonomy/series.yaml`);
+    errors.push(`${file}: chuyên đề "${post.series}" không có trong taxonomy/series.yaml`);
+
+  // Titles also land in <title>, RSS and share cards, where Markdown shows as raw symbols.
+  if (/\*[^*]+\*|`[^`]+`/.test(String(post.title ?? '')))
+    warnings.push(`${file}: tiêu đề có cú pháp Markdown (*…* hoặc \`…\`); tiêu đề hiển thị nguyên ký tự, hãy bỏ đi`);
+
+  if (post.tags.length > MAX_TAGS)
+    warnings.push(`${file}: ${post.tags.length} thẻ là nhiều; nên giữ tối đa ${MAX_TAGS} thẻ chính`);
 
   for (const tag of post.tags) {
     const key = slugify(tag);
+    if (!key) {
+      errors.push(`${file}: thẻ "${tag}" không có chữ hay số Latin nào để làm URL; hãy viết thành chữ (vd. "vô cực")`);
+      continue;
+    }
     const seen = tagNames.get(key);
     if (seen && seen.name !== tag)
       warnings.push(`${file}: thẻ "${tag}" trùng với "${seen.name}" (${seen.file}); hãy thống nhất một cách viết`);

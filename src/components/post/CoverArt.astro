@@ -1,0 +1,61 @@
+---
+/**
+ * Generated cover: the category's tab paper, a line drawing of its motif, one
+ * filled circle placed by the seed, and a large italic glyph. Decorative only.
+ * The parent sizes it (aspect ratio, width); the glyph scales with its height.
+ */
+import { coverArt, type Tone } from '../../lib/cover-art';
+
+interface Props {
+  tone: Tone;
+  /** Seed string; the same key always draws the same cover. */
+  seed: string;
+  glyph: string;
+  class?: string;
+}
+
+const { tone, seed, glyph, class: className } = Astro.props;
+const { motif, circle } = coverArt(seed, tone);
+const rows = [80, 160, 240, 320];
+---
+
+<div class:list={['cover', className]} style={{ '--cover-paper': `var(--tab-${tone})` }} aria-hidden="true">
+  <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" focusable="false">
+    <circle cx={circle.cx} cy={circle.cy} r={circle.r} fill="var(--color-accent-soft)" opacity="0.9" />
+    {motif === 'compass' && (
+      <g fill="none" stroke="var(--color-ink)" stroke-width="1.3" opacity="0.75">
+        <circle cx="250" cy="170" r="110" />
+        <circle cx="170" cy="170" r="110" />
+        <path d="M60 280H360M210 40V360M80 300L340 60" />
+      </g>
+    )}
+    {motif === 'network' && (
+      <>
+        <g stroke="var(--color-ink)" stroke-width="1.1" opacity="0.7">
+          {rows.flatMap((y1) => rows.map((y2) => <line x1="110" y1={y1} x2="300" y2={y2} />))}
+        </g>
+        <g fill={`var(--tab-${tone})`} stroke="var(--color-ink)" stroke-width="1.3">
+          {rows.map((y) => (
+            <>
+              <circle cx="110" cy={y} r="9" />
+              <circle cx="300" cy={y} r="9" />
+            </>
+          ))}
+        </g>
+      </>
+    )}
+    {motif === 'rings' && (
+      <g fill="none" stroke="var(--color-ink)" stroke-width="1.2" opacity="0.7">
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <circle cx="250" cy="160" r={20 + i * 26} />
+        ))}
+      </g>
+    )}
+    {motif === 'portico' && (
+      <g fill="none" stroke="var(--color-ink)" stroke-width="1.3" opacity="0.75">
+        <path d="M70 330H350M80 310H340M100 310V150M150 310V150M200 310V150M250 310V150M300 310V150M80 150H340L210 70Z" />
+      </g>
+    )}
+  </svg>
+  <span class:list={['cover-glyph', [...glyph].length > 1 && 'cover-glyph-wide']}>{glyph}</span>
+</div>

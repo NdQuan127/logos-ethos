@@ -10,15 +10,19 @@ const { sources } = Astro.props;
 
 {sources.length > 0 && (
   <section class="mt-16 border-t border-line pt-6" aria-labelledby="sources-heading">
-    <h2 id="sources-heading" class="font-mono text-xs uppercase tracking-widest text-muted mb-4">
+    <h2 id="sources-heading" class="mb-4 text-[0.8125rem] font-medium text-muted">
       Tài liệu tham khảo
     </h2>
-    <ol class="list-decimal pl-5 space-y-2 font-sans text-sm text-muted leading-relaxed">
+    <ol class="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted">
       {sources.map((source) => (
-        <li>
+        <li class="break-words">
           {source.author && <span>{source.author}, </span>}
           {source.url ? (
-            <a href={source.url} class="italic text-fg hover:text-accent transition-colors" rel="noopener">
+            <a
+              href={source.url}
+              class="text-fg italic underline decoration-lilac-deep decoration-wavy decoration-[1.5px] underline-offset-[0.22em]"
+              rel="noopener"
+            >
               {source.title}
             </a>
           ) : (

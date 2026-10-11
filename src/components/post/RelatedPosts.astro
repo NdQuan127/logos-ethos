@@ -1,5 +1,5 @@
 ---
-import { ArrowRight } from '@lucide/astro';
+import PostList from './PostList.astro';
 import type { PostView } from '../../lib/content';
 
 interface Props {
@@ -10,27 +10,10 @@ const { posts } = Astro.props;
 ---
 
 {posts.length > 0 && (
-  <section class="mt-20 pt-12 border-t border-line" aria-label="Bài viết liên quan">
-    <h2 class="font-mono text-xs uppercase tracking-widest text-muted mb-8">Có thể bạn cũng quan tâm</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {posts.map((post) => (
-        <a
-          href={post.href}
-          class="group flex flex-col gap-3 p-4 border border-line hover:border-accent transition-colors rounded-sm"
-        >
-          <span class="font-mono text-xs font-semibold tracking-wide" style={{ color: post.category.color }}>
-            {post.category.name}
-          </span>
-          <h3 class="font-serif text-lg text-fg group-hover:text-accent transition-colors leading-snug">
-            {post.title}
-          </h3>
-          <p class="font-sans text-sm text-muted leading-relaxed line-clamp-2">{post.description}</p>
-          <div class="mt-auto font-mono text-xs text-muted flex items-center justify-between">
-            <time datetime={post.isoDate}>{post.dateLabel}</time>
-            <ArrowRight size={14} class="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-          </div>
-        </a>
-      ))}
-    </div>
+  <section class="mt-20 border-t border-line pt-10" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="eyebrow mb-2">
+      Có thể bạn cũng quan tâm
+    </h2>
+    <PostList posts={posts} />
   </section>
 )}

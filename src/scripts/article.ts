@@ -1,5 +1,4 @@
 import { bindOnce } from './bind';
-import { readBookmarks, toggleBookmark } from './bookmarks';
 
 function initReadingProgress() {
   const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
@@ -46,20 +45,16 @@ function initTableOfContents() {
         const links = byId.get(entry.target.id);
         if (!entry.isIntersecting || !links) return;
         tocLinks.forEach((item) => {
-          item.classList.remove('text-accent');
           item.removeAttribute('aria-current');
         });
         links.forEach((link) => {
-          link.classList.add('text-accent');
           link.setAttribute('aria-current', 'location');
         });
       });
     },
     { rootMargin: '-20% 0px -65% 0px' },
   );
-  document
-    .querySelectorAll<HTMLElement>('article h2[id], article h3[id]')
-    .forEach((heading) => observer.observe(heading));
+  document.querySelectorAll<HTMLElement>('article h2[id]').forEach((heading) => observer.observe(heading));
 }
 
 function initShare() {
@@ -85,28 +80,6 @@ function initShare() {
   });
 }
 
-function initBookmark() {
-  const button = document.querySelector<HTMLButtonElement>('[data-bookmark-button]');
-  if (!button || !bindOnce(button, 'bookmark')) return;
-
-  const render = () => {
-    const slug = button.dataset.bookmarkSlug;
-    const saved = !!slug && readBookmarks().includes(slug);
-    button.setAttribute('aria-pressed', String(saved));
-    button.querySelector('[data-bookmark-label]')?.replaceChildren(saved ? 'Đã lưu' : 'Lưu');
-    button.querySelector('[data-bookmark-off]')?.classList.toggle('hidden', saved);
-    button.querySelector('[data-bookmark-on]')?.classList.toggle('hidden', !saved);
-  };
-
-  button.addEventListener('click', () => {
-    const slug = button.dataset.bookmarkSlug;
-    if (!slug) return;
-    toggleBookmark(slug);
-    render();
-  });
-  render();
-}
-
 function initSidenotes() {
   document.querySelectorAll<HTMLButtonElement>('[data-sidenote-toggle]').forEach((button) => {
     if (!bindOnce(button, 'sidenote')) return;
@@ -123,6 +96,5 @@ export function initArticle() {
   initReadingProgress();
   initTableOfContents();
   initShare();
-  initBookmark();
   initSidenotes();
 }

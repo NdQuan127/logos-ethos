@@ -18,7 +18,7 @@ const { class: className, mainClass, ...baseProps } = Astro.props;
 
 <BaseLayout {...baseProps}>
   <slot name="head" slot="head" />
-  <div class:list={['min-h-screen flex flex-col relative font-serif', className]}>
+  <div class:list={['flex min-h-svh flex-col', className]}>
     <slot name="before-nav" />
     <Navbar />
     <main id="main-content" class:list={['flex-grow', mainClass]}>

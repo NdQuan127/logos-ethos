@@ -5,7 +5,7 @@ Mọi bài viết đi qua cùng một quy trình: tạo từ template, viết b�
 ## Viết bài mới
 
 ```bash
-npm run new -- "Nghịch lý Russell" --category nghich-ly
+npm run new -- "Nghịch lý Russell" --category toan-hoc
 npm run dev
 ```
 
@@ -31,8 +31,8 @@ src/content/
 │       ├── index.mdx
 │       └── cover.jpg            # ảnh của bài nằm cạnh bài
 └── taxonomy/
-    ├── categories.yaml          # danh sách chủ đề
-    └── series.yaml              # danh sách loạt bài
+    ├── categories.yaml          # danh sách lĩnh vực
+    └── series.yaml              # danh sách chuyên đề
 ```
 
 - Tên thư mục chỉ dùng chữ thường không dấu, số và `-`. Đổi tên thư mục là đổi URL, nên tránh đổi sau khi đã xuất bản.
@@ -49,25 +49,26 @@ src/content/
 | `category`    | ✓               | Một `id` trong `taxonomy/categories.yaml`.                                           |
 | `tags`        |                 | Danh sách tự do, ví dụ `["Gödel", "tự tham chiếu"]`. URL tự sinh không dấu.          |
 | `series`      |                 | Một `id` trong `taxonomy/series.yaml`. Đi kèm `seriesOrder`.                         |
-| `seriesOrder` | khi có `series` | Số thứ tự trong loạt, bắt đầu từ 1.                                                  |
+| `seriesOrder` | khi có `series` | Số thứ tự trong chuyên đề, bắt đầu từ 1.                                             |
 | `draft`       |                 | `true` để ẩn khỏi production.                                                        |
 | `featured`    |                 | Ghim lên vị trí nổi bật ở trang chủ. Nếu không bài nào ghim, bài mới nhất được chọn. |
-| `cover`       |                 | Đường dẫn tương đối, ví dụ `./cover.jpg`. Không có thì dùng ký hiệu của chủ đề.      |
+| `cover`       |                 | Đường dẫn tương đối, ví dụ `./cover.jpg`. Hiện ở trang bài và ô bìa, phủ hai tông.   |
 | `coverAlt`    | khi có `cover`  | Mô tả nội dung ảnh cho người dùng trình đọc màn hình.                                |
+| `artCover`    |                 | `true` để hiện bìa tự sinh trên trang bài khi không có `cover`.                      |
 | `toc`         |                 | `false` để ẩn mục lục (mặc định hiện).                                               |
 | `sources`     |                 | Tài liệu tham khảo: `title`, tuỳ chọn `author`, `url`.                               |
 
 Giữ thứ tự trường như bảng trên để mọi bài trông giống nhau.
 
-## Chủ đề, thẻ và loạt bài
+## Lĩnh vực, thẻ và chuyên đề
 
-- **Chủ đề** (`category`): mỗi bài đúng một chủ đề. Thêm chủ đề mới bằng cách thêm một mục vào `categories.yaml` với `id`, `name`, `description`, `color` (`blue` | `red` | `green` | `yellow`), `symbol`.
-- **Thẻ** (`tags`): không cần khai báo trước. Viết thống nhất một cách (`Gödel`, không lúc `Godel` lúc `gödel`); `check:content` sẽ cảnh báo khi hai cách viết trùng URL.
-- **Loạt bài** (`series`): khai báo trong `series.yaml`, rồi gắn `series` + `seriesOrder` cho từng bài. Trang `/blog/loat-bai/<id>/` và khung điều hướng "Phần trước / Phần sau" tự sinh.
+- **Lĩnh vực** (`category`): mỗi bài đúng một lĩnh vực trong bốn: `toan-hoc`, `ai-hoc-may`, `triet-hoc`, `chinh-tri`. Mỗi mục trong `categories.yaml` có `id`, `name`, `description`, `tone` (`blue` | `green` | `violet` | `red`: chọn màu nhãn và hình vẽ trên bìa tự sinh), `symbol` (ký tự lớn trên bìa). Chủ đề hẹp hơn, như logic học hay nhận thức luận, dùng thẻ.
+- **Thẻ** (`tags`): không cần khai báo trước. Viết thống nhất một cách (`Gödel`, không lúc `Godel` lúc `gödel`); `check:content` sẽ cảnh báo khi hai cách viết trùng URL hoặc khi một bài có quá 8 thẻ, và báo lỗi khi thẻ chỉ gồm ký hiệu (`∞`, `λ`) vì không tạo được URL.
+- **Chuyên đề** (`series`): khai báo trong `series.yaml` (`id`, `title`, `description`, tuỳ chọn `symbol` cho bìa), rồi gắn `series` + `seriesOrder` cho từng bài. Trang `/blog/loat-bai/<id>/` và khung điều hướng "Phần trước / Phần tiếp" tự sinh. Trang chủ hiện kệ chuyên đề khi có từ hai chuyên đề.
 
 ## Viết nội dung
 
-Tiêu đề trong bài bắt đầu từ `##` (tiêu đề bài đã là h1). `##` và `###` xuất hiện trong mục lục.
+Tiêu đề trong bài bắt đầu từ `##` (tiêu đề bài đã là h1). Chỉ `##` xuất hiện trong mục lục; `###` thì không, để mục lục không dài quá màn hình.
 
 ### Toán
 
@@ -107,16 +108,16 @@ import hilbert from './hilbert.jpg';
 
 Dùng trực tiếp trong mọi bài, không cần `import`. Danh sách đăng ký tại `src/components/mdx/index.ts`.
 
-| Component                                                         | Dùng cho                                                              |
-| ----------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `<Theorem>`, `<Lemma>`, `<Proposition>`, `<Corollary>`, `<Axiom>` | Mệnh đề toán học. Nội dung in nghiêng theo quy ước. Tuỳ chọn `title`. |
-| `<Definition>`, `<Example>`, `<Remark>`                           | Định nghĩa, ví dụ, nhận xét. Tuỳ chọn `title`.                        |
-| `<Proof>`                                                         | Chứng minh, tự thêm ∎. Tuỳ chọn `label="Phác thảo chứng minh"`.       |
-| `<Term original="Consistency">Tính nhất quán</Term>`              | Thuật ngữ kèm tên gốc. Tuỳ chọn `lang` (mặc định `en`).               |
-| `<Callout type="note \| warning \| idea" title="…">`              | Hộp ghi chú.                                                          |
-| `<Sidenote label="…">`                                            | Ghi chú bên lề trên màn hình rộng, thu gọn trên điện thoại.           |
-| `<PullQuote author="…">`                                          | Trích dẫn nổi bật.                                                    |
-| `<Figure>`                                                        | Ảnh có chú thích (xem trên).                                          |
+| Component                                                         | Dùng cho                                                                                                                      |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `<Theorem>`, `<Lemma>`, `<Proposition>`, `<Corollary>`, `<Axiom>` | Mệnh đề toán học. Nội dung in nghiêng theo quy ước. Tuỳ chọn `title`.                                                         |
+| `<Definition>`, `<Example>`, `<Remark>`                           | Định nghĩa, ví dụ, nhận xét. Tuỳ chọn `title`.                                                                                |
+| `<Proof>`                                                         | Chứng minh, tự thêm ∎. Tuỳ chọn `label="Phác thảo chứng minh"`.                                                               |
+| `<Term original="Consistency">Tính nhất quán</Term>`              | Thuật ngữ kèm tên gốc. Tuỳ chọn `lang` (mặc định `en`).                                                                       |
+| `<Callout type="note \| warning \| idea" title="…">`              | Hộp ghi chú.                                                                                                                  |
+| `từ<Sidenote>…</Sidenote>`                                        | Ghi chú đánh chữ (a, b, c), viết ngay sau từ cần giải thích. Nằm ở lề phải trên màn hình rộng; trên điện thoại bấm chữ để mở. |
+| `<PullQuote author="…">`                                          | Trích dẫn nổi bật.                                                                                                            |
+| `<Figure>`                                                        | Ảnh có chú thích (xem trên).                                                                                                  |
 
 ```mdx
 <Theorem title="Bất toàn thứ nhất">
@@ -130,10 +131,11 @@ Thêm component mới: tạo file trong `src/components/mdx/`, đăng ký trong 
 
 ## Những gì được sinh tự động
 
-- Thời gian đọc, mục lục, bài liên quan (ưu tiên cùng loạt bài, rồi thẻ chung, rồi cùng chủ đề).
-- Trang chủ đề `/blog/chu-de/<id>/`, thẻ `/blog/tag/<thẻ>/`, loạt bài `/blog/loat-bai/<id>/`.
+- Thời gian đọc, mục lục, bài liên quan (ưu tiên cùng chuyên đề, rồi cùng lĩnh vực, rồi thẻ chung).
+- Trang lĩnh vực `/blog/chu-de/<id>/`, thẻ `/blog/tag/<thẻ>/`, chuyên đề `/blog/loat-bai/<id>/`.
+- Bìa tự sinh cho bài nổi bật ở trang chủ và cho chuyên đề, theo hình vẽ của lĩnh vực.
 - `rss.xml`, `sitemap-index.xml`, ảnh chia sẻ mạng xã hội (1200×630) từ `cover`.
 
 ## Ghi chú
 
-- Khi `series.yaml` còn rỗng, build in cảnh báo `The collection "series" does not exist or is empty`. Cảnh báo này vô hại và tự hết khi có loạt bài đầu tiên.
+- Khi `series.yaml` còn rỗng, build in cảnh báo `The collection "series" does not exist or is empty`. Cảnh báo này vô hại và tự hết khi có chuyên đề đầu tiên.

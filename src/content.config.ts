@@ -1,6 +1,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { TONES } from './lib/cover-art';
 
 /** ASCII kebab-case, used for every id that ends up in a URL. */
 const slugId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Chỉ dùng chữ thường không dấu, số và dấu gạch ngang');
@@ -11,9 +12,9 @@ const categories = defineCollection({
     id: slugId,
     name: z.string(),
     description: z.string(),
-    /** Maps to the `--cat-<name>` custom properties in global.css (light and dark, WCAG AA). */
-    color: z.enum(['blue', 'red', 'green', 'yellow']),
-    /** Glyph shown on typographic covers when a post has no cover image. */
+    /** Picks `--cat-<tone>` (text) and `--tab-<tone>` (chip and cover paper) in global.css, and the cover motif. */
+    tone: z.enum(TONES),
+    /** Glyph shown on generated covers. */
     symbol: z.string().max(2),
   }),
 });
@@ -24,6 +25,8 @@ const series = defineCollection({
     id: slugId,
     title: z.string(),
     description: z.string(),
+    /** Glyph on the series cover; falls back to the first post's category symbol. */
+    symbol: z.string().max(2).optional(),
   }),
 });
 
@@ -48,9 +51,11 @@ const blog = defineCollection({
         draft: z.boolean().default(false),
         /** Pin the post to the homepage feature slot. The newest featured post wins. */
         featured: z.boolean().default(false),
-        /** Image next to the post, e.g. `./cover.jpg`. Falls back to a typographic cover. */
+        /** Cover image, e.g. `./cover.jpg`, shown in duotone on the article and in cover slots. */
         cover: image().optional(),
         coverAlt: z.string().optional(),
+        /** Show a generated cover on the article and in cover slots when there is no `cover` image. */
+        artCover: z.boolean().default(false),
         /** Show the table of contents. */
         toc: z.boolean().default(true),
         sources: z

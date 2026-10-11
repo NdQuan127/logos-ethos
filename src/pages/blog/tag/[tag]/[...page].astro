@@ -1,9 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import ListingLayout from '../../../../layouts/ListingLayout.astro';
-import PostGrid from '../../../../components/post/PostGrid.astro';
+import PostList from '../../../../components/post/PostList.astro';
 import { site } from '../../../../config/site';
 import { getPosts, summarizeTags } from '../../../../lib/content';
+import { formatCount } from '../../../../lib/format';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPosts();
@@ -22,8 +23,8 @@ const { page, tag } = Astro.props;
   title={`Thẻ: ${tag.name}`}
   description={`Các bài viết gắn thẻ ${tag.name} trên Logos & Ethos.`}
   page={page}
-  header={{ eyebrow: 'Thẻ', title: `#${tag.name}`, description: `${page.total} bài viết` }}
+  header={{ eyebrow: 'Thẻ', title: `#${tag.name}`, description: `${formatCount(page.total)} bài` }}
   sectionLabel={`Bài viết gắn thẻ ${tag.name}`}
 >
-  <PostGrid posts={page.data} />
+  <PostList posts={page.data} />
 </ListingLayout>

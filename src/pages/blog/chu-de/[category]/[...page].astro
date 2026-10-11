@@ -2,9 +2,10 @@
 import type { GetStaticPaths } from 'astro';
 import ListingLayout from '../../../../layouts/ListingLayout.astro';
 import CategoryFilter from '../../../../components/post/CategoryFilter.astro';
-import PostGrid from '../../../../components/post/PostGrid.astro';
+import PostList from '../../../../components/post/PostList.astro';
 import { site } from '../../../../config/site';
 import { getPosts, summarizeCategories } from '../../../../lib/content';
+import { formatCount } from '../../../../lib/format';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPosts();
@@ -25,17 +26,16 @@ const { page, category, categories, total } = Astro.props;
 ---
 
 <ListingLayout
-  title={`Chủ đề: ${category.name}`}
-  description={`Các bài viết thuộc chủ đề ${category.name} của Logos & Ethos.`}
+  title={`Lĩnh vực: ${category.name}`}
+  description={`Các bài viết thuộc lĩnh vực ${category.name} của Logos & Ethos.`}
   page={page}
   header={{
-    eyebrow: 'Chủ đề',
-    eyebrowColor: category.color,
+    eyebrow: 'Lĩnh vực',
     title: category.name,
-    description: `${category.description} · ${page.total} bài viết`,
+    description: `${category.description} · ${formatCount(page.total)} bài`,
   }}
-  sectionLabel={`Bài viết thuộc chủ đề ${category.name}`}
+  sectionLabel={`Bài viết thuộc lĩnh vực ${category.name}`}
 >
-  <CategoryFilter categories={categories} total={total} activeSlug={category.id} />
-  <PostGrid posts={page.data} />
+  <CategoryFilter categories={categories} total={total} activeSlug={category.id} class="mb-6" />
+  <PostList posts={page.data} />
 </ListingLayout>
