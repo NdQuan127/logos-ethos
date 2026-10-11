@@ -1,0 +1,21 @@
+---
+/**
+ * A bare card fragment per post. /da-luu/ fetches only the ones a reader
+ * saved, so that page stays small however many posts the blog has.
+ */
+import ArticleCard from '../../../components/post/ArticleCard.astro';
+import { site } from '../../../config/site';
+import { getPosts } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  if (!site.features.bookmarks) return [];
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+---
+
+<li data-saved-date={post.isoDate}>
+  <ArticleCard post={post} />
+</li>

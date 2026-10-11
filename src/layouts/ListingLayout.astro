@@ -2,30 +2,37 @@
 /**
  * Pages that list posts: /blog/, categories, tags, series, saved posts.
  * Renders the page header; the default slot fills the listing section.
+ * Paginated pages pass `page`: the layout then derives the canonical URL,
+ * numbers the title after page 1 and renders the pager.
  */
+import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
 import SiteLayout from './SiteLayout.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
+import Pagination from '../components/ui/Pagination.astro';
+import { withTrailingSlash } from '../lib/routes';
 
-interface Props {
+type Props = {
   /** <title> and meta description. */
   title: string;
   description: string;
-  canonicalPath: string;
   header: ComponentProps<typeof PageHeader>;
   /** aria-label of the listing section. */
   sectionLabel: string;
-}
+} & ({ canonicalPath: string; page?: never } | { page: Page; canonicalPath?: never });
 
-const { title, description, canonicalPath, header, sectionLabel } = Astro.props;
+const { title, description, header, sectionLabel, page } = Astro.props;
+const canonicalPath = page ? withTrailingSlash(page.url.current) : Astro.props.canonicalPath;
+const pageTitle = page && page.currentPage > 1 ? `${title} — trang ${page.currentPage}` : title;
 ---
 
-<SiteLayout title={title} description={description} canonicalPath={canonicalPath}>
+<SiteLayout title={pageTitle} description={description} canonicalPath={canonicalPath}>
   <slot name="head" slot="head" />
   <PageHeader {...header} />
   <section class="w-full py-16 px-6 md:px-12" aria-label={sectionLabel}>
     <div class="max-w-7xl mx-auto">
       <slot />
+      {page && <Pagination page={page} />}
     </div>
   </section>
 </SiteLayout>

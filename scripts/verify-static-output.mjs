@@ -19,7 +19,9 @@ function walk(dir) {
 function resolveFile(urlPath) {
   const decoded = decodeURIComponent(urlPath);
   const candidates = decoded.endsWith('/') ? [`${decoded}index.html`] : [decoded, `${decoded}.html`];
-  return candidates.map((candidate) => path.join(dist, candidate)).find((file) => fs.existsSync(file));
+  return candidates
+    .map((candidate) => path.join(dist, candidate))
+    .find((file) => fs.statSync(file, { throwIfNoEntry: false })?.isFile());
 }
 
 const idCache = new Map();

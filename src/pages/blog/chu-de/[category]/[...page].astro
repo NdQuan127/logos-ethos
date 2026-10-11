@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../../layouts/ListingLayout.astro';
+import CategoryFilter from '../../../../components/post/CategoryFilter.astro';
+import PostGrid from '../../../../components/post/PostGrid.astro';
+import { site } from '../../../../config/site';
+import { getPosts, summarizeCategories } from '../../../../lib/content';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getPosts();
+  const categories = summarizeCategories(posts);
+  return categories.flatMap(({ item }) =>
+    paginate(
+      posts.filter((post) => post.category.id === item.id),
+      {
+        pageSize: site.pageSize,
+        params: { category: item.id },
+        props: { category: item, categories, total: posts.length },
+      },
+    ),
+  );
+}) satisfies GetStaticPaths;
+
+const { page, category, categories, total } = Astro.props;
+---
+
+<ListingLayout
+  title={`Chủ đề: ${category.name}`}
+  description={`Các bài viết thuộc chủ đề ${category.name} của Logos & Ethos.`}
+  page={page}
+  header={{
+    eyebrow: 'Chủ đề',
+    eyebrowColor: category.color,
+    title: category.name,
+    description: `${category.description} · ${page.total} bài viết`,
+  }}
+  sectionLabel={`Bài viết thuộc chủ đề ${category.name}`}
+>
+  <CategoryFilter categories={categories} total={total} activeSlug={category.id} />
+  <PostGrid posts={page.data} />
+</ListingLayout>

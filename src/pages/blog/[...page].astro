@@ -14,14 +14,12 @@ export const getStaticPaths = (async ({ paginate }) => {
 }) satisfies GetStaticPaths;
 
 const { page, categories, total } = Astro.props;
-const canonicalPath = page.url.current.endsWith('/') ? page.url.current : `${page.url.current}/`;
-const pagerLink = 'inline-flex min-h-11 items-center px-4 border border-line hover:border-fg/30';
 ---
 
 <ListingLayout
-  title={page.currentPage > 1 ? `Tất cả bài viết — trang ${page.currentPage}` : 'Tất cả bài viết'}
+  title="Tất cả bài viết"
   description="Khám phá toàn bộ bộ sưu tập bài viết về Toán học và Triết học của Logos & Ethos."
-  canonicalPath={canonicalPath}
+  page={page}
   header={{
     eyebrow: 'Tuyển tập',
     dot: true,
@@ -36,26 +34,5 @@ const pagerLink = 'inline-flex min-h-11 items-center px-4 border border-line hov
     <PostGrid posts={page.data} />
   ) : (
     <EmptyState title="Chưa có bài viết nào." description="Hãy quay lại sớm — chúng tôi đang viết!" />
-  )}
-  {page.lastPage > 1 && (
-    <nav aria-label="Phân trang" class="mt-12 flex items-center justify-between font-sans text-sm">
-      {page.url.prev ? (
-        <a href={page.url.prev} rel="prev" class={pagerLink}>
-          Trang trước
-        </a>
-      ) : (
-        <span />
-      )}
-      <span class="text-muted">
-        Trang {page.currentPage} / {page.lastPage}
-      </span>
-      {page.url.next ? (
-        <a href={page.url.next} rel="next" class={pagerLink}>
-          Trang sau
-        </a>
-      ) : (
-        <span />
-      )}
-    </nav>
   )}
 </ListingLayout>

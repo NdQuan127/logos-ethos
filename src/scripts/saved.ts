@@ -1,19 +1,32 @@
+import { routes } from '../lib/routes';
+import { bindOnce } from './bind';
 import { readBookmarks } from './bookmarks';
 
-export function initSaved() {
-  const saved = new Set(readBookmarks());
-  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-saved-slug]'));
-  let visible = 0;
+/** The card for one saved post, or undefined if the post no longer exists. */
+async function fetchCard(slug: string): Promise<HTMLLIElement | undefined> {
+  try {
+    const response = await fetch(routes.savedCard(encodeURIComponent(slug)));
+    if (!response.ok) return undefined;
+    const template = document.createElement('template');
+    template.innerHTML = await response.text();
+    return template.content.querySelector('li') ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
-  items.forEach((item) => {
-    const show = saved.has(item.dataset.savedSlug ?? '');
-    item.hidden = !show;
-    if (show) visible += 1;
-  });
+export async function initSaved() {
+  const list = document.querySelector<HTMLElement>('[data-saved-list]');
+  if (!list || !bindOnce(list, 'saved')) return;
+
+  const cards = (await Promise.all(readBookmarks().map(fetchCard))).filter((card) => card !== undefined);
+  // Newest post first, like every other listing.
+  cards.sort((a, b) => (b.dataset.savedDate ?? '').localeCompare(a.dataset.savedDate ?? ''));
+  list.replaceChildren(...cards);
 
   const empty = document.querySelector<HTMLElement>('[data-saved-empty]');
-  if (empty) empty.hidden = visible > 0;
+  if (empty) empty.hidden = cards.length > 0;
 
   const status = document.querySelector<HTMLElement>('[data-saved-status]');
-  if (status) status.textContent = `${visible} bài đã lưu`;
+  if (status) status.textContent = `${cards.length} bài đã lưu`;
 }

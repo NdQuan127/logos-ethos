@@ -3,13 +3,9 @@ import ListingLayout from '../layouts/ListingLayout.astro';
 import PostGrid from '../components/post/PostGrid.astro';
 import EmptyState from '../components/ui/EmptyState.astro';
 import { site } from '../config/site';
-import { getPosts } from '../lib/content';
 import { routes } from '../lib/routes';
 
 if (!site.features.bookmarks) return Astro.redirect(routes.home);
-
-// Every post is rendered hidden; the client script reveals the saved ones.
-const posts = await getPosts();
 ---
 
 <ListingLayout
@@ -29,7 +25,7 @@ const posts = await getPosts();
     initSaved();
   </script>
   <p data-saved-status class="sr-only" role="status"></p>
-  <PostGrid posts={posts} data-saved-list itemAttributes={(post) => ({ 'data-saved-slug': post.slug, hidden: true })} />
+  <PostGrid posts={[]} data-saved-list />
   <EmptyState
     data-saved-empty
     hidden
