@@ -20,7 +20,7 @@ const domains = new Intl.ListFormat('vi').format(categories.map(({ item }) => it
 
 <ListingLayout
   title="Tất cả bài viết"
-  description="Mọi bài viết của Logos & Ethos về toán học, học máy, triết học và chính trị."
+  description="Mọi bài viết của Logos & Ethos."
   page={page}
   header={{
     eyebrow: 'Mọi bài viết',
@@ -34,6 +34,6 @@ const domains = new Intl.ListFormat('vi').format(categories.map(({ item }) => it
   {page.data.length > 0 ? (
     <PostList posts={page.data} />
   ) : (
-    <EmptyState title="Chưa có bài viết nào." description="Hãy quay lại sớm — chúng tôi đang viết!" />
+    <EmptyState title="Chưa có bài viết nào." description="Bài đầu tiên đang được viết." />
   )}
 </ListingLayout>

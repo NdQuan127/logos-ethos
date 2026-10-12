@@ -16,22 +16,22 @@ interface Props {
 const { eyebrow, title, titleAccent, description, align = 'left' } = Astro.props;
 ---
 
-<header
-  class:list={['mx-auto w-full max-w-[52rem] px-5 pt-16 pb-10 sm:px-8 md:pt-24', align === 'center' && 'text-center']}
->
-  <p class="eyebrow">{eyebrow}</p>
-  <h1 class="mt-4 font-display text-[clamp(2.75rem,2rem+2.6vw,4.25rem)] leading-none font-normal tracking-[-0.025em] text-balance">
-    {title}
-    {titleAccent && (
-      <>
-        {' '}
-        <em class="italic">{titleAccent}</em>
-      </>
+<header class="w-full px-5 pt-16 pb-10 sm:px-8 md:pt-24">
+  <div class:list={['mx-auto max-w-[52rem]', align === 'center' && 'text-center']}>
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="mt-4 font-display text-[clamp(2.75rem,2rem+2.6vw,4.25rem)] leading-none font-normal tracking-[-0.025em] text-balance">
+      {title}
+      {titleAccent && (
+        <>
+          {' '}
+          <em class="italic">{titleAccent}</em>
+        </>
+      )}
+    </h1>
+    {description && (
+      <p class:list={['mt-5 max-w-xl text-[1.0625rem] leading-[1.6] text-muted', align === 'center' && 'mx-auto']}>
+        {description}
+      </p>
     )}
-  </h1>
-  {description && (
-    <p class:list={['mt-5 max-w-xl text-[1.0625rem] leading-[1.6] text-muted', align === 'center' && 'mx-auto']}>
-      {description}
-    </p>
-  )}
+  </div>
 </header>

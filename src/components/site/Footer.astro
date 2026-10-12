@@ -8,16 +8,16 @@ const links = [...site.footer.explore, ...site.footer.contact, { href: routes.rs
 
 <footer class="slab slab-kraft pb-16 sm:pb-24">
   <div class="wrap grid gap-10 sm:grid-cols-[1fr_auto] sm:items-end">
-    <div>
-      <p class="font-display text-[clamp(2.5rem,1.6rem+3vw,4.25rem)] leading-none tracking-[-0.02em]">
-        Cảm ơn đã
-        <br />
-        <em class="italic">đọc chậm.</em>
-      </p>
-      <p class="mt-4 max-w-md text-[0.9375rem] leading-[1.6] text-muted">
-        {site.title} là sổ tay cá nhân. Không quảng cáo, không theo dõi. Bài mới đến khi viết xong.
-      </p>
-    </div>
+    <figure lang="de">
+      <blockquote class="font-display text-[clamp(2.5rem,1.6rem+3vw,4.25rem)] leading-none tracking-[-0.02em]">
+        <p>
+          Wir müssen wissen.
+          <br />
+          <em class="italic">Wir werden wissen.</em>
+        </p>
+      </blockquote>
+      <figcaption class="mt-4 text-[0.9375rem] text-muted">David Hilbert, Königsberg, 1930</figcaption>
+    </figure>
     <nav aria-label="Liên kết cuối trang">
       <ul class="flex flex-col gap-1 text-[0.9375rem] sm:text-right">
         {links.map((link) => (

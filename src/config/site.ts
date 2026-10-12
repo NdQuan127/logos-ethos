@@ -16,7 +16,7 @@ const email = 'contact@logos-ethos.web.app';
 export const site = {
   title: 'Logos & Ethos',
   shortName: 'L',
-  description: 'Ghi chép chậm về toán học, học máy, triết học và chính trị.',
+  description: 'Sổ tay về những giới hạn của sự hiểu biết.',
   /** The `site` option from astro.config.mjs, which reads SITE_URL. */
   url: import.meta.env.SITE,
   locale: 'vi_VN',
