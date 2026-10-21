@@ -1,127 +1,175 @@
 ---
-title: "Định lý Bất toàn của Gödel"
-description: "Khi toán học tự chứng minh rằng có những chân lý nằm ngoài tầm với của chứng minh. Câu chuyện về giấc mơ Hilbert và người thanh niên 25 tuổi đã phá vỡ nó."
-date: "2024-01-10"
+title: 'Định lý Bất toàn của Gödel'
+description: 'Khi toán học tự chứng minh rằng có những chân lý nằm ngoài tầm với của chứng minh. Câu chuyện về giấc mơ Hilbert và người thanh niên 25 tuổi đã đặt giới hạn cho nó.'
+date: '2024-01-10'
+updated: '2026-10-15'
 category: toan-hoc
-tags: ["Gödel", "Hilbert", "hệ hình thức", "tự tham chiếu", "logic học"]
+tags: ['Gödel', 'Hilbert', 'hệ hình thức', 'tự tham chiếu', 'logic học']
+sources:
+  - title: 'Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I'
+    author: 'Kurt Gödel (1931)'
+  - title: "Gödel's Proof"
+    author: 'Ernest Nagel & James R. Newman (1958)'
+  - title: 'An Introduction to Gödel’s Theorems'
+    author: 'Peter Smith (2013)'
 ---
 
-## Bối cảnh lịch sử: Giấc mơ của Hilbert
+Mùa thu năm 1930 tại Königsberg, David Hilbert tuyên bố trước giới toán học rằng không có bài toán nào là không thể giải quyết (<i lang="la">ignorabimus</i> không tồn tại trong toán học). Chỉ một ngày trước đó, trong một phiên thảo luận nhỏ ở chính hội nghị ấy, chàng thanh niên 24 tuổi Kurt Gödel đã lặng lẽ thông báo một kết quả ngược lại: bất kỳ hệ tiên đề nào đủ giàu để làm số học đều ẩn chứa những chân lý mà chính nó không bao giờ chạm tới được.[^1]
 
-Cuối thế kỷ 19, đầu thế kỷ 20, toán học đang trải qua một cuộc khủng hoảng nền tảng (*Grundlagenkrise der Mathematik*). Các nghịch lý xuất hiện ngay trong lý thuyết tập hợp, tức cái nền móng mà toán học tưởng chừng vững chắc nhất. Nổi tiếng nhất là Nghịch lý Russell (1901): xét tập hợp R chứa tất cả các tập hợp không chứa chính nó. Vậy R có chứa chính nó không? Nếu có thì không, nếu không thì có. Một mâu thuẫn logic thuần túy, không cần thêm giả thiết nào.
+## Giấc mơ của Hilbert và nền móng toán học
 
-Trước tình hình đó, David Hilbert đề xuất một chương trình đầy tham vọng, thường gọi là Chương trình Hilbert (*Hilbert's Program*). Ông muốn đặt toàn bộ toán học lên một nền tảng hình thức tuyệt đối vững chắc. Cụ thể, Hilbert cần chứng minh rằng một hệ tiên đề đủ mạnh (ví dụ, bao trùm được số học) sẽ thỏa mãn ba tính chất:
+Đầu thế kỷ 20, toán học rơi vào cuộc khủng hoảng nền tảng (<i lang="de">Grundlagenkrise</i>). Lý thuyết tập hợp ngây thơ của Georg Cantor — vốn được xem là tầng đất cái cho mọi nhánh toán học — bỗng lộ ra những vết nứt ngay từ gốc. Nổi tiếng nhất là nghịch lý do Bertrand Russell phát hiện năm 1901: xét tập hợp $R = \{x \mid x \notin x\}$ gồm mọi tập hợp không chứa chính nó; hỏi $R \in R$ đúng hay sai? Nếu $R \in R$ thì theo định nghĩa $R \notin R$; ngược lại, nếu $R \notin R$ thì nó thỏa điều kiện để $R \in R$. Một mâu thuẫn thuần túy logic xuất hiện từ thao tác định nghĩa tưởng chừng vô hại nhất.
 
-**Tính nhất quán** (*Consistency*): Hệ thống không bao giờ dẫn đến mâu thuẫn, không thể chứng minh được cả một mệnh đề P lẫn phủ định ¬P của nó.
+Để cứu toán học khỏi những nghịch lý tự quy chiếu như vậy, David Hilbert đề xuất một chương trình kiến thiết toàn diện. Ông muốn đóng khung từng lý thuyết toán học vào một <Term original="Formal system">hệ hình thức</Term> khép kín, nơi mọi suy luận chỉ là phép biến đổi ký hiệu thuần túy theo quy tắc cơ học, tách rời khỏi trực giác mơ hồ của con người.
 
-**Tính đầy đủ** (*Completeness*): Mọi mệnh đề đúng đều có thể được chứng minh trong hệ thống.
+<Definition title="Hệ hình thức">
+  Một hệ hình thức $S$ gồm ba thành phần: một bảng chữ cái cùng quy tắc cú pháp xác định tập các công thức hợp lệ; một
+  tập tiên đề khởi đầu có thể kiểm tra cơ học; và một tập hữu hạn các quy tắc suy luận. Một phép chứng minh trong $S$ là
+  một dãy hữu hạn các công thức $A_1, A_2, \dots, A_n$, trong đó mỗi $A_i$ hoặc là tiên đề, hoặc được suy ra từ các công
+  thức đứng trước qua quy tắc suy luận. Khi công thức $\varphi$ có một phép chứng minh như vậy, ta viết $S \vdash
+  \varphi$.
+</Definition>
 
-**Tính quyết định được** (*Decidability*): Tồn tại một thuật toán cơ học để xác định bất kỳ mệnh đề nào là đúng hay sai.
+Điểm cốt lõi của hệ hình thức nằm ở chỗ: kiểm tra một phép chứng minh hoàn toàn không đòi hỏi phải "hiểu" ý nghĩa của các ký hiệu. Một cỗ máy chỉ cần đối chiếu từng dòng với quy tắc cú pháp là biết phép chứng minh hợp lệ hay không.
 
-Hilbert tin rằng toán học về nguyên tắc có thể được "đóng kín": mọi câu hỏi toán học đều có câu trả lời, và ta có thể tìm ra nó. Câu nói nổi tiếng của ông: *"Wir müssen wissen, wir werden wissen"* — "Chúng ta phải biết, chúng ta sẽ biết."
+Trên nền tảng đó, Chương trình Hilbert đặt mục tiêu chứng minh rằng các hệ hình thức của toán học thỏa mãn đồng thời ba tính chất lý tưởng:
 
-Năm 1931, Kurt Gödel, lúc đó mới 25 tuổi, công bố bài báo *"Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme"* và làm sụp đổ giấc mơ này.
+- <Term original="Consistency">Tính nhất quán</Term>: Hệ không bao giờ tự mâu thuẫn; không tồn tại mệnh đề $\varphi$
+  nào mà cả $S \vdash \varphi$ lẫn $S \vdash \neg\varphi$.
+- <Term original="Completeness">Tính đầy đủ</Term>: Mọi mệnh đề trong ngôn ngữ của $S$ đều có thể định đoạt — với mọi
+  $\varphi$, hoặc $S \vdash \varphi$, hoặc $S \vdash \neg\varphi$.
+- <Term original="Decidability">Tính quyết định được</Term>: Tồn tại một thủ tục hữu hạn cho phép phân định bất kỳ công
+  thức $\varphi$ nào có chứng minh được trong $S$ hay không.<Sidenote>Bài toán tìm thủ tục chung này được Hilbert gọi là
+  *Entscheidungsproblem* (1928). Năm 1936, Alonzo Church và Alan Turing độc lập chứng minh rằng thủ tục như vậy không
+  tồn tại ngay cả với logic vị từ cấp một.</Sidenote>
 
-## Vài khái niệm nền tảng
+<PullQuote author="David Hilbert, bài diễn văn tại Königsberg (1930), khắc trên bia mộ ông tại Göttingen">
+  Wir müssen wissen, wir werden wissen — Chúng ta phải biết, chúng ta sẽ biết.
+</PullQuote>
 
-Trước khi đi vào nội dung chính, cần nắm rõ một số khái niệm.
+Hilbert không đòi hỏi phải chứng minh các tính chất trên bằng những công cụ siêu hình xa xôi, mà chỉ dùng các lập luận hữu hạn luận (<i lang="en">finitistic methods</i>) không thể nghi ngờ để bảo chứng cho toàn bộ tòa lâu đài toán học. Nhưng năm 1931, bài báo của Kurt Gödel đã chỉ ra rằng ngay cả hai mục tiêu đầu tiên cũng không thể cùng đứng vững.[^2]
 
-### Hệ hình thức (*Formal System*) là gì?
+## Khi số học tự soi gương: Mã hóa Gödel
 
-Một hệ hình thức bao gồm ba thành phần: một ngôn ngữ hình thức (bảng chữ cái và quy tắc cú pháp để tạo ra các "câu" hợp lệ, gọi là công thức), một tập hợp các tiên đề (những mệnh đề được chấp nhận là đúng mà không cần chứng minh), và các quy tắc suy luận (cho phép ta đi từ các mệnh đề đã biết đúng đến các mệnh đề mới).
+Định lý của Gödel không áp dụng cho mọi hệ hình thức bất kỳ, mà chỉ nhắm vào những hệ **đủ mạnh** để biểu diễn số học cơ bản — cụ thể là chứa được các phép cộng và phép nhân trên tập số tự nhiên $\mathbb{N}$ (như số học Peano $\mathrm{PA}$ hay lý thuyết tập hợp $\mathrm{ZFC}$).<Sidenote>Nếu một hệ chỉ có phép cộng mà không có phép nhân — tức số học Presburger (1929) — hoặc chỉ mô tả hình học sơ cấp theo tiên đề hóa của Alfred Tarski, hệ đó vừa nhất quán, vừa đầy đủ, vừa quyết định được. Ngưỡng bất toàn chỉ xuất hiện khi phép cộng và phép nhân kết hợp với nhau.</Sidenote>
 
-Một phép chứng minh trong hệ hình thức chỉ đơn giản là một chuỗi hữu hạn các công thức, trong đó mỗi công thức hoặc là tiên đề, hoặc được suy ra từ các công thức trước đó bằng quy tắc suy luận. Điểm mấu chốt: quá trình kiểm tra chứng minh hoàn toàn cơ học. Ta chỉ cần kiểm tra từng bước có tuân theo quy tắc hay không, không cần "hiểu" ý nghĩa.
+Vì sao sự kết hợp giữa cộng và nhân lại tạo ra bước ngoặt? Nhờ định lý cơ bản của số học (mọi số tự nhiên lớn hơn $1$ đều phân tích duy nhất thành tích các thừa số nguyên tố), phép nhân cho phép nén một dãy số bất kỳ thành một số tự nhiên duy nhất rồi giải nén ngược lại. Gödel nhận ra có thể dùng tính chất này để biến chính các công thức và phép chứng minh của hệ hình thức thành các con số.
 
-### "Đủ mạnh" nghĩa là gì?
+Kỹ thuật này được gọi là <Term original="Gödel numbering">mã hóa Gödel</Term>:
 
-Định lý Gödel không áp dụng cho mọi hệ hình thức. Nó chỉ áp dụng cho những hệ thống đủ mạnh để mã hóa số học cơ bản, cụ thể là số học Peano hoặc bất kỳ hệ thống nào có thể biểu diễn được các phép toán cộng và nhân trên số tự nhiên. Đây là một ngưỡng then chốt: khi hệ thống đủ mạnh để "nói về" số tự nhiên, nó cũng đủ mạnh để "nói về chính mình." Gödel khai thác chính điều này.
+1. **Mã hóa ký hiệu**: Gán cho mỗi ký hiệu cơ bản của ngôn ngữ hình thức (như $\neg, \to, \forall, =, 0, S, +, \times, \dots$) một số tự nhiên cố định.
+2. **Mã hóa công thức**: Một công thức $\varphi$ gồm dãy ký hiệu có mã $c_1, c_2, \dots, c_k$ được ánh xạ thành một số duy nhất thông qua lũy thừa của các số nguyên tố liên tiếp:
+   $$
+   \ulcorner \varphi \urcorner = 2^{c_1} \cdot 3^{c_2} \cdot 5^{c_3} \cdots p_k^{c_k}
+   $$
+3. **Mã hóa phép chứng minh**: Một phép chứng minh vốn là dãy các công thức $\varphi_1, \varphi_2, \dots, \varphi_m$ lại tiếp tục được mã hóa bằng cùng nguyên tắc thành một số tự nhiên lớn hơn.
 
-Hình học Euclid hay logic mệnh đề đơn giản thì không đủ mạnh, nên Định lý Bất toàn không áp dụng. Thực tế, Alfred Tarski đã chứng minh rằng hình học Euclid vừa nhất quán vừa đầy đủ — giấc mơ Hilbert đạt được, nhưng chỉ cho những hệ thống "yếu" hơn.
+Nhờ ánh xạ song ánh này, mọi quan hệ cú pháp giữa các công thức đều biến thành quan hệ số học giữa các số tự nhiên. Chẳng hạn, mệnh đề siêu ngôn ngữ *"dãy có mã $y$ là một phép chứng minh hợp lệ cho công thức có mã $x$"* chỉ là việc kiểm tra một loạt phép chia hết giữa các thừa số nguyên tố của $y$ và $x$. Do đó, nó tương đương với một vị từ số học $\mathrm{Proof}_S(y, x)$ viết hoàn toàn bằng ký hiệu cộng, nhân và lượng từ bên trong $S$.
+
+Từ đây, khái niệm *"công thức có mã $x$ chứng minh được trong $S$"* được biểu diễn trực tiếp thành công thức:
+
+$$
+\mathrm{Prov}_S(x) \equiv \exists y \, \mathrm{Proof}_S(y, x)
+$$
+
+Một hệ hình thức vốn chỉ được thiết kế để nói về các con số nay có thể nói về chính các định lý và phép chứng minh của nó.
 
 ## Định lý Bất toàn thứ nhất
 
-### Phát biểu
+Có trong tay vị từ $\mathrm{Prov}_S(x)$, Gödel thực hiện bước đi quyết định: áp dụng bổ đề đường chéo (<i lang="en">diagonal lemma</i>) để dựng nên một công thức số học $G$ tự quy chiếu vào chính mã số $\ulcorner G \urcorner$ của nó:
 
-Trong bất kỳ hệ hình thức nhất quán nào đủ mạnh để mã hóa số học cơ bản, tồn tại một mệnh đề G sao cho cả G lẫn ¬G đều không thể chứng minh được trong hệ thống đó.
+$$
+S \vdash G \leftrightarrow \neg \mathrm{Prov}_S(\ulcorner G \urcorner)
+$$
 
-Nói cách khác: nếu hệ thống không tự mâu thuẫn, thì nó nhất định không đầy đủ. Có những mệnh đề đúng mà hệ thống không thể chứng minh.
+Nếu đọc ở tầng siêu ngôn ngữ, câu $G$ phát biểu một điều duy nhất về các con số, nhưng mang ý nghĩa: *"Công thức $G$ không thể chứng minh được trong hệ $S$."*
 
-### Ý tưởng chứng minh: Mã hóa Gödel (*Gödel Numbering*)
+Khác với nghịch lý kẻ nói dối (*"Câu này là sai"*), câu $G$ không tự khẳng định tính sai của mình mà khẳng định **tính không chứng minh được**. Sự dịch chuyển tinh tế từ ngữ nghĩa (*đúng/sai*) sang cú pháp (*chứng minh được/không chứng minh được*) giúp $G$ thoát khỏi mâu thuẫn logic và trở thành một định lý toán học chặt chẽ.
 
-Nước đi quyết định đầu tiên của Gödel là nhận ra rằng ta có thể mã hóa toàn bộ ngôn ngữ hình thức bằng số tự nhiên. Mỗi ký hiệu được gán một số, mỗi công thức trở thành một dãy số, và mỗi phép chứng minh (vốn là một dãy các công thức) cũng trở thành một số, gọi là số Gödel (*Gödel number*).
+<Theorem title="Bất toàn thứ nhất — Gödel, 1931">
+  Với mọi hệ hình thức $S$ nhất quán, có thể liệt kê hiệu quả các tiên đề và đủ mạnh để biểu diễn số học sơ cấp, tồn tại
+  một mệnh đề số học $G$ sao cho $S \nvdash G$ và (với giả thiết $\omega$-nhất quán) $S \nvdash \neg G$.
+</Theorem>
 
-Hệ quả của việc này: các mệnh đề *về* hệ hình thức (ví dụ: "công thức có số Gödel x có thể chứng minh được") có thể được biểu diễn *bên trong* chính hệ hình thức đó, dưới dạng các mệnh đề về số tự nhiên. Hệ thống có thể "nói về chính mình."
+<Proof label="Phác thảo chứng minh">
+  Giả sử $S$ chứng minh được $G$, tức $S \vdash G$. Khi đó tồn tại một phép chứng minh cho $G$ với mã số $p \in
+  \mathbb{N}$ thỏa $\mathrm{Proof}_S(p, \ulcorner G \urcorner)$. Vì $S$ đủ mạnh để kiểm chứng các quan hệ số học cụ thể,
+  $S$ chứng minh được $\mathrm{Prov}_S(\ulcorner G \urcorner)$. Nhưng theo cách dựng câu Gödel, $G$ tương đương với
+  $\neg \mathrm{Prov}_S(\ulcorner G \urcorner)$, suy ra $S \vdash \neg G$. Hệ $S$ chứng minh được cả $G$ lẫn $\neg G$,
+  trái với giả thiết $S$ nhất quán. Vậy $S \nvdash G$.
 
-Nếu bạn có background về lập trình hay quantitative research, hãy hình dung điều này tương tự như việc một chương trình máy tính có thể đọc và phân tích mã nguồn của chính nó. Đây chính xác là nền tảng mà lý thuyết tính toán sau này được xây dựng lên.
+Ngược lại, vì $S \nvdash G$ ở ngoài thực tế, không có số tự nhiên $n$ nào là mã phép chứng minh của $G$. Với mọi $n \in \mathbb{N}$ cụ thể, $S$ đều chứng minh được $\neg \mathrm{Proof}_S(n, \ulcorner G \urcorner)$. Nếu $S \vdash \neg G$, tức $S \vdash \exists y \, \mathrm{Proof}_S(y, \ulcorner G \urcorner)$, thì $S$ vừa khẳng định tồn tại một số $y$ thỏa tính chất vừa bác bỏ tính chất đó trên từng số tự nhiên $0, 1, 2, \dots$ cụ thể — vi phạm tính $\omega$-nhất quán.<Sidenote>Năm 1936, J. Barkley Rosser đã khéo léo sửa câu $G$ thành *"Với mọi phép chứng minh của tôi, tồn tại một phép chứng minh ngắn hơn cho phủ định của tôi"*, qua đó loại bỏ hoàn toàn giả thiết $\omega$-nhất quán. Định lý từ đó gọi là Định lý Gödel–Rosser: chỉ cần $S$ nhất quán thông thường là đủ để $S \nvdash G$ và $S \nvdash \neg G$.</Sidenote> Do đó $S \nvdash \neg G$.
 
-### Câu Gödel: Tự tham chiếu mà không nghịch lý
+</Proof>
 
-Gödel xây dựng một mệnh đề G mà, thông qua mã hóa Gödel, thực chất nói rằng:
+Điểm đáng kinh ngạc nhất nằm ở bước lùi ra ngoài hệ thống:
 
-> "Mệnh đề này không thể chứng minh được trong hệ thống S."
+- Bên trong $S$, cả $G$ lẫn $\neg G$ đều không chứng minh được — $G$ là một mệnh đề **bất khả quyết** (<i lang="en">undecidable</i>) đối với $S$.
+- Nhưng đứng ở tầng siêu toán học nhìn vào, vì ta vừa chứng minh được rằng $G$ không có phép chứng minh nào trong $S$, còn bản thân $G$ lại phát biểu đúng điều đó (*"$G$ không chứng minh được trong $S$"*), nên **$G$ là một mệnh đề số học đúng**.
 
-Bây giờ ta phân tích bằng logic thuần túy:
-
-**Trường hợp 1:** Giả sử G chứng minh được trong S. Khi đó, vì G nói "tôi không chứng minh được," nên G sai. Nhưng nếu G chứng minh được mà G sai, thì S đã chứng minh một mệnh đề sai, tức S không nhất quán. Mâu thuẫn với giả thiết ban đầu.
-
-**Trường hợp 2:** Giả sử ¬G chứng minh được trong S. Khi đó, phủ định của G đúng, nghĩa là G thực sự chứng minh được, và ta lại rơi vào mâu thuẫn. Với điều kiện kỹ thuật gọi là ω-nhất quán (*ω-consistency*), trường hợp này cũng bị loại.
-
-**Kết luận:** Nếu S nhất quán, thì cả G lẫn ¬G đều không chứng minh được. G là một mệnh đề không quyết định được (*undecidable*) trong S.
-
-Nhưng đây là điểm tinh tế: khi ta đứng *bên ngoài* hệ thống và nhìn vào, ta thấy rằng G thực sự đúng. Vì G nói "tôi không chứng minh được trong S," và thực tế G đúng là không chứng minh được trong S, nên G đúng. Ta có một mệnh đề đúng mà hệ thống không thể chứng minh.
-
-### Khác với Nghịch lý Kẻ nói dối ở đâu?
-
-Nghe giống "câu này là sai" quá? Nhưng có một khác biệt cốt tử. Nghịch lý kẻ nói dối nói "câu này là sai," và dẫn đến mâu thuẫn thực sự, không có lối thoát. Câu Gödel nói "câu này không chứng minh được," và không có mâu thuẫn nào cả, chỉ có sự bất toàn.
-
-Gödel đã biến một nghịch lý (vốn là thảm họa logic) thành một định lý (một kết quả toán học chặt chẽ), bằng cách thay thế khái niệm ngữ nghĩa "đúng/sai" bằng khái niệm cú pháp "chứng minh được/không chứng minh được."
+Như vậy, trong bất kỳ hệ hình thức nhất quán nào đủ mạnh, luôn tồn tại những chân lý số học mà hệ đó không thể chứng minh. Nếu ta cố vá lỗ hổng bằng cách bổ sung $G$ làm tiên đề mới để tạo ra hệ $S' = S + \{G\}$, thì hoàn toàn tương tự, ta lại dựng được câu $G'$ nói rằng *"Tôi không chứng minh được trong $S'$"*. Sự bất toàn không phải là khiếm khuyết của một bộ tiên đề cụ thể, mà là giới hạn cấu trúc của mọi phương pháp tiên đề hóa.
 
 ## Định lý Bất toàn thứ hai
 
-### Phát biểu
+Nếu Định lý thứ nhất phá vỡ giấc mơ về *tính đầy đủ*, thì Định lý thứ hai giáng đòn trực diện vào mục tiêu cốt tử của Chương trình Hilbert: tự bảo chứng *tính nhất quán*.
 
-Nếu hệ hình thức S nhất quán và đủ mạnh, thì S không thể chứng minh tính nhất quán của chính nó.
+Vì câu nói *"Hệ $S$ là nhất quán"* tương đương với việc khẳng định có ít nhất một công thức không chứng minh được trong $S$ (chẳng hạn $0 = 1$), ta có thể viết mệnh đề nhất quán ngay trong ngôn ngữ của $S$:
 
-Mệnh đề Con(S) — "S không dẫn đến mâu thuẫn" — là không chứng minh được bên trong S (giả sử S thực sự nhất quán).
+$$
+\mathrm{Con}(S) \equiv \neg \mathrm{Prov}_S(\ulcorner 0 = 1 \urcorner)
+$$
 
-### Ý tưởng
+Gödel nhận thấy toàn bộ lập luận ở phần đầu của Định lý thứ nhất — *"Nếu $S$ nhất quán thì $S$ không chứng minh được $G$"* — chỉ sử dụng các suy luận số học sơ cấp nên có thể hình thức hóa trọn vẹn **bên trong** chính hệ $S$:
 
-Định lý thứ hai thực chất là hệ quả tự nhiên của định lý thứ nhất. Gödel quan sát rằng lập luận ở trên — "nếu S nhất quán thì G không chứng minh được" — hoàn toàn có thể được hình thức hóa bên trong S. Tức S có thể chứng minh:
+$$
+S \vdash \mathrm{Con}(S) \to \neg \mathrm{Prov}_S(\ulcorner G \urcorner)
+$$
 
-> Con(S) → G
+Mà theo định nghĩa của $G$, ta đã có $S \vdash G \leftrightarrow \neg \mathrm{Prov}_S(\ulcorner G \urcorner)$. Kết hợp lại:
 
-Nghĩa là: "nếu S nhất quán, thì G đúng." Nhưng ta đã biết G không chứng minh được trong S. Nếu S có thể chứng minh Con(S), thì bằng *modus ponens*, S sẽ chứng minh được G, và ta lại mâu thuẫn. Vậy S không thể chứng minh Con(S).
+$$
+S \vdash \mathrm{Con}(S) \to G
+$$
 
-### Tác động đến Chương trình Hilbert
+Nếu bản thân hệ $S$ có thể tự chứng minh tính nhất quán của chính nó ($S \vdash \mathrm{Con}(S)$), thì theo quy tắc suy luận <i lang="la">modus ponens</i>, $S$ sẽ chứng minh được $G$ — điều mà Định lý thứ nhất đã cấm đoán.
 
-Đây thực chất là dấu chấm hết cho Chương trình Hilbert. Hilbert muốn chứng minh tính nhất quán của toán học bằng các phương pháp "an toàn" (hữu hạn luận, *finitistic*). Nhưng Định lý thứ hai cho thấy rằng ngay cả hệ thống đầy đủ quyền năng cũng không thể chứng minh tính nhất quán của chính nó — huống hồ dùng phương pháp yếu hơn.
+<Theorem title="Bất toàn thứ hai — Gödel, 1931">
+  Nếu hệ hình thức $S$ nhất quán và đủ mạnh để biểu diễn số học sơ cấp, thì $S$ không thể tự chứng minh tính nhất quán
+  của chính mình: $S \nvdash \mathrm{Con}(S)$.
+</Theorem>
 
-## Hệ quả
+<Remark title="Ý nghĩa đối với các phép chứng minh nhất quán">
+  Định lý thứ hai không nói rằng ta không bao giờ chứng minh được tính nhất quán của số học Peano ($\mathrm{PA}$), mà
+  chỉ khẳng định không thể chứng minh điều đó bằng những công cụ nằm gọn trong $\mathrm{PA}$. Năm 1936, Gerhard Gentzen
+  đã chứng minh được $\mathrm{Con}(\mathrm{PA})$ bằng cách sử dụng quy nạp siêu hạn đến số thứ tự $\varepsilon_0$ — một
+  nguyên lý nằm ngoài tầm chứng minh của $\mathrm{PA}$. Tương tự, tính nhất quán của $\mathrm{PA}$ có thể được chứng
+  minh dễ dàng trong lý thuyết tập hợp $\mathrm{ZFC}$, nhưng bản thân $\mathrm{ZFC}$ lại không thể chứng minh
+  $\mathrm{Con}(\mathrm{ZFC})$ nếu nó nhất quán.
+</Remark>
 
-### Trong toán học
+## Chân lý, chứng minh và biên giới của hình thức
 
-Định lý Bất toàn cho thấy rằng sự thật toán học (*mathematical truth*) và khả năng chứng minh (*provability*) là hai khái niệm thực sự khác nhau. Có những mệnh đề đúng nhưng không thể chứng minh trong bất kỳ hệ tiên đề cố định nào. Ta có thể thấy chúng đúng bằng cách đứng bên ngoài hệ thống, nhưng không có hệ thống hình thức nào "nắm bắt" được toàn bộ sự thật.
+Trước năm 1931, các nhà toán học mặc nhiên đồng nhất hai khái niệm: một mệnh đề toán học là **đúng** (<i lang="en">true</i>) khi và chỉ khi nó **chứng minh được** (<i lang="en">provable</i>) từ các tiên đề. Gödel đã tách rời hai khái niệm này vĩnh viễn:
 
-Và đây không phải vấn đề ta chưa tìm đủ tiên đề. Dù bạn thêm bao nhiêu tiên đề đi nữa (miễn hệ thống vẫn nhất quán và có thể liệt kê được), sẽ luôn xuất hiện những mệnh đề bất khả quyết mới. Đây là giới hạn cấu trúc, không phải giới hạn về nỗ lực hay thời gian.
+- **Khả năng chứng minh** là một thuộc tính *cú pháp*, luôn phụ thuộc vào hệ hình thức $S$ đang xét ($S \vdash \varphi$).
+- **Chân lý** là một thuộc tính *ngữ nghĩa*, vượt ra ngoài bất kỳ hệ quy tắc hữu hạn cố định nào.<Sidenote>Năm 1933, Alfred Tarski tiến thêm một bước với Định lý Không thể định nghĩa (*Undefinability Theorem*): không một ngôn ngữ hình thức đủ mạnh nào có thể tự định nghĩa khái niệm "đúng" cho chính các câu của nó. Để nói về tính đúng đắn của ngôn ngữ $L$, ta bắt buộc phải bước lên một siêu ngôn ngữ $L'$ giàu hơn.</Sidenote>
 
-Một ví dụ cụ thể: Giả thuyết Continuum của Cantor đã được chứng minh là không quyết định được trong hệ tiên đề ZFC (Zermelo-Fraenkel với Tiên đề Chọn) — hệ tiên đề nền tảng của toán học hiện đại. Paul Cohen và chính Gödel đã chứng minh rằng cả giả thuyết lẫn phủ định của nó đều nhất quán với ZFC.
+Không lâu sau công trình của Gödel, giới hạn này được phát hiện không chỉ ở những câu tự quy chiếu nhân tạo như $G$, mà ngay trong các bài toán cốt lõi của toán học:
 
-### Trong khoa học máy tính
+1. **Giả thuyết Continuum** của Cantor (liệu có lực lượng vô hạn nào nằm giữa tập số tự nhiên $\aleph_0$ và tập số thực $2^{\aleph_0}$ hay không): Năm 1940, chính Gödel chứng minh không thể bác bỏ nó từ $\mathrm{ZFC}$; năm 1963, Paul Cohen dùng kỹ thuật ép (<i lang="en">forcing</i>) chứng minh không thể chứng minh nó từ $\mathrm{ZFC}$. Giả thuyết đứng độc lập hoàn toàn với bộ tiên đề nền tảng của toán học hiện đại.
+2. **Các định lý tổ hợp thuần túy số học**: Định lý Paris–Harrington (1977) và Định lý Goodstein (1944, được Kirby & Paris chứng minh tính độc lập năm 1982) là những mệnh đề tự nhiên về số nguyên dương, hoàn toàn không chứa mã hóa tự quy chiếu, nhưng đúng trong $\mathbb{N}$ mà không thể chứng minh trong số học Peano $\mathrm{PA}$.
+3. **Bài toán Dừng trong khoa học máy tính**: Năm 1936, Alan Turing chuyển hóa kỹ thuật đường chéo của Gödel sang mô hình máy tính trừu tượng (Máy Turing) và chứng minh rằng không một chương trình nào có thể kiểm tra trước liệu một chương trình bất kỳ có dừng lại hay chạy vô tận. Bất toàn trong logic và bất khả tính trong tin học thực chất là hai diện mạo của cùng một định luật cấu trúc.
 
-Kết quả của Gödel liên hệ trực tiếp với Bài toán Dừng (*Halting Problem*) của Turing (1936). Turing chứng minh rằng không tồn tại chương trình máy tính nào có thể quyết định, cho mọi chương trình P và đầu vào I, liệu P có dừng lại khi chạy trên I hay không. Cả hai kết quả đều sử dụng kỹ thuật tự tham chiếu và đường chéo hóa (*diagonalization*), và cả hai đều vạch ra ranh giới cơ bản của tính toán.
+<Callout type="warning" title="Ranh giới của định lý và những suy diễn quá đà">
+  Định lý Bất toàn thường bị viện dẫn ngoài ngữ cảnh để bảo vệ cho thuyết tương đối nhận thức (*"khoa học không thể biết
+  mọi thứ"*) hoặc các lập luận thần bí về tâm thức con người. Cần nhớ rằng đây là một định lý toán học với giả thiết cực
+  kỳ nghiêm ngặt: nó chỉ áp dụng cho **các hệ hình thức tĩnh, nhất quán, có tập tiên đề liệt kê được bằng thuật toán và
+  đủ mạnh để biểu diễn số học**. Nó không phủ nhận tính khách quan của chân lý toán học; trái lại, chính bản thân định
+  lý được chứng minh bằng những suy luận logic chặt chẽ tuyệt đối.
+</Callout>
 
-Thực tế, Định lý Bất toàn và Bài toán Dừng là hai mặt của cùng một hiện tượng: giới hạn nội tại của các hệ thống hình thức.
+Giấc mơ của Hilbert về một cỗ máy tiên đề khép kín đã khép lại, nhưng sự sụp đổ ấy không làm toán học nghèo đi. Ngược lại, nó cho thấy toán học không phải là một trò chơi ký hiệu có thể đóng hộp một lần và mãi mãi, mà là một chân trời mở — nơi mỗi hệ tiên đề khi vươn tới giới hạn của mình lại đòi hỏi những trực giác và cấu trúc bậc cao hơn để tiếp tục khám phá.
 
-### Triết học và nhận thức luận
+[^1]: Hội nghị Nhận thức luận các Khoa học Chính xác diễn ra tại Königsberg từ ngày 5 đến ngày 7 tháng 9 năm 1930. Trong phiên thảo luận bàn tròn ngày 7/9, Gödel lần đầu tiên nhắc đến định lý bất toàn thứ nhất; chỉ một người trong khán phòng lập tức nhận ra tầm vóc chấn động của thông báo đó là John von Neumann. Ngày hôm sau (8/9), Hilbert đọc bài diễn văn danh tiếng *"Naturerkennen und Logik"* kết thúc bằng câu *"Wir müssen wissen, wir werden wissen"* mà chưa hề hay biết về phát biểu của Gödel.
 
-Tới giờ vẫn còn tranh luận: Định lý Gödel có nói gì về trí tuệ con người so với máy tính không? Roger Penrose cho rằng có — rằng trí tuệ con người vượt qua mọi thuật toán vì chúng ta có thể "thấy" sự thật của câu Gödel mà không hệ hình thức nào chứng minh được. Tuy nhiên, lập luận này gây tranh cãi, và nhiều nhà logic học cho rằng Penrose đã suy luận quá xa từ một kết quả kỹ thuật.
-
-## Những hiểu lầm phổ biến
-
-Có vài hiểu lầm phổ biến mà tôi muốn làm rõ.
-
-Định lý Bất toàn không nói rằng "có những thứ ta không bao giờ biết được" theo nghĩa chung chung. Nó nói một điều rất cụ thể: trong bất kỳ hệ hình thức nhất quán đủ mạnh nào, có những mệnh đề không quyết định được. Đây là giới hạn của hệ hình thức, không nhất thiết là giới hạn của trí tuệ.
-
-Nó cũng không nói rằng toán học là không đáng tin cậy. Toán học vẫn hoạt động cực kỳ tốt. Định lý chỉ cho thấy rằng không có hệ tiên đề duy nhất nào "chứa" được toàn bộ sự thật toán học.
-
-Và cuối cùng, nó không áp dụng cho mọi thứ. Người ta hay lạm dụng Gödel để biện minh cho các lập luận kiểu "khoa học không thể biết mọi thứ" hay "mọi hệ thống đều có lỗ hổng." Định lý có phạm vi áp dụng rất cụ thể — hệ hình thức nhất quán đủ mạnh để mã hóa số học — và việc suy rộng sang các lĩnh vực khác đòi hỏi phải hết sức thận trọng.
+[^2]: Bài báo nguyên bản của Gödel mang tên *"Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I"* (*Về các mệnh đề không thể quyết định một cách hình thức của Principia Mathematica và các hệ thống liên quan I*), đăng trên tạp chí *Monatshefte für Mathematik und Physik*, tập 38 (1931), tr. 173–198. Chữ "I" ở cuối tiêu đề dự kiến sẽ có phần II trình bày chi tiết chứng minh cho Định lý Bất toàn thứ hai, nhưng phần II không bao giờ cần viết thêm vì giới toán học đã nhanh chóng công nhận phác thảo trong phần I là hoàn toàn đầy đủ.
