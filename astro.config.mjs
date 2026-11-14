@@ -7,6 +7,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import { rehypeBlocks } from './src/lib/rehype-blocks.ts';
+import { remarkDisplayMath } from './src/lib/remark-display-math.ts';
 
 /** Flags posts that contain math, so ArticleLayout loads the KaTeX stylesheet only where needed. */
 function remarkHasMath() {
@@ -37,7 +38,7 @@ export default defineConfig({
     // Sätteri (the Astro 7 default) has no first-party math support yet, so
     // keep the remark/rehype pipeline for KaTeX. MDX inherits this processor.
     processor: unified({
-      remarkPlugins: [remarkMath, remarkHasMath],
+      remarkPlugins: [remarkMath, remarkDisplayMath, remarkHasMath],
       rehypePlugins: [rehypeKatex, rehypeSlug, rehypeBlocks],
       remarkRehype: {
         footnoteLabel: 'Chú thích',
