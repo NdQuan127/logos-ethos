@@ -1,12 +1,12 @@
 ---
 /**
  * A lettered note (a, b, c) written inline, right after the word it explains:
- * `nhất quán<Sidenote>…</Sidenote>`. On wide screens the note sits in the
- * right margin beside its line; below that, tapping the letter opens it.
+ * `nhất quán<Sidenote>…</Sidenote>`. The letter opens the note in a popover
+ * (scripts/notes.ts). Without scripts the note reads inline, in brackets.
  * The markup stays on one line: whitespace would show as a space before the letter.
  */
 const id = `sidenote-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
 <!-- prettier-ignore -->
-<span class="sidenote" data-open="false"><button type="button" data-sidenote-toggle class="sidenote-ref" aria-label="Ghi chú" aria-expanded="false" aria-controls={id}></button><span id={id} class="sidenote-body" role="note"><slot /></span></span>
+<span class="sidenote"><button type="button" class="note-ref sidenote-ref" data-note={id} aria-label="Ghi chú" aria-expanded="false"></button><span id={id} class="sidenote-body" role="note"><slot /></span></span>

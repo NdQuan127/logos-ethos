@@ -1,9 +1,9 @@
 ---
+import { ArrowRight } from '@lucide/astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import PageHeader from '../components/ui/PageHeader.astro';
+import Button from '../components/ui/Button.astro';
 import { site } from '../config/site';
 import { getPosts, summarizeCategories } from '../lib/content';
-import { formatCount } from '../lib/format';
 import { routes } from '../lib/routes';
 
 const categories = summarizeCategories(await getPosts());
@@ -11,7 +11,6 @@ const categories = summarizeCategories(await getPosts());
 // TODO(content): write the author's real introduction. The section stays hidden while `bio` is empty.
 const author = {
   name: 'Người viết',
-  initials: 'L&E',
   bio: [] as string[],
 };
 
@@ -32,96 +31,231 @@ const names = [
 ---
 
 <SiteLayout title="Giới thiệu" description={site.description} canonicalPath={routes.about}>
-  <PageHeader eyebrow="Giới thiệu" title="Đi cho đến" titleAccent="chỗ lý trí dừng lại." />
+  <div class="wrap">
+    <header class="hero">
+      <h1>Đi cho đến chỗ lý trí dừng lại.</h1>
+      <p>Lý trí có những đường biên mà chính nó không thể nhìn thấy. Sổ tay này là những lần tôi cố đi tới đó.</p>
+    </header>
 
-  <section class="w-full border-b border-line px-5 pb-16 sm:px-8" aria-label="Về sổ tay này">
-    <div class="mx-auto max-w-[52rem]">
-      <p class="font-display text-2xl leading-snug text-fg md:text-3xl">
-        Lý trí có những đường biên mà chính nó không thể nhìn thấy. Sổ tay này là những lần tôi cố đi tới đó.
-      </p>
-    </div>
-  </section>
-
-  <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-labelledby="name-heading">
-    <div class="mx-auto max-w-[60rem]">
-      <div class="mx-auto mb-10 max-w-[52rem]">
-        <p class="eyebrow mb-4">Tên gọi</p>
-        <h2 id="name-heading" class="font-display text-3xl font-medium text-fg">
-          Hai mảnh của <em class="italic">Heraclitus.</em>
-        </h2>
-      </div>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <section aria-labelledby="name">
+      <h2 id="name">Tên gọi</h2>
+      <p class="sub">Hai mảnh của Heraclitus.</p>
+      <div class="names">
         {names.map((name) => (
-          <figure class="flex flex-col rounded-[20px] bg-surface p-8 md:p-10">
-            <div class="mb-4 font-display text-6xl leading-none text-accent-soft italic" aria-hidden="true">
-              {name.symbol}
-            </div>
-            <p class="eyebrow mb-6">{name.word}</p>
-            <blockquote class="mb-3 font-display text-2xl leading-snug text-fg italic">
+          <figure class="card">
+            <p class="word">
+              <span class="symbol" aria-hidden="true">
+                {name.symbol}
+              </span>
+              {name.word}
+            </p>
+            <blockquote>
               <p>“{name.fragment}”</p>
             </blockquote>
-            <figcaption class="text-[0.8125rem] text-muted">{name.source}</figcaption>
+            <figcaption>{name.source}</figcaption>
           </figure>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  {author.bio.length > 0 && (
-    <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-labelledby="author-heading">
-      <div class="mx-auto grid max-w-[52rem] grid-cols-1 items-start gap-10 md:grid-cols-[10rem_minmax(0,1fr)]">
-        <div
-          class="flex h-40 w-40 items-center justify-center rounded-[20px] bg-paper-lilac font-display text-4xl text-fg italic"
-          aria-hidden="true"
-        >
-          {author.initials}
-        </div>
-        <div>
-          <p class="eyebrow mb-4">Người viết</p>
-          <h2 id="author-heading" class="mb-5 font-display text-3xl font-medium text-fg">
-            {author.name}
-          </h2>
+    {author.bio.length > 0 && (
+      <section aria-labelledby="author">
+        <h2 id="author">{author.name}</h2>
+        <div class="bio">
           {author.bio.map((paragraph) => (
-            <p class="mb-4 font-serif text-lg leading-relaxed text-fg">{paragraph}</p>
+            <p>{paragraph}</p>
           ))}
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )}
 
-  {categories.length > 0 && (
-    <section class="w-full border-b border-line px-5 py-16 sm:px-8" aria-labelledby="topics-heading">
-      <div class="mx-auto max-w-[52rem]">
-        <p class="eyebrow mb-4">Lối vào</p>
-        <h2 id="topics-heading" class="mb-6 font-display text-3xl font-medium text-fg">
-          Nếu bạn muốn bắt đầu <em class="italic">từ đâu đó.</em>
-        </h2>
-        <ul>
+    {categories.length > 0 && (
+      <section aria-labelledby="topics">
+        <h2 id="topics">Lĩnh vực</h2>
+        <p class="sub">Nếu bạn muốn bắt đầu từ đâu đó.</p>
+        <ul class="topics">
           {categories.map(({ item, count }) => (
-            <li class="border-b border-line">
-              <a
-                href={item.href}
-                class="group flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-4 text-fg transition-colors duration-[160ms] hover:text-accent"
-              >
-                <span class="font-display text-2xl">{item.name}</span>
-                <span class="text-sm text-muted">{formatCount(count)} bài</span>
+            <li>
+              <a href={item.href}>
+                <i class="dot" style={`--tone: var(--${item.tone})`} aria-hidden="true" />
+                <span class="t">{item.name}</span>
+                <span class="d">{item.description}</span>
+                <span class="n">{count} bài</span>
+                <ArrowRight class="arr" size={14} stroke-width={1.75} aria-hidden="true" />
               </a>
             </li>
           ))}
         </ul>
+      </section>
+    )}
+
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Liên hệ</h2>
+      <p class="sub">Nếu tôi sai ở một bước nào đó, tôi muốn biết.</p>
+      <div class="actions">
+        <Button href={`mailto:${site.email}`}>Viết thư cho tôi</Button>
+        <Button href={routes.rss} variant="outline">
+          Theo dõi qua RSS
+        </Button>
       </div>
     </section>
-  )}
-
-  <section id="contact" class="w-full px-5 py-20 sm:px-8" aria-labelledby="contact-heading">
-    <div class="mx-auto max-w-[52rem] text-center">
-      <p class="eyebrow mb-5">Liên hệ</p>
-      <h2 id="contact-heading" class="mb-8 font-display text-3xl leading-snug text-fg">
-        Nếu tôi sai ở một bước nào đó, <em class="italic">tôi muốn biết.</em>
-      </h2>
-      <a href={`mailto:${site.email}`} class="btn">
-        Viết thư cho tôi
-      </a>
-    </div>
-  </section>
+  </div>
 </SiteLayout>
+
+<style>
+  .hero {
+    padding-top: clamp(3rem, 10vh, 6rem);
+  }
+
+  h1 {
+    max-width: 30rem;
+    font-size: var(--text-display);
+    font-weight: var(--text-display--font-weight);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+  }
+
+  .hero p {
+    max-width: 33rem;
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: var(--text-prose);
+    line-height: 1.6;
+  }
+
+  section {
+    margin-top: 4rem;
+  }
+
+  h2 {
+    font-size: var(--text-ui);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    margin-top: 0.25rem;
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
+
+  .names {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (min-width: 36rem) {
+    .names {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .names figure {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+  }
+
+  .word {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .symbol {
+    color: var(--fg);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  blockquote {
+    flex: 1;
+    margin-top: 1rem;
+    color: var(--fg);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+
+  figcaption {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .bio {
+    display: grid;
+    gap: 1em;
+    margin-top: 1rem;
+    font-size: var(--text-prose);
+    line-height: var(--text-prose--line-height);
+  }
+
+  .topics {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .topics li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topics a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.125rem 0.75rem;
+    margin-inline: -0.75rem;
+    padding: 0.875rem 0.75rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+
+  .t {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .d {
+    grid-column: 2;
+    grid-row: 2;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .n {
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .topics :global(.arr) {
+    color: var(--faint);
+    transition:
+      translate 200ms var(--ease-out),
+      color 150ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .topics a:hover {
+      background-color: var(--hover);
+    }
+
+    .topics a:hover :global(.arr) {
+      color: var(--fg);
+      translate: 2px 0;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+</style>

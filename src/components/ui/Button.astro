@@ -1,0 +1,42 @@
+---
+/**
+ * A button, or a link styled as one when `href` is set.
+ * Icon-only buttons must pass `label`; it becomes the accessible name and the tooltip.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = Omit<HTMLAttributes<'button'> & HTMLAttributes<'a'>, 'class'> & {
+  variant?: 'solid' | 'outline' | 'ghost';
+  size?: 'md' | 'sm';
+  /** Square button holding only an icon. */
+  icon?: boolean;
+  href?: string;
+  /** Accessible name and tooltip text for icon-only buttons. */
+  label?: string;
+  /** Keyboard shortcut shown in the tooltip, e.g. "T". */
+  shortcut?: string;
+  class?: string;
+};
+
+const { variant = 'solid', size = 'md', icon = false, href, label, shortcut, class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const classes = [
+  'btn',
+  variant !== 'solid' && `btn-${variant}`,
+  size === 'sm' && 'btn-sm',
+  icon && 'btn-icon',
+  className,
+];
+---
+
+<Tag
+  class:list={classes}
+  href={href}
+  type={href ? undefined : (rest.type ?? 'button')}
+  aria-label={label}
+  data-tip={label}
+  data-kbd={shortcut}
+  {...rest}
+>
+  <slot />
+</Tag>

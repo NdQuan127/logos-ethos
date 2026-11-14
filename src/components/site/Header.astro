@@ -1,0 +1,145 @@
+---
+/**
+ * The sticky top bar. It shows a hairline once the page scrolls; on articles
+ * (`progress`) the hairline doubles as a reading-progress bar.
+ */
+import { Search } from '@lucide/astro';
+import Logo from './Logo.astro';
+import ThemeButton from './ThemeButton.astro';
+import Button from '../ui/Button.astro';
+import { isCurrent, site } from '../../config/site';
+
+interface Props {
+  progress?: boolean;
+}
+
+const { progress = false } = Astro.props;
+const pathname = Astro.url.pathname;
+---
+
+<a href="#main-content" class="skip">
+  Chuyển đến nội dung chính
+</a>
+<header class="header" data-header>
+  <div class="wrap bar">
+    <Logo />
+    <nav class="nav" aria-label="Điều hướng chính">
+      {site.nav.map((link) => (
+        <a href={link.href} aria-current={isCurrent(link, pathname) ? 'page' : undefined}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <div class="actions">
+      <Button variant="ghost" icon label="Tìm kiếm" shortcut="Ctrl K" data-palette-open aria-haspopup="dialog">
+        <Search size={16} stroke-width={1.75} aria-hidden="true" />
+      </Button>
+      <ThemeButton />
+    </div>
+  </div>
+  {progress && <div class="progress" data-progress aria-hidden="true"></div>}
+</header>
+
+<style>
+  .skip {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-md);
+    background: var(--fg);
+    color: var(--bg);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    translate: 0 calc(-100% - 1rem);
+  }
+
+  .skip:focus-visible {
+    translate: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid transparent;
+    background-color: color-mix(in oklab, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    transition: border-color 200ms ease;
+  }
+
+  .header[data-scrolled] {
+    border-bottom-color: var(--border);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .header {
+      background-color: var(--bg);
+    }
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    height: 3.5rem;
+  }
+
+  .nav {
+    display: flex;
+    gap: 0.25rem;
+    margin-inline-start: auto;
+    font-size: var(--text-ui);
+  }
+
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    height: 2rem;
+    padding-inline: 0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .nav a[aria-current='page'] {
+    color: var(--fg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav a:hover {
+      color: var(--fg);
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.125rem;
+    margin-inline-end: -0.5rem;
+  }
+
+  /* Phones: the logo leads home and the footer carries the links, so the bar keeps its two tools. */
+  @media (max-width: 29.99rem) {
+    .nav {
+      display: none;
+    }
+
+    .actions {
+      margin-inline-start: auto;
+    }
+  }
+
+  .progress {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 1px;
+    background-color: var(--fg);
+    transform-origin: left;
+    scale: 0 1;
+  }
+</style>

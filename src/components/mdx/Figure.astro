@@ -15,7 +15,7 @@ const { src, alt, caption, credit } = Astro.props;
 ---
 
 <figure class="figure">
-  <Image src={src} alt={alt} widths={[640, 960, 1280]} sizes="(min-width: 768px) 38rem, 100vw" />
+  <Image src={src} alt={alt} sizes="(min-width: 42rem) 40rem, 100vw" />
   {(caption || credit || Astro.slots.has('default')) && (
     <figcaption>
       {caption}

@@ -1,13 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, isoDate, readingTime } from './format';
+import { formatDate, formatLongDate, isoDate, readingTime } from './format';
 
 describe('formatDate', () => {
-  it('writes Vietnamese month labels', () => {
-    expect(formatDate(new Date('2024-01-10'))).toBe('10 Tháng 1, 2024');
+  it('pads day and month to two digits', () => {
+    expect(formatDate(new Date('2024-01-10'))).toBe('10.01.2024');
   });
 
   it('uses the UTC day, not the local one', () => {
-    expect(formatDate(new Date('2024-12-31T23:30:00Z'))).toBe('31 Tháng 12, 2024');
+    expect(formatDate(new Date('2024-12-31T23:30:00Z'))).toBe('31.12.2024');
+  });
+});
+
+describe('formatLongDate', () => {
+  it('writes the month in words, in lower case', () => {
+    expect(formatLongDate(new Date('2024-01-10'))).toBe('10 tháng 1, 2024');
   });
 });
 

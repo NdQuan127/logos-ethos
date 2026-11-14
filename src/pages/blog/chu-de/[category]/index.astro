@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SiteLayout from '../../../../layouts/SiteLayout.astro';
+import ListingHeader from '../../../../components/post/ListingHeader.astro';
+import PostFeed from '../../../../components/post/PostFeed.astro';
+import { getPosts, summarizeCategories } from '../../../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return summarizeCategories(posts).map(({ item }) => ({
+    params: { category: item.id },
+    props: { category: item, posts: posts.filter((post) => post.category.id === item.id) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { category, posts } = Astro.props;
+---
+
+<SiteLayout
+  title={category.name}
+  description={`Các bài viết về ${category.name.toLowerCase()} trên Logos & Ethos: ${category.description.toLowerCase()}.`}
+  canonicalPath={category.href}
+>
+  <div class="wrap">
+    <ListingHeader
+      kind="Lĩnh vực"
+      title={category.name}
+      description={category.description}
+      count={posts.length}
+      tone={category.tone}
+    />
+    <PostFeed posts={posts} level={2} />
+  </div>
+</SiteLayout>

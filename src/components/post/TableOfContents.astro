@@ -1,54 +1,214 @@
 ---
-import type { MarkdownHeading } from 'astro';
+/**
+ * The article's sections. `sidebar`: a fixed column beside the text on wide
+ * screens, with a marker that follows the section being read. `inline`: a
+ * collapsible card above the text on narrower ones.
+ */
+import { ArrowUp, ChevronDown } from '@lucide/astro';
+
+interface Entry {
+  slug: string;
+  text: string;
+}
 
 interface Props {
-  headings: MarkdownHeading[];
-  /** `sidebar`: sticky column on wide screens. `inline`: collapsible box above the article. */
+  entries: Entry[];
   variant: 'sidebar' | 'inline';
 }
 
-const { headings, variant } = Astro.props;
-const sidebar = variant === 'sidebar';
-const Outer = sidebar ? 'aside' : 'details';
-const Label = sidebar ? 'p' : 'summary';
+const { entries, variant } = Astro.props;
 ---
 
-<Outer
-  class={
-    sidebar
-      ? 'hidden text-[0.8125rem] leading-[1.45] article:sticky article:top-8 article:block article:max-h-[calc(100vh-4rem)] article:self-start article:overflow-y-auto'
-      : 'toc-inline mb-10 rounded-xl bg-surface text-sm article:hidden'
-  }
->
-  <Label
-    class={
-      sidebar
-        ? 'text-[0.8125rem] font-medium text-muted'
-        : 'flex min-h-11 cursor-pointer items-center px-4 font-medium text-muted'
-    }
-  >
-    Trong bài
-  </Label>
-  <nav
-    aria-label={sidebar ? 'Mục lục bài viết' : 'Mục lục bài viết (thu gọn)'}
-    class={sidebar ? undefined : 'px-4 pb-4'}
-  >
-    <ol class={sidebar ? 'mt-3 border-l border-line' : 'space-y-2'}>
-      {headings.map((heading) => (
-        <li>
-          <a
-            href={`#${heading.slug}`}
-            data-toc-link
-            class:list={[
-              'block text-muted transition-colors duration-[160ms] hover:text-fg',
-              sidebar &&
-                '-ml-px border-l-2 border-transparent py-1.5 pl-3.5 aria-[current=location]:border-accent aria-[current=location]:text-fg',
-            ]}
-          >
-            {heading.text}
-          </a>
-        </li>
-      ))}
-    </ol>
+{variant === 'sidebar' ? (
+  <nav class="toc" aria-label="Mục lục">
+    <p class="label">Trong bài</p>
+    <div class="track">
+      <span class="marker" data-toc-marker aria-hidden="true" />
+      <ol>
+        {entries.map((entry) => (
+          <li>
+            <a href={`#${entry.slug}`} data-toc-link>
+              {entry.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <a href="#main-content" class="top">
+      <ArrowUp size={14} stroke-width={1.75} aria-hidden="true" />
+      Lên đầu trang
+    </a>
   </nav>
-</Outer>
+) : (
+  <details class="card toc-inline">
+    <summary>
+      <span>Trong bài</span>
+      <span class="n">{entries.length} mục</span>
+      <ChevronDown class="chev" size={16} stroke-width={1.75} aria-hidden="true" />
+    </summary>
+    <nav aria-label="Mục lục">
+      <ol>
+        {entries.map((entry) => (
+          <li>
+            <a href={`#${entry.slug}`}>{entry.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </details>
+)}
+
+<style>
+  .toc {
+    display: none;
+  }
+
+  @media (min-width: 76rem) {
+    .toc {
+      position: fixed;
+      top: 6rem;
+      left: calc(50% + var(--container-col) / 2 + 3.5rem);
+      display: block;
+      width: 13rem;
+      max-height: calc(100svh - 8rem);
+      overflow-y: auto;
+      font-size: var(--text-caption);
+      scrollbar-width: none;
+    }
+
+    .toc-inline {
+      display: none;
+    }
+  }
+
+  .label {
+    margin-bottom: 0.75rem;
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .track {
+    position: relative;
+    border-inline-start: 1px solid var(--border);
+  }
+
+  .toc ol {
+    display: grid;
+    gap: 0.125rem;
+    list-style: none;
+  }
+
+  .toc li a {
+    display: block;
+    padding: 0.25rem 0 0.25rem 0.875rem;
+    color: var(--muted);
+    line-height: 1.45;
+    text-decoration: none;
+    text-wrap: pretty;
+    transition: color 150ms ease;
+  }
+
+  .toc li a[aria-current='location'] {
+    color: var(--fg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .toc a:hover {
+      color: var(--fg);
+    }
+  }
+
+  .marker {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 1px;
+    height: 0;
+    background-color: var(--fg);
+    opacity: 0;
+    transition:
+      translate 220ms var(--ease-out),
+      height 220ms var(--ease-out),
+      opacity 150ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marker {
+      transition: opacity 150ms ease;
+    }
+  }
+
+  .top {
+    min-height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 1.25rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .toc-inline {
+    margin-top: 2rem;
+    background-color: var(--surface);
+    font-size: var(--text-ui);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+    color: var(--fg);
+    font-weight: 500;
+    list-style: none;
+    border-radius: inherit;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .n {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  summary :global(.chev) {
+    margin-inline-start: auto;
+    color: var(--muted);
+    transition: rotate 200ms var(--ease-out);
+  }
+
+  .toc-inline[open] summary :global(.chev) {
+    rotate: 180deg;
+  }
+
+  .toc-inline ol {
+    display: grid;
+    gap: 0.125rem;
+    padding: 0 1rem 0.875rem 2.25rem;
+    color: var(--muted);
+  }
+
+  .toc-inline li::marker {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .toc-inline a {
+    display: block;
+    padding-block: 0.3rem;
+    text-decoration: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .toc-inline a:hover,
+    .top:hover {
+      color: var(--fg);
+    }
+  }
+</style>

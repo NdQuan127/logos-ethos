@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SiteLayout from '../../../../layouts/SiteLayout.astro';
+import ListingHeader from '../../../../components/post/ListingHeader.astro';
+import PostFeed from '../../../../components/post/PostFeed.astro';
+import { getPosts, summarizeTags } from '../../../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return summarizeTags(posts).map(({ item }) => ({
+    params: { tag: item.slug },
+    props: { tag: item, posts: posts.filter((post) => post.tags.some((tag) => tag.slug === item.slug)) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { tag, posts } = Astro.props;
+---
+
+<SiteLayout
+  title={`Thẻ: ${tag.name}`}
+  description={`Các bài viết gắn thẻ ${tag.name} trên Logos & Ethos.`}
+  canonicalPath={tag.href}
+>
+  <div class="wrap">
+    <ListingHeader kind="Thẻ" title={tag.name} count={posts.length} />
+    <PostFeed posts={posts} level={2} />
+  </div>
+</SiteLayout>

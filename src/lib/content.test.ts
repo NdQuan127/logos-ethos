@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  getActiveSeries,
-  getRelatedPosts,
-  getSeriesPosts,
-  pickFeatured,
+  getNeighbours,
   summarizeCategories,
   summarizeTags,
   toTagView,
@@ -16,9 +13,6 @@ const category = (id: string): CategoryView => ({
   name: id,
   description: '',
   tone: 'blue',
-  color: 'var(--cat-blue)',
-  tab: 'var(--tab-blue)',
-  symbol: '∀',
   href: `/blog/chu-de/${id}/`,
 });
 
@@ -34,9 +28,7 @@ function post(slug: string, options: Partial<PostView> & { day?: number; tagName
     isoDate: '',
     category: category('logic-hoc'),
     tags: tagNames.map(toTagView),
-    featured: false,
     draft: false,
-    artCover: false,
     toc: true,
     sources: [],
     readingTime: 1,
@@ -45,56 +37,18 @@ function post(slug: string, options: Partial<PostView> & { day?: number; tagName
   };
 }
 
-const series = (order: number) => ({ id: 'bat-toan', title: '', description: '', href: '', order, total: 2 });
+describe('getNeighbours', () => {
+  it('returns the newer and older post around the current one', () => {
+    const [newest, middle, oldest] = [
+      post('newest', { day: 9 }),
+      post('middle', { day: 5 }),
+      post('oldest', { day: 1 }),
+    ];
+    const posts = [newest, middle, oldest];
 
-describe('getRelatedPosts', () => {
-  it('ranks same series, then category, then shared tags, and skips the current post', () => {
-    const current = post('current', { series: series(1), tagNames: ['Gödel'] });
-    const sameSeries = post('same-series', { category: category('triet-hoc'), series: series(2) });
-    const sameCategory = post('same-category');
-    const twoTags = post('two-tags', { category: category('triet-hoc'), tagNames: ['Gödel', 'x'] });
-    const unrelated = post('unrelated', { category: category('triet-hoc'), day: 9 });
-
-    const related = getRelatedPosts([unrelated, twoTags, sameCategory, sameSeries, current], current, 4);
-
-    expect(related.map((p) => p.slug)).toEqual(['same-series', 'same-category', 'two-tags', 'unrelated']);
-  });
-
-  it('breaks ties by newest first and honours the limit', () => {
-    const current = post('current');
-    const older = post('older', { day: 2 });
-    const newer = post('newer', { day: 5 });
-
-    expect(getRelatedPosts([older, newer, current], current, 1).map((p) => p.slug)).toEqual(['newer']);
-  });
-});
-
-describe('getSeriesPosts', () => {
-  it('returns only that series, in reading order', () => {
-    const second = post('second', { series: series(2) });
-    const first = post('first', { series: series(1) });
-    const other = post('other');
-
-    expect(getSeriesPosts([second, other, first], 'bat-toan').map((p) => p.slug)).toEqual(['first', 'second']);
-  });
-});
-
-describe('getActiveSeries', () => {
-  it('lists each series that has posts once', () => {
-    const posts = [post('a', { series: series(1) }), post('b'), post('c', { series: series(2) })];
-
-    expect(getActiveSeries(posts).map((s) => s.id)).toEqual(['bat-toan']);
-    expect(getActiveSeries([post('d')])).toEqual([]);
-  });
-});
-
-describe('pickFeatured', () => {
-  it('prefers a featured post, else the first one', () => {
-    const a = post('a');
-    const b = post('b', { featured: true });
-    expect(pickFeatured([a, b])).toBe(b);
-    expect(pickFeatured([a])).toBe(a);
-    expect(pickFeatured([])).toBeUndefined();
+    expect(getNeighbours(posts, middle)).toEqual({ newer: newest, older: oldest });
+    expect(getNeighbours(posts, newest)).toEqual({ newer: undefined, older: middle });
+    expect(getNeighbours(posts, oldest)).toEqual({ newer: middle, older: undefined });
   });
 });
 

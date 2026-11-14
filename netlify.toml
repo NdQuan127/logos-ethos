@@ -41,3 +41,15 @@
   from   = "/blog/chu-de/phuong-phap-luan/*"
   to     = "/blog/chu-de/triet-hoc/"
   status = 301
+
+# The list of all posts moved to the home page, and series pages were removed.
+[[redirects]]
+  from   = "/blog/"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/blog/loat-bai/*"
+  to     = "/"
+  status = 301

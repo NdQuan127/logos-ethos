@@ -1,0 +1,111 @@
+---
+/** The posts written just after and just before this one. */
+import { ArrowLeft, ArrowRight } from '@lucide/astro';
+import type { PostView } from '../../lib/content';
+
+interface Props {
+  newer?: PostView;
+  older?: PostView;
+}
+
+const { newer, older } = Astro.props;
+---
+
+{(newer || older) && (
+  <nav class="pn" aria-label="Bài khác">
+    {newer && (
+      <a href={newer.href} class="card newer" rel="next">
+        <span class="dir">
+          <ArrowLeft size={14} stroke-width={1.75} aria-hidden="true" />
+          Bài mới hơn
+        </span>
+        <span class="t">{newer.title}</span>
+      </a>
+    )}
+    {older && (
+      <a href={older.href} class="card older" rel="prev">
+        <span class="dir">
+          Bài cũ hơn
+          <ArrowRight size={14} stroke-width={1.75} aria-hidden="true" />
+        </span>
+        <span class="t">{older.title}</span>
+      </a>
+    )}
+  </nav>
+)}
+
+<style>
+  .pn {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 3rem;
+  }
+
+  @media (min-width: 36rem) {
+    .pn {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .newer {
+      grid-column: 1;
+    }
+
+    .older {
+      grid-column: 2;
+    }
+  }
+
+  a {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem;
+    text-decoration: none;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .older {
+    text-align: end;
+  }
+
+  .dir {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .older .dir {
+    justify-content: flex-end;
+  }
+
+  .dir :global(svg) {
+    transition: translate 200ms var(--ease-out);
+  }
+
+  .t {
+    color: var(--fg);
+    font-size: var(--text-small);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    a:hover {
+      border-color: var(--border-strong);
+      background-color: var(--surface);
+    }
+
+    .newer:hover .dir :global(svg) {
+      translate: -2px 0;
+    }
+
+    .older:hover .dir :global(svg) {
+      translate: 2px 0;
+    }
+  }
+</style>

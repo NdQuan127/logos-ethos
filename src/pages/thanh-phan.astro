@@ -3,7 +3,13 @@
  * The design system on one page: tokens first, components as they are built.
  * Internal: not linked from the site, kept out of search results and the sitemap.
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { ArrowRight, Check, Copy, Link, Search } from '@lucide/astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Badge from '../components/ui/Badge.astro';
+import Button from '../components/ui/Button.astro';
+import IconSwap from '../components/ui/IconSwap.astro';
+import Kbd from '../components/ui/Kbd.astro';
+import { TONES } from '../lib/tones';
 
 interface Swatch {
   name: string;
@@ -84,19 +90,14 @@ const scale = [
 ];
 ---
 
-<BaseLayout title="Thành phần" description="Hệ thống thiết kế của Logos & Ethos." canonicalPath="/thanh-phan/" noindex>
-  <div class="wrap py-16 sm:py-20">
-    <header class="flex flex-wrap items-start justify-between gap-4">
-      <div>
-        <h1 class="text-display">Thành phần</h1>
-        <p class="mt-3 max-w-[34rem] text-muted">
-          Token và component của blog đặt cạnh nhau để soát. Bấm nút hoặc phím <kbd class="kbd">T</kbd> để đổi nền; số
-          tương phản tính lại theo nền đang xem.
-        </p>
-      </div>
-      <button type="button" class="tmp-toggle" data-theme-toggle aria-label="Đổi nền">
-        Đổi nền
-      </button>
+<SiteLayout title="Thành phần" description="Hệ thống thiết kế của Logos & Ethos." canonicalPath="/thanh-phan/" noindex>
+  <div class="wrap pt-12 sm:pt-16">
+    <header>
+      <h1 class="text-display">Thành phần</h1>
+      <p class="mt-3 max-w-[34rem] text-muted">
+        Token và component của blog đặt cạnh nhau để soát. Đổi nền bằng nút trên thanh đầu trang hoặc phím
+        <Kbd>T</Kbd>; số tương phản tính lại theo nền đang xem.
+      </p>
     </header>
 
     <section class="spec" aria-labelledby="colors">
@@ -192,21 +193,109 @@ const scale = [
       </div>
     </section>
 
+    <section class="spec" aria-labelledby="buttons">
+      <h2 id="buttons">Nút</h2>
+      <p class="note">
+        Ba mức: đặc cho hành động chính duy nhất, viền cho hành động phụ, trong suốt cho công cụ. Cao 36px (32px bản
+        nhỏ, 44px trên màn hình cảm ứng), nhấn co 0.97. Rê chuột lên nút icon để thấy tooltip.
+      </p>
+      <div class="demo">
+        <Button>
+          Đọc bài <ArrowRight aria-hidden="true" />
+        </Button>
+        <Button variant="outline">Viền</Button>
+        <Button variant="ghost">Trong suốt</Button>
+        <Button variant="outline" size="sm">
+          Nhỏ
+        </Button>
+        <Button variant="outline" disabled>
+          Vô hiệu
+        </Button>
+        <Button variant="outline" icon label="Tìm kiếm" shortcut="Ctrl K">
+          <Search aria-hidden="true" />
+        </Button>
+        <Button variant="ghost" icon label="Chép liên kết">
+          <Link aria-hidden="true" />
+        </Button>
+        <Button variant="ghost" size="sm" icon label="Chép">
+          <Copy aria-hidden="true" />
+        </Button>
+      </div>
+    </section>
+
+    <section class="spec" aria-labelledby="swap">
+      <h2 id="swap">Đổi icon</h2>
+      <p class="note">
+        Hai icon chồng lên nhau, mờ dần qua nhau kèm thu nhỏ và nhoè nhẹ trong 200ms. Bấm nút để thử; nút đổi nền trên
+        thanh đầu trang dùng cùng cơ chế.
+      </p>
+      <div class="demo">
+        <Button variant="outline" data-swap-demo aria-pressed="false">
+          <IconSwap>
+            <Copy slot="from" aria-hidden="true" />
+            <Check slot="to" aria-hidden="true" />
+          </IconSwap>
+          Bấm để đổi
+        </Button>
+      </div>
+    </section>
+
+    <section class="spec" aria-labelledby="badges">
+      <h2 id="badges">Nhãn và phím</h2>
+      <p class="note">Nhãn lĩnh vực luôn có chấm màu đi kèm tên. Nhãn thẻ không có màu.</p>
+      <div class="demo">
+        {TONES.map((tone, i) => (
+          <Badge tone={tone} href="#badges">
+            {hues[i].name}
+          </Badge>
+        ))}
+        <Badge href="#badges">logic học</Badge>
+        <Badge>không phải liên kết</Badge>
+      </div>
+      <div class="demo">
+        <Kbd>Ctrl K</Kbd>
+        <Kbd>T</Kbd>
+        <Kbd>Esc</Kbd>
+        <Kbd>↵</Kbd>
+        <Kbd>↑</Kbd>
+        <Kbd>↓</Kbd>
+      </div>
+    </section>
+
+    <section class="spec" aria-labelledby="cards">
+      <h2 id="cards">Thẻ và lớp nổi</h2>
+      <p class="note">Thẻ là viền 1px bo 12px, không bóng. Bóng chỉ dành cho thứ nằm trên trang: popover, hộp thoại.</p>
+      <div class="cards">
+        <div class="card p-4 text-small">Thẻ thường: viền, không bóng.</div>
+        <div class="raised p-4 text-small">Lớp nổi: bóng nhẹ, viền sáng ở nền tối.</div>
+      </div>
+    </section>
+
+    <section class="spec" aria-labelledby="links">
+      <h2 id="links">Liên kết</h2>
+      <p class="note">Gạch chân mảnh màu viền đậm, đậm lên khi rê chuột.</p>
+      <p class="text-prose">
+        Một đoạn văn có{' '}
+        <a class="link" href="#links">
+          liên kết trong câu
+        </a>{' '}
+        để soát độ dày và khoảng cách gạch chân với các chữ có dấu như “ượng”, “gặp”.
+      </p>
+    </section>
+
     <section class="spec" aria-labelledby="focus">
       <h2 id="focus">Vòng focus</h2>
       <p class="note">Bấm Tab để thấy. Chỉ hiện khi dùng bàn phím, cách mép 2px.</p>
       <p class="flex flex-wrap items-center gap-4 text-ui">
         <a href="#focus">Một liên kết</a>
-        <button type="button" class="tmp-toggle">
-          Một nút
-        </button>
-        <a href="#focus" class="underline">
+        <Button variant="outline">Một nút</Button>
+        <a href="#focus" class="link">
           Liên kết trong câu
         </a>
       </p>
     </section>
   </div>
-</BaseLayout>
+</SiteLayout>
 
 <script>
   /** WCAG relative luminance of an `rgb()` string from getComputedStyle. */
@@ -236,6 +325,14 @@ const scale = [
       out.title = min ? `Cần ≥ ${min}:1` : 'Không dùng cho chữ';
     });
   }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-swap-demo]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const on = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(on));
+      button.querySelector('[data-swap]')?.toggleAttribute('data-swapped', on);
+    });
+  });
 
   measure();
   new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -404,23 +501,16 @@ const scale = [
     box-shadow: var(--shadow-raised);
   }
 
-  /* Stand-ins until the Button and Kbd components land in phase 2. */
-  .tmp-toggle {
-    height: 2.25rem;
-    padding-inline: 0.875rem;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-md);
-    background: var(--bg);
-    color: var(--fg);
-    font-size: var(--text-ui);
-    font-weight: 500;
+  .demo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .kbd {
-    padding: 0.05rem 0.35rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    color: var(--fg);
-    font-size: 0.75rem;
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 0.75rem;
   }
 </style>

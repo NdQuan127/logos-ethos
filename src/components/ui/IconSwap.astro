@@ -1,0 +1,16 @@
+---
+/**
+ * Two icons in one place; the second shows while the container has
+ * [data-swapped]. Pass them in the `from` and `to` slots.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={['swap', className]} data-swap aria-hidden="true">
+  <slot name="from" />
+  <slot name="to" />
+</span>

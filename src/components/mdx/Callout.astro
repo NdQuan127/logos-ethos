@@ -1,20 +1,20 @@
 ---
+import { Info, Lightbulb, TriangleAlert } from '@lucide/astro';
+
 interface Props {
   type?: 'note' | 'warning' | 'idea';
   title?: string;
 }
 
 const { type = 'note', title } = Astro.props;
-const labels = {
-  note: 'Ghi chú',
-  warning: 'Lưu ý',
-  idea: 'Ý tưởng',
-};
+const labels = { note: 'Ghi chú', warning: 'Lưu ý', idea: 'Ý tưởng' };
+const Icon = { note: Info, warning: TriangleAlert, idea: Lightbulb }[type];
 ---
 
-<aside class={`my-8 rounded-xl bg-surface px-5 py-4 font-sans text-base callout-${type}`}>
-  <p class="mb-2 text-[0.8125rem] font-medium text-accent">{title ?? labels[type]}</p>
-  <div class="leading-relaxed text-fg">
+<aside class="callout" data-type={type} aria-label={title ?? labels[type]}>
+  <Icon class="callout-icon" size={16} stroke-width={1.75} aria-hidden="true" />
+  <div class="callout-body">
+    <p class="callout-title">{title ?? labels[type]}</p>
     <slot />
   </div>
 </aside>

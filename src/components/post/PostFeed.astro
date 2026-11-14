@@ -1,0 +1,38 @@
+---
+import PostEntry from './PostEntry.astro';
+import type { PostView } from '../../lib/content';
+
+interface Props {
+  posts: PostView[];
+  /** Heading level of each post title. */
+  level?: 2 | 3;
+  /** Shown when there is nothing to list. */
+  empty?: string;
+}
+
+const { posts, level, empty = 'Chưa có bài viết nào.' } = Astro.props;
+---
+
+{posts.length > 0 ? (
+  <ol class="feed">
+    {posts.map((post) => (
+      <PostEntry post={post} level={level} />
+    ))}
+  </ol>
+) : (
+  <p class="empty">{empty}</p>
+)}
+
+<style>
+  .feed {
+    list-style: none;
+  }
+
+  .empty {
+    padding-block: 3rem;
+    border-block: 1px solid var(--border);
+    color: var(--muted);
+    font-size: var(--text-small);
+    text-align: center;
+  }
+</style>

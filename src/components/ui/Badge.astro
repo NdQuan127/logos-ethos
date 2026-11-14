@@ -1,0 +1,20 @@
+---
+/**
+ * A small label. With `tone` it carries a category dot; with `href` it is a link.
+ */
+import type { CategoryTone } from '../../lib/content';
+
+interface Props {
+  href?: string;
+  tone?: CategoryTone;
+  class?: string;
+}
+
+const { href, tone, class: className } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag href={href} class:list={['badge', className]}>
+  {tone && <i class="dot" style={`--tone: var(--${tone})`} aria-hidden="true" />}
+  <slot />
+</Tag>

@@ -12,9 +12,8 @@ interface Props {
 const { original, lang = 'en' } = Astro.props;
 ---
 
-<dfn class="term">
-  <slot />
-</dfn>
+<!-- prettier-ignore -->
+<dfn class="term"><slot /></dfn>
 {original && (
   <span class="term-original">
     {' '}

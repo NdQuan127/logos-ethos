@@ -1,0 +1,98 @@
+---
+/** The top of a filtered list (one category, one tag): a way back, the name and a count. */
+import { ArrowLeft } from '@lucide/astro';
+import type { CategoryTone } from '../../lib/content';
+import { routes } from '../../lib/routes';
+
+interface Props {
+  /** What kind of list this is, e.g. "Lĩnh vực". */
+  kind: string;
+  title: string;
+  description?: string;
+  count: number;
+  tone?: CategoryTone;
+}
+
+const { kind, title, description, count, tone } = Astro.props;
+---
+
+<header class="head">
+  <a href={routes.home} class="back">
+    <ArrowLeft size={14} stroke-width={1.75} aria-hidden="true" />
+    Bài viết
+  </a>
+  <p class="kind">{kind}</p>
+  <h1>
+    {tone && <i class="dot" style={`--tone: var(--${tone})`} aria-hidden="true" />}
+    {title}
+  </h1>
+  {description && <p class="desc">{description}</p>}
+  <p class="count">{count} bài</p>
+</header>
+
+<style>
+  .head {
+    padding-top: clamp(2.5rem, 8vh, 4.5rem);
+    padding-bottom: 2rem;
+  }
+
+  .back {
+    min-height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .back :global(svg) {
+    transition: translate 200ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .back:hover {
+      color: var(--fg);
+    }
+
+    .back:hover :global(svg) {
+      translate: -2px 0;
+    }
+  }
+
+  .kind {
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+    font-size: var(--text-display);
+    font-weight: var(--text-display--font-weight);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+    overflow-wrap: anywhere;
+  }
+
+  h1 .dot {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  .desc {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: var(--text-prose);
+  }
+
+  .count {
+    margin-top: 0.25rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+</style>

@@ -1,6 +1,13 @@
-/** "10 Tháng 1, 2024". Uses UTC so the label never shifts with the build machine's timezone. */
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/** "10.01.2024", set in the mono face. Uses UTC so the label never shifts with the build machine's timezone. */
 export function formatDate(date: Date): string {
-  return `${date.getUTCDate()} Tháng ${date.getUTCMonth() + 1}, ${date.getUTCFullYear()}`;
+  return `${pad(date.getUTCDate())}.${pad(date.getUTCMonth() + 1)}.${date.getUTCFullYear()}`;
+}
+
+/** "10 tháng 1, 2024", for screen readers and prose where digits alone read poorly. */
+export function formatLongDate(date: Date): string {
+  return `${date.getUTCDate()} tháng ${date.getUTCMonth() + 1}, ${date.getUTCFullYear()}`;
 }
 
 const counts = new Intl.NumberFormat('vi');

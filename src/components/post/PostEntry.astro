@@ -1,0 +1,150 @@
+---
+/**
+ * One post in a list: date, title, description, category and reading time.
+ * The whole block is clickable through the title link; the category stays its own link.
+ */
+import type { PostView } from '../../lib/content';
+import { formatLongDate } from '../../lib/format';
+
+interface Props {
+  post: PostView;
+  /** Heading level of the title, so lists nest correctly under their section heading. */
+  level?: 2 | 3;
+}
+
+const { post, level = 3 } = Astro.props;
+const Heading = `h${level}` as const;
+---
+
+<li class="entry">
+  <time datetime={post.isoDate} title={formatLongDate(post.date)}>
+    {post.dateLabel}
+  </time>
+  <div class="body">
+    <Heading class="title">
+      <a href={post.href}>{post.title}</a>
+    </Heading>
+    <p class="desc">{post.description}</p>
+    <p class="meta">
+      <a href={post.category.href} class="cat">
+        <i class="dot" style={`--tone: var(--${post.category.tone})`} aria-hidden="true"></i>
+        {post.category.name}
+      </a>
+      <span aria-hidden="true">·</span>
+      <span>{post.readingTime} phút đọc</span>
+      {post.draft && <span class="draft">Bản nháp</span>}
+    </p>
+  </div>
+</li>
+
+<style>
+  .entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    margin-inline: -0.75rem;
+    padding: 0.875rem 0.75rem;
+    border-radius: var(--radius-lg);
+    transition: background-color 150ms ease;
+  }
+
+  @media (min-width: 40rem) {
+    .entry {
+      grid-template-columns: 6.25rem minmax(0, 1fr);
+      gap: 0 1rem;
+      padding-block: 1rem;
+    }
+
+    time {
+      padding-top: 0.25rem;
+    }
+  }
+
+  time {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+  }
+
+  .body {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .title {
+    color: var(--fg);
+    font-size: var(--text-title);
+    font-weight: var(--text-title--font-weight);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--text-title--letter-spacing);
+    overflow-wrap: break-word;
+  }
+
+  /* The title link covers the whole entry. */
+  .title a {
+    text-decoration: none;
+  }
+
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .title a:focus-visible {
+    outline: none;
+  }
+
+  .entry:has(.title a:focus-visible) {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .desc {
+    color: var(--muted);
+    font-size: var(--text-small);
+    line-height: var(--text-small--line-height);
+    overflow-wrap: break-word;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin-top: 0.15rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  /* Above the title's overlay, so it opens the category instead of the post. */
+  .cat {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .draft {
+    padding: 0 0.375rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .entry:hover {
+      background-color: var(--hover);
+    }
+
+    .cat:hover {
+      color: var(--fg);
+    }
+  }
+</style>

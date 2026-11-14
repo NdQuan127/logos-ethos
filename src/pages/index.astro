@@ -1,141 +1,69 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import CategoryFilter from '../components/post/CategoryFilter.astro';
-import PostCover from '../components/post/PostCover.astro';
-import PostList from '../components/post/PostList.astro';
-import SectionHeading from '../components/ui/SectionHeading.astro';
-import { getActiveSeries, getPosts, getSeriesPosts, pickFeatured, summarizeCategories } from '../lib/content';
-import { formatCount } from '../lib/format';
-import { routes } from '../lib/routes';
+import PostFeed from '../components/post/PostFeed.astro';
+import { site } from '../config/site';
+import { getPosts } from '../lib/content';
 
 const posts = await getPosts();
-const featured = pickFeatured(posts);
-/** Ten rows keep the page short; the rest are one click away on /blog/. */
-const LIST_COUNT = 10;
-const rest = posts.filter((post) => post !== featured);
-const categories = summarizeCategories(posts);
-const shelf = getActiveSeries(posts).map((series) => {
-  const parts = getSeriesPosts(posts, series.id);
-  const [first] = parts;
-  return {
-    series,
-    first,
-    count: parts.length,
-    domains: [...new Set(parts.map((post) => post.category.name))].join(' × '),
-  };
-});
 ---
 
 <SiteLayout>
-  <section class="wrap pt-14 pb-20 text-center sm:pt-[5.5rem] sm:pb-28" aria-labelledby="hero-heading">
-    <p class="eyebrow">Logos &amp; Ethos</p>
-    <h1
-      id="hero-heading"
-      class="mt-5 font-display text-[clamp(3rem,2rem+4vw,5.25rem)] leading-none font-normal tracking-[-0.025em] text-balance"
-    >
-      Về những giới hạn
-      <br />
-      <em class="italic">của sự hiểu biết.</em>
-    </h1>
-    <figure class="mx-auto mt-8 max-w-[32rem]">
-      <blockquote class="font-display text-[1.375rem] leading-[1.45] text-balance italic">
-        <p>“Hành động cuối cùng của lý trí là thừa nhận có vô số điều vượt quá nó.”</p>
-      </blockquote>
-      <figcaption class="mt-3 text-[0.8125rem] text-muted">
-        Blaise Pascal, <cite class="not-italic">Pensées</cite>
-      </figcaption>
-    </figure>
-    <div class="mt-8 flex flex-wrap justify-center gap-3">
-      {featured && (
-        <a href={featured.href} class="btn">
-          Đọc bài mới nhất
-        </a>
-      )}
-      <a href={routes.blog} class="btn btn-ghost">
-        Mọi bài viết
-      </a>
-    </div>
-  </section>
-
-  {featured && (
-    <section class="slab slab-sage" aria-label={featured.featured ? 'Bài nổi bật' : 'Bài mới nhất'}>
-      <div class="wrap">
-        <a
-          href={featured.href}
-          class="group grid items-center gap-8 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-12"
-        >
-          <PostCover
-            category={featured.category}
-            cover={featured.cover}
-            coverAlt={featured.coverAlt}
-            seed={featured.slug}
-            sizes="(min-width: 768px) 38rem, 100vw"
-            class="aspect-[4/3]"
-          />
-          <div>
-            <p class="eyebrow">
-              {featured.featured ? 'Nổi bật' : 'Mới nhất'} · {featured.category.name}
-            </p>
-            <h2 class="mt-4 font-display text-[clamp(2rem,1.4rem+1.8vw,3rem)] leading-[1.05] font-normal tracking-[-0.02em] text-balance">
-              {featured.title}
-            </h2>
-            <p class="mt-4 max-w-md text-[1.0625rem] leading-[1.6] text-muted">{featured.description}</p>
-            <p class="mt-7 flex flex-wrap items-center gap-4 text-sm text-muted">
-              <span class="btn btn-sm">Đọc bài</span>
-              <span>
-                <time datetime={featured.isoDate}>{featured.dateLabel}</time> · {featured.readingTime} phút đọc
-              </span>
-            </p>
-          </div>
-        </a>
-      </div>
+  <div class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">{site.description}</h1>
+      <p>{site.intro}</p>
     </section>
-  )}
 
-  {shelf.length >= 2 && (
-    <section class="slab slab-lilac" aria-labelledby="series-heading">
-      <div class="wrap">
-        <SectionHeading eyebrow="Chuyên đề" id="series-heading">
-          Đọc theo <em class="wavy">mạch</em>, không theo ngày.
-        </SectionHeading>
-        <ul class="-mr-[clamp(1.25rem,4vw,3rem)] flex snap-x snap-mandatory gap-6 overflow-x-auto pr-5 pb-6 [scrollbar-width:none] min-[900px]:mr-0 min-[900px]:grid min-[900px]:grid-cols-[repeat(auto-fit,minmax(0,15rem))] min-[900px]:justify-center min-[900px]:gap-5 min-[900px]:overflow-visible min-[900px]:p-0">
-          {shelf.map(({ series, first, count, domains }) => (
-            <li class="flex-[0_0_58%] snap-start min-[900px]:flex-auto">
-              <a
-                href={series.href}
-                class="block h-full rounded-[20px] border border-line bg-canvas p-2.5 transition-[border-color] duration-200 hover:border-muted"
-              >
-                <PostCover category={first.category} seed={series.id} symbol={series.symbol} class="aspect-[4/5]" />
-                <span class="mx-1.5 mt-3.5 block font-display text-[1.375rem] leading-[1.1] font-medium text-balance">
-                  {series.title}
-                </span>
-                <span class="mx-1.5 mt-1.5 mb-1 block text-[0.8125rem] leading-[1.4] text-muted">
-                  {formatCount(count)} bài · {domains}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
+    <section class="posts" aria-labelledby="posts-title">
+      <div class="posts-head">
+        <h2 id="posts-title">Bài viết</h2>
+        <span>{posts.length} bài</span>
       </div>
+      <PostFeed posts={posts} />
     </section>
-  )}
-
-  {rest.length > 0 && (
-    <section class="slab slab-canvas" aria-labelledby="list-heading">
-      <div class="wrap">
-        <SectionHeading eyebrow="Mọi bài viết" id="list-heading">
-          Mới nhất <em class="wavy">trước</em>.
-        </SectionHeading>
-        <CategoryFilter categories={categories} total={posts.length} center class="mb-8" />
-        <PostList posts={rest.slice(0, LIST_COUNT)} class="mx-auto max-w-[52rem]" />
-        {rest.length > LIST_COUNT && (
-          <div class="mt-8 flex justify-center">
-            <a href={routes.blog} class="btn btn-ghost">
-              Xem tất cả {formatCount(posts.length)} bài
-            </a>
-          </div>
-        )}
-      </div>
-    </section>
-  )}
+  </div>
 </SiteLayout>
+
+<style>
+  .hero {
+    padding-top: clamp(3rem, 10vh, 6rem);
+  }
+
+  .hero h1 {
+    max-width: 30rem;
+    font-size: var(--text-display);
+    font-weight: var(--text-display--font-weight);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+  }
+
+  .hero p {
+    max-width: 33rem;
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: var(--text-prose);
+    line-height: 1.6;
+  }
+
+  .posts {
+    margin-top: 4rem;
+  }
+
+  .posts-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .posts-head h2 {
+    font-size: var(--text-ui);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .posts-head span {
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+</style>

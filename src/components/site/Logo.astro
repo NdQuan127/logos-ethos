@@ -1,17 +1,45 @@
 ---
 import { site } from '../../config/site';
-
-interface Props {
-  class?: string;
-}
-
-const { class: className } = Astro.props;
+import { routes } from '../../lib/routes';
 ---
 
-<a
-  href="/"
-  class:list={['font-display text-[1.375rem] leading-none font-medium tracking-[-0.01em] whitespace-nowrap', className]}
-  aria-label={`${site.title} — trang chủ`}
->
-  Logos <i class="text-accent italic">&amp;</i> Ethos
+<a href={routes.home} class="logo" aria-label={`${site.title}, trang chủ`}>
+  <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" data-swap>
+    <circle cx="8" cy="8" r="6.75" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+    <path d="M8 1.25a6.75 6.75 0 0 0 0 13.5z" fill="currentColor"></path>
+  </svg>
+  <span>{site.title}</span>
 </a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-inline-start: -0.25rem;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .logo svg {
+    flex: none;
+    transition: rotate 400ms var(--ease-out);
+  }
+
+  /* The half-moon turns with the theme, a quiet echo of the toggle. */
+  :global(.dark) .logo svg {
+    rotate: 180deg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo svg {
+      transition: none;
+    }
+  }
+</style>

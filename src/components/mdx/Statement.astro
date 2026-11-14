@@ -2,6 +2,7 @@
 /**
  * Shared shell for theorem-like blocks. Use the named wrappers in MDX
  * (<Theorem>, <Definition>, …) rather than this component directly.
+ * Claims (theorem, lemma, proposition, corollary) set their body in italic, as in print.
  */
 const STATEMENT_LABELS = {
   theorem: 'Định lý',
@@ -13,6 +14,8 @@ const STATEMENT_LABELS = {
   example: 'Ví dụ',
   remark: 'Nhận xét',
 } as const;
+
+const CLAIMS = new Set(['theorem', 'lemma', 'proposition', 'corollary']);
 
 type StatementKind = keyof typeof STATEMENT_LABELS;
 
@@ -26,10 +29,14 @@ const { kind, title } = Astro.props;
 const label = STATEMENT_LABELS[kind];
 ---
 
-<div class={`statement statement-${kind}`} role="group" aria-label={title ? `${label}: ${title}` : label}>
-  <p class="statement-label">
-    <span>{label}</span>
-    {title && <span class="statement-title"> ({title})</span>}.
+<div
+  class:list={['statement', { claim: CLAIMS.has(kind) }]}
+  role="group"
+  aria-label={title ? `${label}: ${title}` : label}
+>
+  <p class="statement-head">
+    <span class="statement-label">{label}</span>
+    {title && <span class="statement-title">{title}</span>}
   </p>
   <div class="statement-body">
     <slot />

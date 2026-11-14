@@ -15,7 +15,6 @@ const warnings = [];
 const readIds = (file) => new Set((parse(fs.readFileSync(file, 'utf8')) ?? []).map((item) => item.id));
 
 const categoryIds = readIds('src/content/taxonomy/categories.yaml');
-const seriesIds = readIds('src/content/taxonomy/series.yaml');
 
 const posts = [];
 for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
@@ -58,7 +57,6 @@ for (const entry of fs.readdirSync(BLOG_DIR, { withFileTypes: true })) {
     draft: data.draft === true,
     date: data.date,
     category: data.category,
-    series: data.series,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
   });
 }
@@ -81,17 +79,8 @@ for (const post of posts) {
   }
 
   for (const [, href] of prose.matchAll(/\]\((\/blog\/[^)\s#]*)/g)) {
-    const [, kind, id] = href.match(/^\/blog\/(?:(chu-de|tag|loat-bai)\/)?([^/]+)\/?$/) ?? [];
-    const ok =
-      kind === 'chu-de'
-        ? categoryIds.has(id)
-        : kind === 'loat-bai'
-          ? seriesIds.has(id)
-          : kind === 'tag'
-            ? true
-            : id
-              ? slugs.has(id)
-              : false;
+    const [, kind, id] = href.match(/^\/blog\/(?:(chu-de|tag)\/)?([^/]+)\/?$/) ?? [];
+    const ok = kind === 'chu-de' ? categoryIds.has(id) : kind === 'tag' ? true : id ? slugs.has(id) : false;
     if (!ok) errors.push(`${file}: liên kết nội bộ không tồn tại: ${href}`);
     else if (!href.endsWith('/')) warnings.push(`${file}: liên kết nội bộ nên kết thúc bằng "/": ${href}`);
   }
@@ -102,8 +91,6 @@ for (const post of posts) {
 
   if (post.category && !categoryIds.has(post.category))
     errors.push(`${file}: lĩnh vực "${post.category}" không có trong taxonomy/categories.yaml`);
-  if (post.series && !seriesIds.has(post.series))
-    errors.push(`${file}: chuyên đề "${post.series}" không có trong taxonomy/series.yaml`);
 
   // Titles also land in <title>, RSS and share cards, where Markdown shows as raw symbols.
   if (/\*[^*]+\*|`[^`]+`/.test(String(post.title ?? '')))

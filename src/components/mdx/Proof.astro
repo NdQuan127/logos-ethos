@@ -1,4 +1,7 @@
 ---
+/**
+ * A proof the reader can fold away. Open by default; the ∎ marks its end.
+ */
 interface Props {
   /** Replaces the "Chứng minh" label, e.g. "Phác thảo chứng minh". */
   label?: string;
@@ -7,12 +10,17 @@ interface Props {
 const { label = 'Chứng minh' } = Astro.props;
 ---
 
-<div class="proof" role="group" aria-label={label}>
-  <p class="proof-label">{label}.</p>
+<details class="proof" open>
+  <summary>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"></path>
+    </svg>
+    <span>{label}</span>
+  </summary>
   <div class="proof-body">
     <slot />
+    <span class="proof-qed" role="img" aria-label="Hết chứng minh">
+      ∎
+    </span>
   </div>
-  <span class="proof-qed" role="img" aria-label="Hết chứng minh">
-    ∎
-  </span>
-</div>
+</details>

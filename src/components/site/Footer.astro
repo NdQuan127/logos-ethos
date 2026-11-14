@@ -1,36 +1,81 @@
 ---
+import Kbd from '../ui/Kbd.astro';
 import { site } from '../../config/site';
-import { routes } from '../../lib/routes';
 
-const currentYear = new Date().getFullYear();
-const links = [...site.footer.explore, ...site.footer.contact, { href: routes.rss, label: 'RSS' }];
+const year = new Date().getFullYear();
 ---
 
-<footer class="slab slab-kraft pb-16 sm:pb-24">
-  <div class="wrap grid gap-10 sm:grid-cols-[1fr_auto] sm:items-end">
-    <figure lang="de">
-      <blockquote class="font-display text-[clamp(2.5rem,1.6rem+3vw,4.25rem)] leading-none tracking-[-0.02em]">
-        <p>
-          Wir müssen wissen.
-          <br />
-          <em class="italic">Wir werden wissen.</em>
-        </p>
-      </blockquote>
-      <figcaption class="mt-4 text-[0.9375rem] text-muted">David Hilbert, Königsberg, 1930</figcaption>
-    </figure>
-    <nav aria-label="Liên kết cuối trang">
-      <ul class="flex flex-col gap-1 text-[0.9375rem] sm:text-right">
-        {links.map((link) => (
-          <li>
-            <a href={link.href} class="inline-block py-1.5 transition-colors duration-[160ms] hover:text-accent">
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-  <p class="wrap mt-12 text-[0.8125rem] text-muted">
-    © {currentYear} {site.title}
+<footer class="wrap footer">
+  <nav aria-label="Liên kết cuối trang">
+    {site.footer.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+  </nav>
+  <p class="keys" aria-hidden="true">
+    <span>
+      <Kbd>Ctrl K</Kbd> tìm
+    </span>
+    <span>
+      <Kbd>T</Kbd> sáng/tối
+    </span>
+  </p>
+  <p>
+    © {year} {site.title}
   </p>
 </footer>
+
+<style>
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-top: 6rem;
+    padding-block: 2rem 2.5rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  /* The top rule spans the column only, not the gutters. */
+  .footer {
+    background: linear-gradient(var(--border), var(--border)) top / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+  }
+
+  nav {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  nav a {
+    min-height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    nav a:hover {
+      color: var(--fg);
+    }
+  }
+
+  .keys {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .keys span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  /* Shortcuts mean nothing without a keyboard. */
+  @media (pointer: coarse) {
+    .keys {
+      display: none;
+    }
+  }
+</style>
