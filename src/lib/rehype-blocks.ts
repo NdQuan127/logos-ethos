@@ -3,6 +3,10 @@
  * tables get a scroll container, code blocks a header with the language and a
  * copy button. Doing it here keeps the markup in the HTML, so no script has to
  * rebuild it after the page has painted. Runs after Shiki.
+ *
+ * Markdown images also get `sizes`. Without it Astro assumes an image fills
+ * the viewport, so a wide screenshot would download its full original width
+ * for a 40rem column. Astro's image step runs after this plugin and reads it.
  */
 import type { Element, ElementContent, Root, RootContent } from 'hast';
 
@@ -97,11 +101,14 @@ function wrapCode(pre: Element): Element {
   return el('div', { className: ['code-block'] }, [head, pre]);
 }
 
+export const PROSE_IMAGE_SIZES = '(min-width: 42rem) 40rem, 100vw';
+
 function walk(parent: Parent) {
   parent.children = parent.children.map((child): RootContent => {
     if (child.type !== 'element') return child;
     if (child.tagName === 'table') return wrapTable(child);
     if (child.tagName === 'pre') return wrapCode(child);
+    if (child.tagName === 'img') child.properties.sizes ??= PROSE_IMAGE_SIZES;
     walk(child);
     return child;
   }) as Parent['children'];

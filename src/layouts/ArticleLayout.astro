@@ -7,6 +7,7 @@
 import katexHref from 'katex/dist/katex.min.css?url';
 import { ArrowLeft, Check, Link } from '@lucide/astro';
 import { Image } from 'astro:assets';
+import { PROSE_IMAGE_SIZES } from '../lib/rehype-blocks';
 import { render } from 'astro:content';
 import '../styles/prose.css';
 import SiteLayout from './SiteLayout.astro';
@@ -122,7 +123,7 @@ const jsonLd = {
           alt={post.coverAlt}
           class="cover"
           widths={[640, 960, 1280]}
-          sizes="(min-width: 42rem) 40rem, 100vw"
+          sizes={PROSE_IMAGE_SIZES}
           loading="eager"
         />
       )}

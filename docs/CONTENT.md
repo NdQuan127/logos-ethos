@@ -131,8 +131,3 @@ Thêm component mới: tạo file trong `src/components/mdx/`, đăng ký trong 
 - Khối code có tô màu theo hai nền và nút chép; bảng và công thức dài cuộn ngang trong khung riêng; ảnh lớn bấm để phóng to.
 - Ảnh chia sẻ mạng xã hội (1200×630) cho từng bài tại `/og/<slug>.png`, vẽ lúc build từ tiêu đề và lĩnh vực.
 - `rss.xml`, `sitemap-index.xml`, `search.json` cho ô tìm kiếm (`Ctrl K`).
-
-## Soát giao diện
-
-- `/thanh-phan/`: bảng màu, thang chữ và các component, không có trong menu và không cho máy tìm kiếm lập chỉ mục.
-- `/blog/kitchen-sink/` (chỉ khi chạy `npm run dev`): bài nháp chứa mọi phần tử Markdown và mọi thẻ MDX. Sửa style thân bài thì mở bài này ở cả hai nền và khổ điện thoại.

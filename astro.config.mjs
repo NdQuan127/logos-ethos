@@ -7,7 +7,6 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import { rehypeBlocks } from './src/lib/rehype-blocks.ts';
-import { routes } from './src/lib/routes.ts';
 
 /** Flags posts that contain math, so ArticleLayout loads the KaTeX stylesheet only where needed. */
 function remarkHasMath() {
@@ -33,7 +32,7 @@ export default defineConfig({
     layout: 'constrained',
     responsiveStyles: false,
   },
-  integrations: [mdx(), sitemap({ filter: (page) => !page.includes(routes.components) })],
+  integrations: [mdx(), sitemap()],
   markdown: {
     // Sätteri (the Astro 7 default) has no first-party math support yet, so
     // keep the remark/rehype pipeline for KaTeX. MDX inherits this processor.

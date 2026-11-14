@@ -3,7 +3,6 @@ export const routes = {
   home: '/',
   about: '/about/',
   /** Internal review page for the design system; not linked, not indexed. */
-  components: '/thanh-phan/',
   rss: '/rss.xml',
   search: '/search.json',
   post: (slug: string) => `/blog/${slug}/`,

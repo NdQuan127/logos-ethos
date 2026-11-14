@@ -105,7 +105,7 @@ src/
     └── prose.css          # kiểu chữ thân bài
 ```
 
-Màu dùng qua token (`var(--muted)` hoặc utility `text-muted`, `bg-surface`, `border-border`…) định nghĩa một lần trong `global.css`; Tailwind chỉ sinh được màu từ các token này. Trang `/thanh-phan/` hiện toàn bộ token và component để soát.
+Màu dùng qua token (`var(--muted)` hoặc utility `text-muted`, `bg-surface`, `border-border`…) định nghĩa một lần trong `global.css`; Tailwind chỉ sinh được màu từ các token này.
 
 ## Viết bài mới
 
