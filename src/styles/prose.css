@@ -504,6 +504,33 @@ html:not(.js) .prose .code-copy {
   rotate: 90deg;
 }
 
+.prose .proof {
+  interpolate-size: allow-keywords;
+}
+
+.prose .proof::details-content {
+  height: 0;
+  opacity: 0;
+  overflow: clip;
+  transition:
+    height 200ms var(--ease-out),
+    opacity 150ms ease,
+    content-visibility 200ms allow-discrete;
+}
+
+.prose .proof[open]::details-content {
+  height: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose .proof::details-content {
+    transition:
+      opacity 150ms ease,
+      content-visibility 150ms allow-discrete;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .prose .proof summary:hover {
     background-color: var(--hover);
@@ -804,6 +831,24 @@ html:not(.js) .prose .sidenote-body::after {
   background-color: #fff;
 }
 
+.zoom {
+  opacity: 0;
+  scale: 0.96;
+  transition:
+    opacity 150ms ease,
+    scale 150ms ease,
+    overlay 150ms allow-discrete,
+    display 150ms allow-discrete;
+}
+
+.zoom::backdrop {
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    overlay 150ms allow-discrete,
+    display 150ms allow-discrete;
+}
+
 .zoom[open] {
   opacity: 1;
   scale: 1;
@@ -816,7 +861,10 @@ html:not(.js) .prose .sidenote-body::after {
 
 .zoom[open]::backdrop {
   opacity: 1;
-  transition: opacity 200ms ease;
+  transition:
+    opacity 200ms ease,
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
 }
 
 @starting-style {
@@ -831,6 +879,7 @@ html:not(.js) .prose .sidenote-body::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .zoom,
   .zoom[open] {
     scale: none;
   }
