@@ -4,6 +4,3 @@ node_modules
 package-lock.json
 # MDX posts are prose; Prettier would rewrap and re-escape them.
 src/content/**/*.mdx
-
-# Design prototype, removed when the redesign lands (phase 7).
-prototypes

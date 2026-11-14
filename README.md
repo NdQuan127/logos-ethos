@@ -14,16 +14,17 @@
 
 ## Giới thiệu
 
-**Logos & Ethos** là một blog học thuật về **Toán học** và **Triết học** — nơi giao thoa của lý trí và nhân sinh. Thiết kế lấy cảm hứng từ tạp chí in ấn cổ điển, ưu tiên khả năng đọc và sự tĩnh lặng trong trải nghiệm.
+**Logos & Ethos** là sổ tay về toán học, học máy, triết học và chính trị: những nơi lý trí đi đến tận cùng và nhận ra mình có biên giới. Giao diện tối giản, một cột chữ, ưu tiên khả năng đọc.
 
 ### Đặc điểm
 
-- **Editorial design** — bảng màu Paper/Ink/Leather, typography kiểu tạp chí in.
-- **Typography tối ưu cho tiếng Việt** — Crimson Pro + Be Vietnam Pro + IBM Plex Mono.
-- **Dark mode** — chuyển đổi qua CSS custom properties và script nhỏ.
+- **Tối giản** — thang màu trung tính, bốn màu lĩnh vực chỉ ở chấm nhỏ; token định nghĩa một lần trong `src/styles/global.css`.
+- **Chữ** — Inter và Geist Mono, có tiếng Việt, tự host qua fontsource.
+- **Nền sáng/tối** — theo máy cho tới khi người đọc tự chọn; phím `T`.
+- **Tìm kiếm** — bảng lệnh `Ctrl K` (cmdk), chỉ tải khi mở.
 - **Static generation** — Astro pre-render toàn bộ route tại build time.
 - **MDX content collections** — frontmatter được validate bằng schema.
-- **Hệ thống nội dung chuẩn hoá** — chủ đề, thẻ, loạt bài, bản nháp; component MDX cho định lý, chứng minh, định nghĩa.
+- **Hệ thống nội dung chuẩn hoá** — lĩnh vực, thẻ, bản nháp; component MDX cho định lý, chứng minh, định nghĩa.
 - **SEO** — metadata, JSON-LD, sitemap.xml, robots.txt, RSS.
 - **Accessible** — ARIA labels, skip-to-content, keyboard navigation.
 
@@ -76,40 +77,43 @@ npm run ci        # chạy toàn bộ các bước dưới đây theo thứ tự
 
 ```text
 src/
-├── config/site.ts         # tên site, menu, footer, bật/tắt tính năng
+├── config/site.ts         # tên site, lời giới thiệu, menu, footer
 ├── content/
 │   ├── blog/<slug>/       # mỗi bài một thư mục (index.mdx + ảnh)
-│   └── taxonomy/          # chủ đề và loạt bài (YAML)
+│   └── taxonomy/          # lĩnh vực (YAML)
 ├── content.config.ts      # schema frontmatter
 ├── layouts/
-│   ├── BaseLayout.astro   # <head>, SEO, theme
-│   ├── SiteLayout.astro   # menu + <main> + footer
-│   ├── ListingLayout.astro# trang danh sách bài
+│   ├── BaseLayout.astro   # <head>, SEO, font, theme
+│   ├── SiteLayout.astro   # thanh đầu trang + <main> + chân trang
 │   └── ArticleLayout.astro# trang bài viết
 ├── components/
-│   ├── site/              # Navbar, Footer, Logo, ThemeButton
-│   ├── ui/                # PageHeader, EmptyState, Pagination, AnimateOnScroll
-│   ├── blocks/            # khối trang chủ: Hero, Featured, Quote
-│   ├── post/              # thẻ bài, lưới bài, mục lục, loạt bài, thẻ…
+│   ├── site/              # Header, Footer, Logo, ThemeButton
+│   ├── ui/                # Button, Badge, Kbd, IconSwap
+│   ├── post/              # danh sách bài, đầu trang danh sách, mục lục, tài liệu, thẻ, bài kế
+│   ├── palette/           # bảng lệnh Ctrl K (React + cmdk, chỉ tải khi mở)
 │   └── mdx/               # component dùng trong bài (đăng ký ở index.ts)
 ├── lib/
-│   ├── content.ts         # API duy nhất để lấy bài, chủ đề, thẻ, loạt bài
+│   ├── content.ts         # API duy nhất để lấy bài, lĩnh vực, thẻ
 │   ├── routes.ts          # mọi URL nội bộ
-│   └── format.ts, slug.ts
+│   ├── rehype-blocks.ts   # bọc bảng và khối code lúc build
+│   ├── og.ts              # ảnh chia sẻ (Satori)
+│   └── format.ts, fold.ts, slug.ts
 ├── pages/                 # route; chỉ lấy dữ liệu và chọn layout
 ├── scripts/               # JS phía trình duyệt, mỗi file một hàm init*()
-└── styles/global.css      # token màu, typography, style bài viết
+└── styles/
+    ├── global.css         # token, style nền, component dùng chung
+    └── prose.css          # kiểu chữ thân bài
 ```
 
-Màu dùng qua utility semantic (`text-fg`, `bg-canvas`, `border-line`, `text-accent`, `text-muted`, `bg-surface`) ánh xạ tới biến CSS trong `global.css`; đổi bảng màu chỉ cần sửa file đó.
+Màu dùng qua token (`var(--muted)` hoặc utility `text-muted`, `bg-surface`, `border-border`…) định nghĩa một lần trong `global.css`; Tailwind chỉ sinh được màu từ các token này. Trang `/thanh-phan/` hiện toàn bộ token và component để soát.
 
 ## Viết bài mới
 
 ```bash
-npm run new -- "Tiêu đề bài viết" --category logic-hoc
+npm run new -- "Tiêu đề bài viết" --category toan-hoc
 ```
 
-Quy ước frontmatter, chủ đề, thẻ, loạt bài và các component MDX (`<Theorem>`, `<Proof>`, `<Sidenote>`…) nằm trong [docs/CONTENT.md](docs/CONTENT.md).
+Quy ước frontmatter, lĩnh vực, thẻ và các component MDX (`<Theorem>`, `<Proof>`, `<Sidenote>`…) nằm trong [docs/CONTENT.md](docs/CONTENT.md).
 
 ## License
 
