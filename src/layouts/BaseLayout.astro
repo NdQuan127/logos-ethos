@@ -5,6 +5,9 @@
  */
 import '../styles/fonts.css';
 import '../styles/global.css';
+// The two subsets every Vietnamese page needs on first paint.
+import interLatin from '@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2?url';
+import interVietnamese from '@fontsource-variable/inter/files/inter-vietnamese-opsz-normal.woff2?url';
 import { site } from '../config/site';
 import { routes } from '../lib/routes';
 
@@ -16,6 +19,8 @@ export interface Props {
   image?: string;
   type?: 'website' | 'article';
   jsonLd?: unknown;
+  /** Keep the page out of search results, e.g. internal review pages. */
+  noindex?: boolean;
 }
 
 const {
@@ -25,6 +30,7 @@ const {
   image,
   type = 'website',
   jsonLd,
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = title === site.title ? site.title : `${title} | ${site.title}`;
@@ -40,8 +46,11 @@ const socialImage = image ? new URL(image, site.url).toString() : undefined;
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#fdfbec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#10120f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interVietnamese} as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content={site.locale} />

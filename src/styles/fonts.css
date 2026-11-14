@@ -1,23 +1,36 @@
 /*
  * Self-hosted fonts from fontsource, bundled from node_modules so builds never
- * depend on a font CDN. The family stacks live in global.css (@theme).
+ * depend on a font CDN. Both families ship a Vietnamese subset.
+ * The family stacks live in global.css (@theme).
  */
 
-/* ─── EB Garamond (display: headings, titles, covers) ──────────────────────── */
-@import '@fontsource/eb-garamond/400.css';
-@import '@fontsource/eb-garamond/400-italic.css';
-@import '@fontsource/eb-garamond/500.css';
-@import '@fontsource/eb-garamond/500-italic.css';
+/* Inter: interface and article text. The opsz files carry both the weight and
+   the optical-size axis, so small text gets sturdier letterforms. */
+@import '@fontsource-variable/inter/opsz.css';
+@import '@fontsource-variable/inter/opsz-italic.css';
 
-/* ─── Literata (article body) ──────────────────────────────────────────────── */
-/* Variable weight plus the optical-size axis, so small text gets sturdier strokes. */
-@import '@fontsource-variable/literata/opsz.css';
-@import '@fontsource-variable/literata/opsz-italic.css';
+/* Geist Mono: dates, numbers and code. */
+@import '@fontsource-variable/geist-mono/wght.css';
 
-/* ─── Be Vietnam Pro (UI) ──────────────────────────────────────────────────── */
-@import '@fontsource/be-vietnam-pro/400.css';
-@import '@fontsource/be-vietnam-pro/500.css';
-@import '@fontsource/be-vietnam-pro/600.css';
+/*
+ * Fallbacks sized to the web fonts' metrics, so text does not reflow when the
+ * fonts finish loading. Computed with fontTools against Arial and Courier New
+ * (Liberation Sans and Liberation Mono on Linux share their metrics).
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 108.08%;
+  ascent-override: 89.63%;
+  descent-override: 22.32%;
+  line-gap-override: 0%;
+}
 
-/* ─── IBM Plex Mono (code blocks only) ─────────────────────────────────────── */
-@import '@fontsource/ibm-plex-mono/400.css';
+@font-face {
+  font-family: 'Geist Mono Fallback';
+  src: local('Courier New'), local('Liberation Mono');
+  size-adjust: 99.98%;
+  ascent-override: 100.52%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}

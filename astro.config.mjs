@@ -24,7 +24,7 @@ export default defineConfig({
   // Astro 7 defaults to 'jsx', which drops whitespace between inline elements
   // written on separate lines. Keep the HTML-aware behaviour the templates rely on.
   compressHTML: true,
-  integrations: [mdx(), sitemap({ filter: (page) => !page.includes(routes.savedCards) })],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.includes(routes.components) })],
   markdown: {
     // Sätteri (the Astro 7 default) has no first-party math support yet, so
     // keep the remark/rehype pipeline for KaTeX. MDX inherits this processor.
