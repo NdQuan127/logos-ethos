@@ -81,10 +81,6 @@ const { newer, older } = Astro.props;
     justify-content: flex-end;
   }
 
-  .dir :global(svg) {
-    transition: translate 200ms var(--ease-out);
-  }
-
   .t {
     color: var(--fg);
     font-size: var(--text-small);
@@ -98,14 +94,6 @@ const { newer, older } = Astro.props;
     a:hover {
       border-color: var(--border-strong);
       background-color: var(--surface);
-    }
-
-    .newer:hover .dir :global(svg) {
-      translate: -2px 0;
-    }
-
-    .older:hover .dir :global(svg) {
-      translate: 2px 0;
     }
   }
 </style>

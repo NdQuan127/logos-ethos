@@ -236,9 +236,7 @@ const names = [
 
   .topics :global(.arr) {
     color: var(--faint);
-    transition:
-      translate 200ms var(--ease-out),
-      color 150ms ease;
+    transition: color 150ms ease;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -248,7 +246,6 @@ const names = [
 
     .topics a:hover :global(.arr) {
       color: var(--fg);
-      translate: 2px 0;
     }
   }
 

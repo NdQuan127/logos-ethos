@@ -47,17 +47,9 @@ const { kind, title, description, count, tone } = Astro.props;
     transition: color 150ms ease;
   }
 
-  .back :global(svg) {
-    transition: translate 200ms var(--ease-out);
-  }
-
   @media (hover: hover) and (pointer: fine) {
     .back:hover {
       color: var(--fg);
-    }
-
-    .back:hover :global(svg) {
-      translate: -2px 0;
     }
   }
 
