@@ -35,7 +35,7 @@ function initTableOfContents() {
     }
     link.setAttribute('aria-current', 'location');
     marker.style.opacity = '1';
-    marker.style.height = `${link.offsetHeight}px`;
+    marker.style.scale = `1 ${link.offsetHeight}`;
     marker.style.translate = `0 ${link.offsetTop}px`;
   };
 

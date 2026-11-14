@@ -494,6 +494,12 @@
     transition-duration: 0ms;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip {
+      scale: none !important;
+    }
+  }
+
   .tooltip .kbd {
     border-color: color-mix(in oklab, var(--bg) 30%, transparent);
     background-color: transparent;
