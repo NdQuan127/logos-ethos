@@ -547,7 +547,7 @@
     word-break: break-all;
   }
 
-  .prose :is(pre, .table-wrap, .statement, .callout, figure, img) {
+  .prose :is(pre, .table-frame, .statement, .callout, figure, img) {
     break-inside: avoid;
   }
 

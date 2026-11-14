@@ -1,6 +1,7 @@
 import { bindOnce } from './bind';
 import { initCopy } from './copy';
 import { initNotes } from './notes';
+import { initScrollFade } from './scroll-fade';
 
 /** Makes each section heading a link to itself, so readers can share a section. */
 function initHeadingLinks() {
@@ -118,4 +119,5 @@ export function initArticle() {
   initCopy();
   initNotes();
   initZoom();
+  initScrollFade();
 }

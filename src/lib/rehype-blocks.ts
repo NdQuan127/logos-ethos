@@ -73,9 +73,12 @@ function copyIcon(): Element {
   ]);
 }
 
+/** The frame draws the border; the box inside scrolls, so its edge fade never fades the border. */
 function wrapTable(table: Element): Element {
-  return el('div', { className: ['table-wrap'], tabIndex: 0, role: 'region', ariaLabel: 'Bảng, cuộn ngang nếu cần' }, [
-    table,
+  return el('div', { className: ['table-frame'] }, [
+    el('div', { className: ['table-wrap'], tabIndex: 0, role: 'region', ariaLabel: 'Bảng, cuộn ngang nếu cần' }, [
+      table,
+    ]),
   ]);
 }
 

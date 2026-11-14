@@ -257,32 +257,30 @@
 }
 
 /*
- * Scroll cues for boxes that scroll sideways (wide formulas, tables, code):
- * a soft shadow shows on the side that still has content. The cover layers
- * scroll with the content and hide the shadow once an edge is reached.
+ * Boxes that scroll sideways (wide formulas, tables, code) fade out on the
+ * side that still has content, so a cut-off line reads as "more this way"
+ * rather than as a broken layout. scroll-fade.ts sets data-fade from the
+ * scroll position; without scripts the box simply scrolls.
  */
 .prose :is(.katex-display, .table-wrap, pre) {
-  --cue-bg: var(--bg);
-  background:
-    linear-gradient(to right, var(--cue-bg) 30%, transparent) left / 2.5rem 100% no-repeat local,
-    linear-gradient(to left, var(--cue-bg) 30%, transparent) right / 2.5rem 100% no-repeat local,
-    radial-gradient(farthest-side at 0 50%, rgb(0 0 0 / 0.14), transparent) left / 0.75rem 100% no-repeat scroll,
-    radial-gradient(farthest-side at 100% 50%, rgb(0 0 0 / 0.14), transparent) right / 0.75rem 100% no-repeat scroll;
-  background-color: var(--cue-bg);
+  --fade: 2.5rem;
 }
 
-.dark .prose :is(.katex-display, .table-wrap, pre) {
-  background:
-    linear-gradient(to right, var(--cue-bg) 30%, transparent) left / 2.5rem 100% no-repeat local,
-    linear-gradient(to left, var(--cue-bg) 30%, transparent) right / 2.5rem 100% no-repeat local,
-    radial-gradient(farthest-side at 0 50%, rgb(255 255 255 / 0.12), transparent) left / 0.75rem 100% no-repeat scroll,
-    radial-gradient(farthest-side at 100% 50%, rgb(255 255 255 / 0.12), transparent) right / 0.75rem 100% no-repeat
-      scroll;
-  background-color: var(--cue-bg);
+.prose :is(.katex-display, .table-wrap, pre)[data-fade='end'] {
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--fade)), transparent);
 }
 
-.prose pre {
-  --cue-bg: var(--surface);
+.prose :is(.katex-display, .table-wrap, pre)[data-fade='start'] {
+  mask-image: linear-gradient(to left, #000 calc(100% - var(--fade)), transparent);
+}
+
+.prose :is(.katex-display, .table-wrap, pre)[data-fade='both'] {
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+}
+
+/* A mask would also hide the focus ring; keyboard users scroll with the arrows anyway. */
+.prose :is(.katex-display, .table-wrap, pre):focus-visible {
+  mask-image: none;
 }
 
 /* ── Math ─────────────────────────────────────────────────────────────── */
@@ -338,12 +336,16 @@
 
 /* ── Tables ───────────────────────────────────────────────────────────── */
 
-.prose .table-wrap {
+.prose .table-frame {
   margin-block: 1.75em;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+}
+
+.prose .table-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
   scrollbar-width: thin;
 }
 
@@ -417,8 +419,13 @@ html:not(.js) .prose .code-copy {
   font-size: inherit;
 }
 
-.prose pre:focus-visible {
+/* Drawn inside: the table frame and code block clip anything outside the box. */
+.prose :is(pre, .table-wrap):focus-visible {
   outline-offset: -2px;
+}
+
+.prose .table-wrap:focus-visible {
+  border-radius: calc(var(--radius-lg) - 1px);
 }
 
 .astro-code,
