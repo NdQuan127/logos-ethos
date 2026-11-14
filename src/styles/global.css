@@ -191,6 +191,11 @@
     cursor: pointer;
   }
 
+  /* Taps fire at once: nothing on these zooms on double-tap. */
+  :where(a, button, [role='button'], summary, label[for]) {
+    touch-action: manipulation;
+  }
+
   :where(a) {
     color: inherit;
     text-underline-offset: 0.2em;
@@ -218,8 +223,11 @@
     width: 100%;
     max-width: calc(var(--container-col) + 2 * var(--gutter));
     margin-inline: auto;
-    padding-inline: var(--gutter);
+    padding-inline: var(--pad-start) var(--pad-end);
     --gutter: clamp(1rem, 5vw, 1.5rem);
+    /* In landscape the notch and rounded corners eat into the sides (viewport-fit=cover). */
+    --pad-start: max(var(--gutter), env(safe-area-inset-left, 0px));
+    --pad-end: max(var(--gutter), env(safe-area-inset-right, 0px));
   }
 
   /*

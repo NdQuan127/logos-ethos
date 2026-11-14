@@ -1,7 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Button from '../components/ui/Button.astro';
-import Kbd from '../components/ui/Kbd.astro';
 import { routes } from '../lib/routes';
 ---
 
@@ -11,10 +10,7 @@ import { routes } from '../lib/routes';
       ∄
     </p>
     <h1>Trang này không có ở đây.</h1>
-    <p class="lead">
-      Có thể đường dẫn đã đổi, hoặc trang chưa từng tồn tại. Thử tìm bài viết bằng <Kbd>Ctrl K</Kbd>, hoặc về danh sách
-      bài.
-    </p>
+    <p class="lead">Có thể đường dẫn đã đổi, hoặc trang chưa từng tồn tại.</p>
     <div class="actions">
       <Button href={routes.home}>Về trang chủ</Button>
       <Button variant="outline" data-palette-open aria-haspopup="dialog">

@@ -32,14 +32,15 @@ const year = new Date().getFullYear();
     justify-content: space-between;
     gap: 0.75rem 1.5rem;
     margin-top: 6rem;
-    padding-block: 2rem 2.5rem;
+    padding-block: 2rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
     color: var(--muted);
     font-size: var(--text-caption);
   }
 
   /* The top rule spans the column only, not the gutters. */
   .footer {
-    background: linear-gradient(var(--border), var(--border)) top / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+    background: linear-gradient(var(--border), var(--border)) var(--pad-start) 0 /
+      calc(100% - var(--pad-start) - var(--pad-end)) 1px no-repeat;
   }
 
   nav {

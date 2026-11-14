@@ -42,7 +42,10 @@ const socialImage = new URL(image, site.url).toString();
 <html lang={site.lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
@@ -72,7 +75,14 @@ const socialImage = new URL(image, site.url).toString();
         try {
           const stored = localStorage.getItem('theme');
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && prefersDark));
+          const dark = stored === 'dark' || (!stored && prefersDark);
+          document.documentElement.classList.toggle('dark', dark);
+          // A saved choice can differ from the OS, so the browser bar follows it from the first paint.
+          if (stored) {
+            document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+              meta.setAttribute('content', dark ? '#0a0a0a' : '#ffffff');
+            });
+          }
         } catch {
           // Storage can be blocked; the page then starts in the light theme.
         }
