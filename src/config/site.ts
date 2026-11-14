@@ -16,9 +16,6 @@ const email = 'contact@logos-ethos.web.app';
 export const site = {
   title: 'Logos & Ethos',
   description: 'Sổ tay về những giới hạn của sự hiểu biết.',
-  /** One or two sentences under the title on the home page. */
-  intro:
-    'Toán học, học máy, triết học và chính trị: những nơi lý trí đi đến tận cùng và nhận ra mình có biên giới. Viết khi có điều đáng viết.',
   /** The `site` option from astro.config.mjs, which reads SITE_URL. */
   url: import.meta.env.SITE,
   locale: 'vi_VN',

@@ -3,6 +3,9 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import PostFeed from '../components/post/PostFeed.astro';
 import { site } from '../config/site';
 import { getPosts } from '../lib/content';
+import { Picture } from 'astro:assets';
+import flammarion from '../assets/home/flammarion.jpg';
+import { PROSE_IMAGE_SIZES } from '../lib/rehype-blocks';
 
 const posts = await getPosts();
 ---
@@ -10,8 +13,32 @@ const posts = await getPosts();
 <SiteLayout>
   <div class="wrap">
     <section class="hero" aria-labelledby="hero-title">
+      <figure class="banner">
+        <Picture
+          src={flammarion}
+          alt="Tranh khắc gỗ: một người lữ hành quỳ ở chân trời, chui đầu qua vòm trời đầy sao để nhìn cơ chế vận hành của vũ trụ phía sau."
+          width={1280}
+          widths={[640, 960, 1280]}
+          formats={['avif']}
+          fallbackFormat="webp"
+          quality={40}
+          sizes={PROSE_IMAGE_SIZES}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>
+          Tranh khắc gỗ trong <cite>L’atmosphère</cite> của Camille Flammarion, 1888
+        </figcaption>
+      </figure>
       <h1 id="hero-title">{site.description}</h1>
-      <p>{site.intro}</p>
+      <figure class="epigraph">
+        <blockquote>
+          <p>“Hành động cuối cùng của lý trí là thừa nhận có vô số điều vượt quá nó.”</p>
+        </blockquote>
+        <figcaption>
+          Blaise Pascal, <cite>Pensées</cite>
+        </figcaption>
+      </figure>
     </section>
 
     <section class="posts" aria-labelledby="posts-title">
@@ -26,23 +53,73 @@ const posts = await getPosts();
 
 <style>
   .hero {
-    padding-top: clamp(3rem, 10vh, 6rem);
+    padding-top: clamp(1.5rem, 5vh, 3rem);
+  }
+
+  /*
+   * The engraving is prepared as pure white paper and black ink. Light mode
+   * shows it as printed. Dark mode keeps it the right way round (an inverted
+   * print turns faces into negatives) and dims the paper to a dark grey, so
+   * it reads like a print in low light instead of a bright slab on black.
+   */
+  .banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    object-position: 30% 100%;
+  }
+
+  :global(.dark) .banner img {
+    filter: brightness(0.34);
+  }
+
+  @media (min-width: 36rem) {
+    .banner img {
+      aspect-ratio: 2 / 1;
+      object-position: 50% 100%;
+    }
+  }
+
+  .banner figcaption {
+    margin-top: 0.625rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
+  }
+
+  .banner cite,
+  .epigraph cite {
+    font-style: italic;
   }
 
   .hero h1 {
     max-width: 30rem;
+    margin-top: 2.5rem;
     font-size: var(--text-display);
     font-weight: var(--text-display--font-weight);
     line-height: var(--text-display--line-height);
     letter-spacing: var(--text-display--letter-spacing);
   }
 
-  .hero p {
-    max-width: 33rem;
-    margin-top: 1rem;
+  .epigraph {
+    max-width: 30rem;
+    margin-top: 1.25rem;
+  }
+
+  .epigraph blockquote {
     color: var(--muted);
-    font-size: var(--text-prose);
-    line-height: 1.6;
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .epigraph figcaption {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: var(--text-caption);
   }
 
   .posts {
