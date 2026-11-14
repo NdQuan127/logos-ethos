@@ -10,7 +10,8 @@
  * custom properties in @layer base (light, then .dark) and exposed to Tailwind
  * through @theme inline, so `text-muted` and `var(--muted)` are the same token.
  */
-@theme {
+/* `static`: components read these through var(), which Tailwind cannot see, so emit them all. */
+@theme static {
   /* Only our tokens: no stray `text-blue-500` can slip in. */
   --color-*: initial;
 
