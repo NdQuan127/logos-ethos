@@ -11,6 +11,7 @@ import Figure from './Figure.astro';
 import Lemma from './Lemma.astro';
 import Proof from './Proof.astro';
 import Proposition from './Proposition.astro';
+import ProseImage from './ProseImage.astro';
 import PullQuote from './PullQuote.astro';
 import Remark from './Remark.astro';
 import Sidenote from './Sidenote.astro';
@@ -18,6 +19,8 @@ import Term from './Term.astro';
 import Theorem from './Theorem.astro';
 
 export const mdxComponents = {
+  /** Markdown images (`![alt](./file.png)`) render through this. */
+  img: ProseImage,
   Axiom,
   Callout,
   Corollary,

@@ -90,7 +90,9 @@ function initZoom() {
   const open = (img: HTMLImageElement) => {
     const large = document.createElement('img');
     large.src = img.currentSrc || img.src;
-    large.srcset = img.srcset;
+    // Inside <picture> the img carries the WebP fallback; reuse the AVIF candidates when those were chosen.
+    const source = img.parentElement instanceof HTMLPictureElement ? img.parentElement.querySelector('source') : null;
+    large.srcset = source && img.currentSrc.endsWith('.avif') ? source.srcset : img.srcset;
     large.sizes = '100vw';
     large.alt = img.alt;
     dialog.replaceChildren(large);
@@ -113,7 +115,23 @@ function initZoom() {
   dialog.addEventListener('click', () => dialog.close());
 }
 
+/**
+ * Clears the loading placeholder (data-loading, set in the HTML) once each
+ * image has pixels. Lazy images below the fold keep it until the reader gets
+ * there.
+ */
+function initImagePlaceholders() {
+  document.querySelectorAll<HTMLImageElement>('.prose img[data-loading]').forEach((img) => {
+    const done = () => img.removeAttribute('data-loading');
+    // Chrome reports deferred lazy images as `complete`, so check for actual pixels instead.
+    if (img.naturalWidth > 0) return done();
+    img.addEventListener('load', done, { once: true });
+    img.addEventListener('error', done, { once: true });
+  });
+}
+
 export function initArticle() {
+  initImagePlaceholders();
   initHeadingLinks();
   initTableOfContents();
   initCopy();

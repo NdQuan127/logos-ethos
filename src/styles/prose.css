@@ -315,6 +315,19 @@
   filter: brightness(0.92);
 }
 
+/*
+ * Until it loads, an image's reserved box shows a quiet tone. data-loading is
+ * in the HTML and article.ts clears it; scoped to .js so that without scripts
+ * transparent images never keep the tint.
+ */
+.js .prose img[data-loading] {
+  background-color: var(--hover);
+}
+
+.dark.js .prose img[data-loading] {
+  background-color: var(--surface);
+}
+
 .prose img[data-zoomable] {
   cursor: zoom-in;
 }

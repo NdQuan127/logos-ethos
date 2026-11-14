@@ -1,0 +1,28 @@
+---
+/**
+ * Every raster image in an article: Markdown images (registered as `img` in
+ * the MDX component map), <Figure> and the cover. AVIF first, about 40%
+ * lighter than WebP for these diagrams, with WebP for browsers that cannot
+ * decode AVIF. SVG and GIF pass through untouched: re-encoding would
+ * rasterise a vector or drop an animation.
+ *
+ * `data-loading` ships in the HTML so the placeholder tone shows from the
+ * first paint; article.ts removes it once the image has pixels.
+ */
+import type { ComponentProps } from 'astro/types';
+import { Image, Picture } from 'astro:assets';
+import { PROSE_IMAGE_SIZES } from '../../lib/rehype-blocks';
+
+type Props = ComponentProps<typeof Picture>;
+
+const props = Astro.props;
+const sizes = props.sizes ?? PROSE_IMAGE_SIZES;
+const format = typeof props.src === 'object' && 'format' in props.src ? props.src.format : undefined;
+const passthrough = format === 'svg' || format === 'gif';
+---
+
+{passthrough ? (
+  <Image {...(props as ComponentProps<typeof Image>)} sizes={sizes} data-loading />
+) : (
+  <Picture {...props} sizes={sizes} formats={['avif']} fallbackFormat="webp" data-loading />
+)}

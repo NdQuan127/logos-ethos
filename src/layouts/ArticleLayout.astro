@@ -8,8 +8,7 @@ import katexHref from 'katex/dist/katex.min.css?url';
 import serifLatin from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
 import serifVietnamese from '@fontsource-variable/source-serif-4/files/source-serif-4-vietnamese-wght-normal.woff2?url';
 import { ArrowLeft, Check, Link } from '@lucide/astro';
-import { Image } from 'astro:assets';
-import { PROSE_IMAGE_SIZES } from '../lib/rehype-blocks';
+import ProseImage from '../components/mdx/ProseImage.astro';
 import { render } from 'astro:content';
 import '../styles/prose.css';
 import SiteLayout from './SiteLayout.astro';
@@ -122,14 +121,7 @@ const jsonLd = {
       </header>
 
       {post.cover && post.coverAlt && (
-        <Image
-          src={post.cover}
-          alt={post.coverAlt}
-          class="cover"
-          widths={[640, 960, 1280]}
-          sizes={PROSE_IMAGE_SIZES}
-          loading="eager"
-        />
+        <ProseImage src={post.cover} alt={post.coverAlt} class="cover" widths={[640, 960, 1280]} loading="eager" />
       )}
 
       {showToc && <TableOfContents entries={tocEntries} variant="inline" />}
