@@ -16,6 +16,7 @@
   --color-*: initial;
 
   --font-sans: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4 Variable', 'Source Serif Fallback', ui-serif, Georgia, serif;
   --font-mono: 'Geist Mono Variable', 'Geist Mono Fallback', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* Type scale. Each role carries its line-height, weight and tracking. */
@@ -29,6 +30,8 @@
   --text-body--line-height: 1.6;
   --text-prose: 1.0625rem; /* 17px: article text */
   --text-prose--line-height: 1.75;
+  --text-article: 1.125rem; /* 18px: article body, set in the serif */
+  --text-article--line-height: 1.7;
   --text-title: 1.0625rem; /* 17px: post titles in lists */
   --text-title--line-height: 1.4;
   --text-title--font-weight: 500;

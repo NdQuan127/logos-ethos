@@ -4,18 +4,24 @@
  * The family stacks live in global.css (@theme).
  */
 
-/* Inter: interface and article text. The opsz files carry both the weight and
+/* Inter: interface, headings and short text. The opsz files carry both the weight and
    the optical-size axis, so small text gets sturdier letterforms. */
 @import '@fontsource-variable/inter/opsz.css';
 @import '@fontsource-variable/inter/opsz-italic.css';
+
+/* Source Serif 4: article body. Sits beside KaTeX's serif maths without a
+   change of voice. The weight-only files: body text stays near 18px, so the
+   optical-size axis would more than double the download for little gain. */
+@import '@fontsource-variable/source-serif-4/wght.css';
+@import '@fontsource-variable/source-serif-4/wght-italic.css';
 
 /* Geist Mono: dates, numbers and code. */
 @import '@fontsource-variable/geist-mono/wght.css';
 
 /*
  * Fallbacks sized to the web fonts' metrics, so text does not reflow when the
- * fonts finish loading. Computed with fontTools against Arial and Courier New
- * (Liberation Sans and Liberation Mono on Linux share their metrics).
+ * fonts finish loading. Computed with fontTools against Arial, Times New Roman
+ * and Courier New (the Liberation fonts on Linux share their metrics).
  */
 @font-face {
   font-family: 'Inter Fallback';
@@ -23,6 +29,15 @@
   size-adjust: 108.08%;
   ascent-override: 89.63%;
   descent-override: 22.32%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Times New Roman'), local('Liberation Serif'), local('Times');
+  size-adjust: 117.3%;
+  ascent-override: 88.32%;
+  descent-override: 28.56%;
   line-gap-override: 0%;
 }
 

@@ -6,10 +6,17 @@
 
 .prose {
   color: var(--text);
-  font-size: var(--text-prose);
-  line-height: var(--text-prose--line-height);
+  font-family: var(--font-serif);
+  font-size: var(--text-article);
+  line-height: var(--text-article--line-height);
   overflow-wrap: break-word;
   counter-reset: sidenote;
+}
+
+/* Headings and the furniture around blocks stay in the interface sans; only
+   the running text is serif. */
+.prose :is(h2, h3, h4, figcaption, table, .code-head, .statement-head, .proof summary, .callout-title) {
+  font-family: var(--font-sans);
 }
 
 /* ── Flow ─────────────────────────────────────────────────────────────── */

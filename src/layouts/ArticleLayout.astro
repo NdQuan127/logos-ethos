@@ -5,6 +5,8 @@
  */
 // Linked per page instead of bundled, so posts without math skip it.
 import katexHref from 'katex/dist/katex.min.css?url';
+import serifLatin from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
+import serifVietnamese from '@fontsource-variable/source-serif-4/files/source-serif-4-vietnamese-wght-normal.woff2?url';
 import { ArrowLeft, Check, Link } from '@lucide/astro';
 import { Image } from 'astro:assets';
 import { PROSE_IMAGE_SIZES } from '../lib/rehype-blocks';
@@ -72,6 +74,8 @@ const jsonLd = {
   jsonLd={jsonLd}
   progress
 >
+  <link slot="head" rel="preload" href={serifLatin} as="font" type="font/woff2" crossorigin />
+  <link slot="head" rel="preload" href={serifVietnamese} as="font" type="font/woff2" crossorigin />
   {remarkPluginFrontmatter.hasMath && <link slot="head" rel="stylesheet" href={katexHref} />}
 
   {showToc && <TableOfContents entries={tocEntries} variant="sidebar" />}
