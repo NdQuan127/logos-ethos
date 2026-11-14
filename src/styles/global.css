@@ -144,12 +144,6 @@
     scroll-padding-top: 5rem;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html:focus-within {
-      scroll-behavior: smooth;
-    }
-  }
-
   body {
     min-height: 100svh;
     background-color: var(--bg);

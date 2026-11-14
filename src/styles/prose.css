@@ -760,7 +760,7 @@ html:not(.js) .prose .sidenote-body::after {
 
 .prose .footnotes li {
   border-radius: var(--radius-sm);
-  transition: background-color 600ms ease;
+  transition: background-color 250ms ease;
 }
 
 .prose .footnotes li:target {
